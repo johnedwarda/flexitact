@@ -1,17 +1,15 @@
-import { useState } from "react";
+import { useInfotainment } from "./InfotainmentContext";
 import { Minus, Plus, CircleDot, Heater, Wind } from "lucide-react";
 
 const ClimateWidget = () => {
-  const [temp, setTemp] = useState(22);
-  const [seatHeat, setSeatHeat] = useState(1);
-  const [steeringHeat, setSteeringHeat] = useState(false);
-  const [defogger, setDefogger] = useState(false);
+  const { climate, setClimate } = useInfotainment();
+  const { temp, seatHeat, steeringHeat, defogger } = climate;
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
       {/* Temperature control */}
       <button
-        onClick={() => setTemp((t) => Math.max(16, t - 0.5))}
+        onClick={() => setClimate((c) => ({ ...c, temp: Math.max(16, c.temp - 0.5) }))}
         className="w-7 h-7 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors text-secondary-foreground"
       >
         <Minus size={14} />
@@ -20,7 +18,7 @@ const ClimateWidget = () => {
         {temp}°
       </span>
       <button
-        onClick={() => setTemp((t) => Math.min(30, t + 0.5))}
+        onClick={() => setClimate((c) => ({ ...c, temp: Math.min(30, c.temp + 0.5) }))}
         className="w-7 h-7 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors text-secondary-foreground"
       >
         <Plus size={14} />
@@ -30,7 +28,7 @@ const ClimateWidget = () => {
 
       {/* Seat heating */}
       <button
-        onClick={() => setSeatHeat((s) => (s + 1) % 4)}
+        onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
         className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
           seatHeat > 0 ? "bg-climate-warm/20 text-climate-warm" : "bg-secondary text-muted-foreground"
         }`}
@@ -46,7 +44,7 @@ const ClimateWidget = () => {
 
       {/* Steering heat */}
       <button
-        onClick={() => setSteeringHeat((s) => !s)}
+        onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
           steeringHeat ? "bg-climate-warm/20 text-climate-warm" : "bg-secondary text-muted-foreground"
         }`}
@@ -57,7 +55,7 @@ const ClimateWidget = () => {
 
       {/* Defogger */}
       <button
-        onClick={() => setDefogger((d) => !d)}
+        onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
           defogger ? "bg-climate-cool/20 text-climate-cool" : "bg-secondary text-muted-foreground"
         }`}

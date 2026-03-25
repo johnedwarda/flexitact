@@ -1,12 +1,44 @@
 import { useState } from "react";
+import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const NavigationButtons = () => {
+  const {
+    highlightedIndex,
+    navigateLeft,
+    navigateRight,
+    openApp,
+    minimizeApp,
+    dialLeft,
+    dialRight,
+    dialUp,
+    dialDown,
+    dialRotate,
+    dialCenter,
+  } = useInfotainment();
+
   const [dialRotation, setDialRotation] = useState(0);
   const [activeJoystick, setActiveJoystick] = useState<string | null>(null);
   const [activeDialDir, setActiveDialDir] = useState<string | null>(null);
 
+  const currentItem = TASKBAR_ITEMS[highlightedIndex];
+
+  const handleJoystick = (dir: string) => {
+    if (dir === "left") navigateLeft();
+    if (dir === "right") navigateRight();
+    if (dir === "up") openApp();
+    if (dir === "down") minimizeApp();
+  };
+
+  const handleDialDirection = (dir: string) => {
+    if (dir === "left") dialLeft();
+    if (dir === "right") dialRight();
+    if (dir === "up") dialUp();
+    if (dir === "down") dialDown();
+  };
+
   const handleRotate = (dir: "cw" | "ccw") => {
     setDialRotation((r) => r + (dir === "cw" ? 15 : -15));
+    dialRotate(dir);
   };
 
   const joystickDirs = [
@@ -15,6 +47,20 @@ const NavigationButtons = () => {
     { key: "left", label: "◀", style: "left-0 top-1/2 -translate-y-1/2" },
     { key: "right", label: "▶", style: "right-0 top-1/2 -translate-y-1/2" },
   ];
+
+  // Contextual hints for the control dial
+  const getDialHints = () => {
+    switch (currentItem.id) {
+      case "media":
+        return { label: "Media Control", left: "Prev", right: "Next", dial: "Volume", center: "Play/Pause" };
+      case "climate":
+        return { label: "Climate Control", left: "Zone ←", right: "Zone →", dial: "Temp", center: "Single Zone" };
+      default:
+        return { label: "Control Dial", left: "←", right: "→", dial: "Scroll", center: "Select" };
+    }
+  };
+
+  const hints = getDialHints();
 
   return (
     <div className="flex items-center justify-center gap-20 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
@@ -33,7 +79,10 @@ const NavigationButtons = () => {
                   ? "bg-primary/30 text-primary scale-110"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
               }`}
-              onPointerDown={() => setActiveJoystick(key)}
+              onPointerDown={() => {
+                setActiveJoystick(key);
+                handleJoystick(key);
+              }}
               onPointerUp={() => setActiveJoystick(null)}
               onPointerLeave={() => setActiveJoystick(null)}
             >
@@ -56,9 +105,13 @@ const NavigationButtons = () => {
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
           Task Switcher
         </span>
+        {/* Show highlighted item name */}
+        <span className="text-[10px] font-mono text-primary">
+          {currentItem.label}
+        </span>
       </div>
 
-      {/* Control Dial - Rotating dial + 4-way joystick */}
+      {/* Control Dial */}
       <div className="flex flex-col items-center gap-2">
         <div className="relative w-32 h-32">
           {/* Outer rotating ring */}
@@ -78,7 +131,7 @@ const NavigationButtons = () => {
             <div className="absolute w-1.5 h-3 bg-primary rounded-full top-1 left-1/2 -translate-x-1/2" />
           </div>
 
-          {/* Rotate buttons (invisible touch areas on edges) */}
+          {/* Rotate buttons */}
           <button
             className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-16 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors rounded-l-lg hover:bg-secondary/30"
             onClick={() => handleRotate("ccw")}
@@ -105,7 +158,10 @@ const NavigationButtons = () => {
                     ? "text-primary scale-110"
                     : "text-muted-foreground/60 hover:text-foreground"
                 }`}
-                onPointerDown={() => setActiveDialDir(key)}
+                onPointerDown={() => {
+                  setActiveDialDir(key);
+                  handleDialDirection(key);
+                }}
                 onPointerUp={() => setActiveDialDir(null)}
                 onPointerLeave={() => setActiveDialDir(null)}
               >
@@ -120,15 +176,24 @@ const NavigationButtons = () => {
                   ? "bg-primary/30 shadow-[0_0_10px_hsl(var(--primary)/0.3)]"
                   : "bg-[hsl(var(--surface-glass))] hover:bg-secondary"
               }`}
-              onPointerDown={() => setActiveDialDir("center")}
+              onPointerDown={() => {
+                setActiveDialDir("center");
+                dialCenter();
+              }}
               onPointerUp={() => setActiveDialDir(null)}
               onPointerLeave={() => setActiveDialDir(null)}
             />
           </div>
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-          Control Dial
+          {hints.label}
         </span>
+        {/* Contextual hint */}
+        <div className="flex gap-3 text-[9px] font-mono text-muted-foreground/70">
+          <span>◀ {hints.left}</span>
+          <span>⟳ {hints.dial}</span>
+          <span>{hints.right} ▶</span>
+        </div>
       </div>
     </div>
   );
