@@ -2,6 +2,7 @@ import StatusBar from "@/components/infotainment/StatusBar";
 import DrivingInfo from "@/components/infotainment/DrivingInfo";
 import MapView from "@/components/infotainment/MapView";
 import BottomTaskbar from "@/components/infotainment/BottomTaskbar";
+import NavigationButtons from "@/components/infotainment/NavigationButtons";
 
 const Index = () => {
   return (
