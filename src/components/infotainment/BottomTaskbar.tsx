@@ -15,23 +15,19 @@ const BottomTaskbar = () => {
 
     return (
       <div key={item.id} className="relative flex flex-col items-center">
-        {/* Top indicator - shown when app is opened */}
+        {/* Top indicator - shown when highlighted AND (opened OR minimized) */}
         <div
           className={`absolute -top-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-            isHighlighted && isOpened
+            isHighlighted && (isOpened || isMinimized)
               ? "w-8 bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)]"
+              : isHighlighted
+              ? "w-4 bg-primary/50"
               : "w-0 bg-transparent"
           }`}
         />
 
-        {/* The widget/button content */}
-        <div
-          className={`rounded-2xl transition-all duration-200 ${
-            isHighlighted
-              ? "ring-2 ring-primary/50 ring-offset-1 ring-offset-background"
-              : ""
-          }`}
-        >
+        {/* The widget/button content - no ring highlight */}
+        <div className="rounded-2xl">
           {item.id === "settings" && (
             <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
               <Settings size={20} />
@@ -46,7 +42,7 @@ const BottomTaskbar = () => {
           )}
         </div>
 
-        {/* Bottom indicator - shown when app is minimized */}
+        {/* Bottom indicator - shown when minimized and highlighted */}
         <div
           className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
             isHighlighted && isMinimized
