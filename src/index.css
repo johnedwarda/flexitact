@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -45,7 +45,7 @@
     --climate-warm: 15 90% 55%;
     --climate-cool: 205 100% 55%;
 
-    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-display: 'Nunito', system-ui, sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
 
     --sidebar-background: 0 0% 98%;
