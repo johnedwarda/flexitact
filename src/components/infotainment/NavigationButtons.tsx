@@ -52,11 +52,11 @@ const NavigationButtons = () => {
   const getDialHints = () => {
     switch (currentItem.id) {
       case "media":
-        return { label: "Media Control", left: "Prev", right: "Next", dial: "Volume", center: "Play/Pause" };
+        return { label: "Media Control", left: "⏮ Prev", right: "Next ⏭", up: "Source", down: "Mute", dial: "Volume", center: "⏯" };
       case "climate":
-        return { label: "Climate Control", left: "Zone ←", right: "Zone →", dial: "Temp", center: "Single Zone" };
+        return { label: "Climate Control", left: "Zone L", right: "Zone R", up: "Steering", down: "Defog", dial: "Temp", center: "Zones" };
       default:
-        return { label: "Control Dial", left: "←", right: "→", dial: "Scroll", center: "Select" };
+        return { label: "Control Dial", left: "←", right: "→", up: "↑", down: "↓", dial: "Scroll", center: "OK" };
     }
   };
 
@@ -147,16 +147,21 @@ const NavigationButtons = () => {
             <span className="text-xs">↻</span>
           </button>
 
-          {/* Inner joystick area */}
+          {/* Inner display + joystick area */}
           <div className="absolute inset-5 rounded-full bg-[hsl(var(--surface-elevated))] border border-border/30 shadow-[inset_0_1px_4px_rgba(0,0,0,0.3)]">
-            {/* 4-way directions */}
-            {joystickDirs.map(({ key, label, style }) => (
+            {/* 4-way direction buttons with hint labels */}
+            {[
+              { key: "up", style: "top-0 left-1/2 -translate-x-1/2", hint: hints.up },
+              { key: "down", style: "bottom-0 left-1/2 -translate-x-1/2", hint: hints.down },
+              { key: "left", style: "left-0 top-1/2 -translate-y-1/2", hint: hints.left },
+              { key: "right", style: "right-0 top-1/2 -translate-y-1/2", hint: hints.right },
+            ].map(({ key, style, hint }) => (
               <button
                 key={key}
-                className={`absolute ${style} w-6 h-6 flex items-center justify-center rounded text-[10px] transition-all duration-100 ${
+                className={`absolute ${style} px-1 h-6 flex items-center justify-center rounded text-[7px] font-mono transition-all duration-100 leading-none whitespace-nowrap ${
                   activeDialDir === key
                     ? "text-primary scale-110"
-                    : "text-muted-foreground/60 hover:text-foreground"
+                    : "text-muted-foreground/70 hover:text-foreground"
                 }`}
                 onPointerDown={() => {
                   setActiveDialDir(key);
@@ -165,13 +170,13 @@ const NavigationButtons = () => {
                 onPointerUp={() => setActiveDialDir(null)}
                 onPointerLeave={() => setActiveDialDir(null)}
               >
-                {label}
+                {hint}
               </button>
             ))}
 
-            {/* Center press */}
+            {/* Center press with label */}
             <button
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border border-border/40 transition-all duration-100 ${
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-border/40 transition-all duration-100 flex flex-col items-center justify-center ${
                 activeDialDir === "center"
                   ? "bg-primary/30 shadow-[0_0_10px_hsl(var(--primary)/0.3)]"
                   : "bg-[hsl(var(--surface-glass))] hover:bg-secondary"
@@ -182,18 +187,15 @@ const NavigationButtons = () => {
               }}
               onPointerUp={() => setActiveDialDir(null)}
               onPointerLeave={() => setActiveDialDir(null)}
-            />
+            >
+              <span className="text-[6px] font-mono text-muted-foreground leading-none">{hints.center}</span>
+            </button>
           </div>
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
           {hints.label}
         </span>
-        {/* Contextual hint */}
-        <div className="flex gap-3 text-[9px] font-mono text-muted-foreground/70">
-          <span>◀ {hints.left}</span>
-          <span>⟳ {hints.dial}</span>
-          <span>{hints.right} ▶</span>
-        </div>
+        <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {hints.dial}</span>
       </div>
     </div>
   );
