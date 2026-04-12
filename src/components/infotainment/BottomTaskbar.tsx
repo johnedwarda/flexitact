@@ -15,13 +15,11 @@ const BottomTaskbar = () => {
 
     return (
       <div key={item.id} className="relative flex flex-col items-center">
-        {/* Top indicator - shown when highlighted AND (opened OR minimized) */}
+        {/* Top indicator - shown when highlighted AND opened */}
         <div
           className={`absolute -top-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-            isHighlighted && (isOpened || isMinimized)
+            isHighlighted && isOpened
               ? "w-8 bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)]"
-              : isHighlighted
-              ? "w-4 bg-primary/50"
               : "w-0 bg-transparent"
           }`}
         />
@@ -42,10 +40,10 @@ const BottomTaskbar = () => {
           )}
         </div>
 
-        {/* Bottom indicator - shown when minimized and highlighted */}
+        {/* Bottom indicator - shown when highlighted and NOT opened (closed or minimized) */}
         <div
           className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-            isHighlighted && isMinimized
+            isHighlighted && !isOpened
               ? "w-8 bg-accent shadow-[0_0_8px_hsl(var(--accent)/0.6)]"
               : "w-0 bg-transparent"
           }`}
