@@ -5,12 +5,13 @@ import BottomTaskbar from "@/components/infotainment/BottomTaskbar";
 import NavigationButtons from "@/components/infotainment/NavigationButtons";
 import ClimateAppView from "@/components/infotainment/ClimateAppView";
 import MediaAppView from "@/components/infotainment/MediaAppView";
+import SettingsAppView from "@/components/infotainment/SettingsAppView";
+import AppMenuOverlay from "@/components/infotainment/AppMenuOverlay";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
 const IndexContent = () => {
-  const { apps } = useInfotainment();
+  const { apps, appMenuOpen } = useInfotainment();
 
-  // Find which app is currently opened
   const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened");
 
   const renderRightPane = () => {
@@ -19,6 +20,8 @@ const IndexContent = () => {
         return <ClimateAppView />;
       case "media":
         return <MediaAppView />;
+      case "settings":
+        return <SettingsAppView />;
       default:
         return <MapView />;
     }
@@ -29,14 +32,13 @@ const IndexContent = () => {
       <StatusBar />
 
       <div className="flex flex-1 min-h-0">
-        {/* Left: Driving Info */}
         <div className="w-[340px] flex-shrink-0 border-r border-border bg-card/40">
           <DrivingInfo />
         </div>
 
-        {/* Right: Map or App */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 relative">
           {renderRightPane()}
+          {appMenuOpen && <AppMenuOverlay />}
         </div>
       </div>
 

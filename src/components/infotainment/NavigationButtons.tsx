@@ -55,6 +55,8 @@ const NavigationButtons = () => {
         return { label: "Media Control", left: "⏮ Prev", right: "Next ⏭", up: "Source", down: "Mute", dial: "Volume", center: "⏯" };
       case "climate":
         return { label: "Climate Control", left: "Zone L", right: "Zone R", up: "Steering", down: "Defog", dial: "Temp", center: "Zones" };
+      case "menu":
+        return { label: "App Menu", left: "← Prev", right: "Next →", up: "↑ Row", down: "↓ Row", dial: "Browse", center: "Open" };
       default:
         return { label: "Control Dial", left: "←", right: "→", up: "↑", down: "↓", dial: "Scroll", center: "OK" };
     }
