@@ -41,7 +41,7 @@ const AppMenuPopup = () => {
   const { appMenuIndex } = useInfotainment();
 
   return (
-    <div className="fixed bottom-[60px] right-4 z-[100]">
+    <div className="fixed bottom-[220px] right-4 z-[100]">
       <div className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl p-3 shadow-[0_-8px_30px_rgba(0,0,0,0.4)]">
         <div className="grid grid-cols-4 gap-2">
           {APP_MENU_ITEMS.map((app, i) => (
