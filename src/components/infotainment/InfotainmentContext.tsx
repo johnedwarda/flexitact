@@ -144,11 +144,24 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
     if (id === "menu" && appMenuOpen) {
-      // Open the selected app from the menu
       const APP_MENU_IDS = ["navigation", "media", "climate", "settings", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "charging", "performance", "parking", "security", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
-        openAppFromMenu(selectedAppId);
+        setAppMenuOpen(false);
+        const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === selectedAppId);
+        if (taskbarIndex >= 0) {
+          setHighlightedIndex(taskbarIndex);
+          setApps((prev) => {
+            const updated = { ...prev };
+            for (const key of Object.keys(updated)) {
+              if (updated[key].state === "opened") {
+                updated[key] = { ...updated[key], state: "minimized" };
+              }
+            }
+            updated[selectedAppId] = { ...updated[selectedAppId], state: "opened" };
+            return updated;
+          });
+        }
       }
     } else if (id !== "menu") {
       setApps((prev) => {
