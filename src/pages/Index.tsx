@@ -10,7 +10,7 @@ import SettingsAppView from "@/components/infotainment/SettingsAppView";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
 const IndexContent = () => {
-  const { apps, appMenuOpen } = useInfotainment();
+  const { apps } = useInfotainment();
 
   const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened");
 

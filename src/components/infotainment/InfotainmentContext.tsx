@@ -108,17 +108,20 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
+    if (appMenuOpen) {
+      // When menu is open, left cycles through menu items backwards
+      setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
+      return;
+    }
     setHighlightedIndex((prev) => {
       const next = (prev - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(0);
-      } else {
-        setAppMenuOpen(false);
       }
       return next;
     });
-  }, []);
+  }, [appMenuOpen]);
 
   const navigateRight = useCallback(() => {
     if (appMenuOpen) {
