@@ -156,7 +156,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
     if (id === "menu" && appMenuOpen) {
-      const APP_MENU_IDS = ["navigation", "media", "climate", "settings", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "charging", "performance", "parking", "security", "about"];
+      const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         setAppMenuOpen(false);
@@ -284,7 +284,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (currentId === "menu" && appMenuOpen) {
       // Import the app menu items list to get the id
       // We'll use a dynamic import approach - for now just use the index mapping
-      const APP_MENU_IDS = ["navigation", "media", "climate", "settings", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "charging", "performance", "parking", "security", "about"];
+      const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         openAppFromMenu(selectedAppId);
