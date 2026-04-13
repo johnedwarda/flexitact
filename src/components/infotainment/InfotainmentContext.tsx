@@ -63,6 +63,8 @@ interface InfotainmentContextType {
   dialRotate: (dir: "cw" | "ccw") => void;
   dialCenter: () => void;
   openAppFromMenu: (appId: string) => void;
+  openAppById: (appId: string) => void;
+  navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
   setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
 }
@@ -204,6 +206,32 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  const openAppById = useCallback((appId: string) => {
+    setApps((prev) => {
+      const updated = { ...prev };
+      for (const key of Object.keys(updated)) {
+        if (updated[key].state === "opened") {
+          updated[key] = { ...updated[key], state: "minimized" };
+        }
+      }
+      if (updated[appId]) {
+        updated[appId] = { ...updated[appId], state: "opened" };
+      }
+      return updated;
+    });
+  }, []);
+
+  const navigateToItem = useCallback((index: number) => {
+    const item = TASKBAR_ITEMS[index];
+    setHighlightedIndex(index);
+    if (item.id === "menu") {
+      setAppMenuOpen(true);
+      setAppMenuIndex(0);
+    } else {
+      setAppMenuOpen(false);
+    }
+  }, []);
+
   const openAppFromMenu = useCallback((appId: string) => {
     setAppMenuOpen(false);
     // Map menu items to taskbar items where possible
@@ -320,6 +348,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         dialRotate,
         dialCenter,
         openAppFromMenu,
+        openAppById,
+        navigateToItem,
         setClimate,
         setMedia,
       }}
