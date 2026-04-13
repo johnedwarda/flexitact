@@ -17,17 +17,15 @@ const DrivingInfo = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
       {/* Speed + Limit row */}
-      <div className="flex flex-col items-center">
-        <div className="flex items-baseline gap-4">
-          <span className="text-7xl font-bold font-mono tracking-tighter text-foreground animate-speed-pulse">
-            {speed}
-          </span>
-          {/* Road sign style speed limit */}
-          <div className="flex items-center justify-center w-14 h-14 rounded-full border-[3px] border-destructive bg-white mb-1">
-            <span className="text-xl font-bold text-black leading-none">80</span>
-          </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-7xl font-bold font-mono tracking-tighter text-foreground animate-speed-pulse">
+          {speed}
+        </span>
+        <span className="text-sm text-muted-foreground tracking-widest uppercase">km/h</span>
+        {/* Road sign style speed limit */}
+        <div className="flex items-center justify-center w-12 h-12 rounded-full border-[3px] border-destructive bg-white mt-2">
+          <span className="text-lg font-bold text-black leading-none">80</span>
         </div>
-        <span className="text-sm text-muted-foreground tracking-widest uppercase mt-1">km/h</span>
       </div>
 
       {/* Info Grid */}
