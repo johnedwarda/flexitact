@@ -6,11 +6,11 @@ import NavigationButtons from "@/components/infotainment/NavigationButtons";
 import ClimateAppView from "@/components/infotainment/ClimateAppView";
 import MediaAppView from "@/components/infotainment/MediaAppView";
 import SettingsAppView from "@/components/infotainment/SettingsAppView";
-
+import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
 const IndexContent = () => {
-  const { apps } = useInfotainment();
+  const { apps, appMenuOpen } = useInfotainment();
 
   const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened");
 
@@ -38,12 +38,13 @@ const IndexContent = () => {
 
         <div className="flex-1 min-w-0 relative">
           {renderRightPane()}
-          
         </div>
       </div>
 
       <BottomTaskbar />
       <NavigationButtons />
+
+      {appMenuOpen && <AppMenuPopup />}
     </div>
   );
 };
