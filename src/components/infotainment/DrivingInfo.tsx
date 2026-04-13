@@ -18,7 +18,7 @@ const DrivingInfo = () => {
     <div className="flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
       {/* Speed + Limit row */}
       <div className="flex flex-col items-center">
-        <div className="flex items-baseline gap-4">
+        <div className="flex items-center gap-4">
           <span className="text-7xl font-bold font-mono tracking-tighter text-foreground animate-speed-pulse">
             {speed}
           </span>
