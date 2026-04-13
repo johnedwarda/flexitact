@@ -9,22 +9,10 @@ const BottomTaskbar = () => {
   const renderItem = (index: number) => {
     const item = TASKBAR_ITEMS[index];
     const isHighlighted = highlightedIndex === index;
-    const appState = apps[item.id]?.state;
-    const isOpened = appState === "opened";
-    const isMinimized = appState === "minimized";
 
     return (
       <div key={item.id} className="relative flex flex-col items-center">
-        {/* Top indicator - shown when highlighted AND opened */}
-        <div
-          className={`absolute -top-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-            isHighlighted && isOpened
-              ? "w-8 bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)]"
-              : "w-0 bg-transparent"
-          }`}
-        />
-
-        {/* The widget/button content - no ring highlight */}
+        {/* The widget/button content */}
         <div className="rounded-2xl">
           {item.id === "settings" && (
             <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
@@ -40,10 +28,10 @@ const BottomTaskbar = () => {
           )}
         </div>
 
-        {/* Bottom indicator - shown when highlighted and NOT opened (closed or minimized) */}
+        {/* Bottom indicator - shows which widget is linked to control dial */}
         <div
           className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-            isHighlighted && !isOpened
+            isHighlighted
               ? "w-8 bg-accent shadow-[0_0_8px_hsl(var(--accent)/0.6)]"
               : "w-0 bg-transparent"
           }`}
