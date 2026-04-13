@@ -6,7 +6,7 @@ import NavigationButtons from "@/components/infotainment/NavigationButtons";
 import ClimateAppView from "@/components/infotainment/ClimateAppView";
 import MediaAppView from "@/components/infotainment/MediaAppView";
 import SettingsAppView from "@/components/infotainment/SettingsAppView";
-import AppMenuOverlay from "@/components/infotainment/AppMenuOverlay";
+
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
 const IndexContent = () => {
@@ -38,7 +38,7 @@ const IndexContent = () => {
 
         <div className="flex-1 min-w-0 relative">
           {renderRightPane()}
-          {appMenuOpen && <AppMenuOverlay />}
+          
         </div>
       </div>
 

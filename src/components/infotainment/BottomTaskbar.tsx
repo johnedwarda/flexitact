@@ -1,10 +1,11 @@
 import { Settings, LayoutGrid } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
+import AppMenuPopup from "./AppMenuPopup";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, apps } = useInfotainment();
+  const { highlightedIndex, appMenuOpen } = useInfotainment();
 
   const renderItem = (index: number) => {
     const item = TASKBAR_ITEMS[index];
@@ -12,7 +13,6 @@ const BottomTaskbar = () => {
 
     return (
       <div key={item.id} className="relative flex flex-col items-center">
-        {/* The widget/button content */}
         <div className="rounded-2xl">
           {item.id === "settings" && (
             <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
@@ -22,13 +22,15 @@ const BottomTaskbar = () => {
           {item.id === "climate" && <ClimateWidget />}
           {item.id === "media" && <MediaWidget />}
           {item.id === "menu" && (
-            <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
-              <LayoutGrid size={20} />
-            </button>
+            <div className="relative">
+              {appMenuOpen && <AppMenuPopup />}
+              <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
+                <LayoutGrid size={20} />
+              </button>
+            </div>
           )}
         </div>
 
-        {/* Bottom indicator - shows which widget is linked to control dial */}
         <div
           className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
             isHighlighted
