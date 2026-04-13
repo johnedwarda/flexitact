@@ -132,8 +132,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const navigateRight = useCallback(() => {
     if (appMenuOpen) {
-      // When menu is open, right cycles through menu items
-      setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
+      if (appMenuIndex === APP_MENU_COUNT - 1) {
+        // Past last item — exit menu, go to first taskbar item
+        setAppMenuOpen(false);
+        setHighlightedIndex(0);
+      } else {
+        setAppMenuIndex((i) => i + 1);
+      }
       return;
     }
     setHighlightedIndex((prev) => {
@@ -144,7 +149,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       }
       return next;
     });
-  }, [appMenuOpen]);
+  }, [appMenuOpen, appMenuIndex]);
 
   const currentId = TASKBAR_ITEMS[highlightedIndex].id;
 
