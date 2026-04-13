@@ -75,7 +75,7 @@ export const useInfotainment = () => {
   return ctx;
 };
 
-const APP_MENU_COUNT = 16;
+const APP_MENU_COUNT = 9;
 
 export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(1);
