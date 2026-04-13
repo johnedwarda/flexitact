@@ -348,6 +348,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         dialRotate,
         dialCenter,
         openAppFromMenu,
+        openAppById,
+        navigateToItem,
         setClimate,
         setMedia,
       }}
