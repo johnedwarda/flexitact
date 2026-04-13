@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -45,7 +45,7 @@
     --climate-warm: 15 90% 55%;
     --climate-cool: 205 100% 55%;
 
-    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
     --sidebar-background: 0 0% 98%;

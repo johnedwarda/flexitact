@@ -127,16 +127,19 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [highlightedIndex]);
 
   const minimizeApp = useCallback(() => {
-    const id = TASKBAR_ITEMS[highlightedIndex].id;
-    if (id === "menu") {
-      setAppMenuOpen(false);
-    } else {
-      setApps((prev) => ({
-        ...prev,
-        [id]: { ...prev[id], state: prev[id].state === "opened" ? "minimized" : "closed" },
-      }));
-    }
-  }, [highlightedIndex]);
+    // Close app menu if open
+    setAppMenuOpen(false);
+    // Close any opened app regardless of what's highlighted
+    setApps((prev) => {
+      const updated = { ...prev };
+      for (const key of Object.keys(updated)) {
+        if (updated[key].state === "opened") {
+          updated[key] = { ...updated[key], state: "minimized" };
+        }
+      }
+      return updated;
+    });
+  }, []);
 
   const openAppFromMenu = useCallback((appId: string) => {
     setAppMenuOpen(false);

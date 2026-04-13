@@ -28,7 +28,7 @@ const IndexContent = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background relative">
       <StatusBar />
 
       <div className="flex flex-1 min-h-0">
