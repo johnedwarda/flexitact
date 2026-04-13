@@ -1,4 +1,4 @@
-import { Gauge, CircleAlert, Zap, Fuel, Navigation } from "lucide-react";
+import { Gauge, Zap, Fuel, Navigation } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const DrivingInfo = () => {
