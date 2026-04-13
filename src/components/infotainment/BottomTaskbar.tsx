@@ -8,7 +8,7 @@ const BottomTaskbar = () => {
 
   const renderItem = (index: number) => {
     const item = TASKBAR_ITEMS[index];
-    const isHighlighted = highlightedIndex === index;
+    const isHighlighted = highlightedIndex === index && item.id !== "menu";
 
     return (
       <div key={item.id} className="relative flex flex-col items-center">
