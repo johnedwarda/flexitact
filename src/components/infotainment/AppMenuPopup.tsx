@@ -46,7 +46,7 @@ const AppMenuPopup = () => {
   }
 
   return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 bottom-[17rem] z-[9999] flex justify-end px-4">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[20rem] z-[9999] flex justify-end px-4">
       <div className="pointer-events-auto w-[19rem] rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl">
         <div className="grid grid-cols-4 gap-2">
           {APP_MENU_ITEMS.map((app, i) => (
