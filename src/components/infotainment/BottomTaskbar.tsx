@@ -1,11 +1,10 @@
 import { Settings, LayoutGrid } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
-import AppMenuPopup from "./AppMenuPopup";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, appMenuOpen } = useInfotainment();
+  const { highlightedIndex } = useInfotainment();
 
   const renderItem = (index: number) => {
     const item = TASKBAR_ITEMS[index];
@@ -22,12 +21,9 @@ const BottomTaskbar = () => {
           {item.id === "climate" && <ClimateWidget />}
           {item.id === "media" && <MediaWidget />}
           {item.id === "menu" && (
-            <div className="relative">
-              {appMenuOpen && <AppMenuPopup />}
-              <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
-                <LayoutGrid size={20} />
-              </button>
-            </div>
+            <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors">
+              <LayoutGrid size={20} />
+            </button>
           )}
         </div>
 
