@@ -122,7 +122,17 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       setAppMenuOpen(true);
       setAppMenuIndex(0);
     } else {
-      setApps((prev) => ({ ...prev, [id]: { ...prev[id], state: "opened" } }));
+      setApps((prev) => {
+        const updated = { ...prev };
+        // Close any currently opened app first
+        for (const key of Object.keys(updated)) {
+          if (updated[key].state === "opened") {
+            updated[key] = { ...updated[key], state: "minimized" };
+          }
+        }
+        updated[id] = { ...updated[id], state: "opened" };
+        return updated;
+      });
     }
   }, [highlightedIndex]);
 
