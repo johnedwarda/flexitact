@@ -23,8 +23,8 @@ const DrivingInfo = () => {
             {speed}
           </span>
           {/* Road sign style speed limit */}
-          <div className="flex items-center justify-center w-14 h-14 rounded-full border-[3px] border-destructive bg-white mb-1">
-            <span className="text-xl font-bold text-black leading-none">80</span>
+          <div className="flex items-center justify-center w-11 h-11 rounded-full border-[2.5px] border-destructive bg-white">
+            <span className="text-base font-bold text-black leading-none">80</span>
           </div>
         </div>
         <span className="text-sm text-muted-foreground tracking-widest uppercase mt-1">km/h</span>
