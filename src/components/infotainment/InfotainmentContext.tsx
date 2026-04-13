@@ -75,7 +75,7 @@ export const useInfotainment = () => {
   return ctx;
 };
 
-const APP_MENU_COUNT = 8;
+const APP_MENU_COUNT = 16;
 
 export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(1);
@@ -106,25 +106,66 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [appMenuOpen, setAppMenuOpen] = useState(false);
   const [appMenuIndex, setAppMenuIndex] = useState(0);
 
+  // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
-    setHighlightedIndex((i) => (i - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length);
-  }, []);
+    if (appMenuOpen) {
+      // When menu is open, left cycles through menu items backwards
+      setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
+      return;
+    }
+    setHighlightedIndex((prev) => {
+      const next = (prev - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
+      if (TASKBAR_ITEMS[next].id === "menu") {
+        setAppMenuOpen(true);
+        setAppMenuIndex(0);
+      }
+      return next;
+    });
+  }, [appMenuOpen]);
 
   const navigateRight = useCallback(() => {
-    setHighlightedIndex((i) => (i + 1) % TASKBAR_ITEMS.length);
-  }, []);
+    if (appMenuOpen) {
+      // When menu is open, right cycles through menu items
+      setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
+      return;
+    }
+    setHighlightedIndex((prev) => {
+      const next = (prev + 1) % TASKBAR_ITEMS.length;
+      if (TASKBAR_ITEMS[next].id === "menu") {
+        setAppMenuOpen(true);
+        setAppMenuIndex(0);
+      }
+      return next;
+    });
+  }, [appMenuOpen]);
 
   const currentId = TASKBAR_ITEMS[highlightedIndex].id;
 
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
-    if (id === "menu") {
-      setAppMenuOpen(true);
-      setAppMenuIndex(0);
-    } else {
+    if (id === "menu" && appMenuOpen) {
+      const APP_MENU_IDS = ["navigation", "media", "climate", "settings", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "charging", "performance", "parking", "security", "about"];
+      const selectedAppId = APP_MENU_IDS[appMenuIndex];
+      if (selectedAppId) {
+        setAppMenuOpen(false);
+        const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === selectedAppId);
+        if (taskbarIndex >= 0) {
+          setHighlightedIndex(taskbarIndex);
+          setApps((prev) => {
+            const updated = { ...prev };
+            for (const key of Object.keys(updated)) {
+              if (updated[key].state === "opened") {
+                updated[key] = { ...updated[key], state: "minimized" };
+              }
+            }
+            updated[selectedAppId] = { ...updated[selectedAppId], state: "opened" };
+            return updated;
+          });
+        }
+      }
+    } else if (id !== "menu") {
       setApps((prev) => {
         const updated = { ...prev };
-        // Close any currently opened app first
         for (const key of Object.keys(updated)) {
           if (updated[key].state === "opened") {
             updated[key] = { ...updated[key], state: "minimized" };
@@ -134,7 +175,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         return updated;
       });
     }
-  }, [highlightedIndex]);
+  }, [highlightedIndex, appMenuOpen, appMenuIndex]);
 
   const minimizeApp = useCallback(() => {
     // Close app menu if open
@@ -231,7 +272,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (currentId === "menu" && appMenuOpen) {
       // Import the app menu items list to get the id
       // We'll use a dynamic import approach - for now just use the index mapping
-      const APP_MENU_IDS = ["navigation", "media", "climate", "settings", "phone", "camera", "calendar", "messages"];
+      const APP_MENU_IDS = ["navigation", "media", "climate", "settings", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "charging", "performance", "parking", "security", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         openAppFromMenu(selectedAppId);
