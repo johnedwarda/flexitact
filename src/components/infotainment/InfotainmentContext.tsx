@@ -63,6 +63,8 @@ interface InfotainmentContextType {
   dialRotate: (dir: "cw" | "ccw") => void;
   dialCenter: () => void;
   openAppFromMenu: (appId: string) => void;
+  openAppById: (appId: string) => void;
+  navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
   setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
 }
