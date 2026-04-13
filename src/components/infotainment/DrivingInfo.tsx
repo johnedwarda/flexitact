@@ -1,4 +1,4 @@
-import { Gauge, CircleAlert, Zap, Fuel, Navigation } from "lucide-react";
+import { Gauge, Zap, Fuel, Navigation } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const DrivingInfo = () => {
@@ -16,18 +16,19 @@ const DrivingInfo = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
-      {/* Speed Display */}
-      <div className="flex flex-col items-center">
-        <span className="text-7xl font-bold font-mono tracking-tighter text-foreground animate-speed-pulse">
-          {speed}
-        </span>
-        <span className="text-sm text-muted-foreground tracking-widest uppercase mt-1">km/h</span>
-      </div>
+      {/* Speed + Limit row */}
+      <div className="flex items-center gap-5">
+        <div className="flex flex-col items-center">
+          <span className="text-7xl font-bold font-mono tracking-tighter text-foreground animate-speed-pulse">
+            {speed}
+          </span>
+          <span className="text-sm text-muted-foreground tracking-widest uppercase mt-1">km/h</span>
+        </div>
 
-      {/* Speed Limit */}
-      <div className="flex items-center gap-2 px-4 py-2 rounded-full border-2 border-destructive/60 bg-destructive/10">
-        <CircleAlert size={18} className="text-destructive" />
-        <span className="text-lg font-bold font-mono text-destructive">80</span>
+        {/* Road sign style speed limit */}
+        <div className="flex items-center justify-center w-14 h-14 rounded-full border-[3px] border-destructive bg-white">
+          <span className="text-xl font-bold text-black leading-none">80</span>
+        </div>
       </div>
 
       {/* Info Grid */}
