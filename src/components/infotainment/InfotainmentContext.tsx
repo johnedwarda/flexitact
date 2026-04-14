@@ -24,8 +24,7 @@ interface AppInstance {
 }
 
 interface ClimateState {
-  tempLeft: number;
-  tempRight: number;
+  temp: number;
   seatHeat: number;
   steeringHeat: boolean;
   defogger: boolean;
@@ -96,8 +95,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [climate, setClimate] = useState<ClimateState>({
-    tempLeft: 22,
-    tempRight: 22,
+    temp: 22,
     seatHeat: 1,
     steeringHeat: false,
     defogger: false,
@@ -342,15 +340,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
           muted: false,
         }));
       } else if (currentId === "climate") {
-        setClimate((c) => {
-          const key = c.zones === "dual" ? (c.activeZone === "left" ? "tempLeft" : "tempRight") : "tempLeft";
-          const delta = dir === "cw" ? 0.5 : -0.5;
-          const newVal = Math.max(16, Math.min(30, c[key] + delta));
-          if (c.zones === "single") {
-            return { ...c, tempLeft: newVal, tempRight: newVal };
-          }
-          return { ...c, [key]: newVal };
-        });
+        setClimate((c) => ({
+          ...c,
+          temp: Math.max(16, Math.min(30, c.temp + (dir === "cw" ? 0.5 : -0.5))),
+        }));
       }
     },
     [currentId, appMenuOpen, phonePopupOpen]
