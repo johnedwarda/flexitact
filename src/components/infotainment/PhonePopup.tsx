@@ -27,11 +27,11 @@ const callTypeIcon = (type: string) => {
   }
 };
 
-const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
+const PhonePopup = ({ phoneIndex, anchorX }: { phoneIndex: number; anchorX: number }) => {
   if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 bottom-[20rem] z-[9999] flex justify-center px-4">
+    <div className="pointer-events-none fixed bottom-[20rem] z-[9999]" style={{ left: anchorX, transform: "translateX(-50%)" }}>
       <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">Favorites</div>
         <div className="flex items-center justify-center gap-3 mb-3">
