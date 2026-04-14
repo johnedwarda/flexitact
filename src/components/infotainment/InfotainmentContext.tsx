@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { PHONE_ITEMS_COUNT } from "./PhonePopup";
 
 export type TaskbarItem = {
   id: string;
@@ -88,6 +89,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     settings: { id: "settings", state: "closed" },
     climate: { id: "climate", state: "closed" },
     media: { id: "media", state: "closed" },
+    phone: { id: "phone", state: "closed" },
     menu: { id: "menu", state: "closed" },
   });
 
@@ -260,6 +262,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const dialLeft = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
     } else if (currentId === "media") {
       setMedia((m) => ({
         ...m,
@@ -268,11 +272,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialRight = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => (i + 1) % PHONE_ITEMS_COUNT);
     } else if (currentId === "media") {
       setMedia((m) => ({
         ...m,
@@ -281,23 +287,27 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialUp = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 4 + APP_MENU_COUNT) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => Math.max(0, i - 1));
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialDown = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 4) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => Math.min(PHONE_ITEMS_COUNT - 1, i + 1));
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
