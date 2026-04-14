@@ -125,6 +125,36 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [appMenuIndex, setAppMenuIndex] = useState(0);
   const [phonePopupOpen, setPhonePopupOpen] = useState(false);
   const [phoneIndex, setPhoneIndex] = useState(0);
+  const lastDialUsedIndexRef = useRef<number>(1); // default to climate
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Track dial usage on eligible items (not settings or menu)
+  const recordDialUsage = useCallback((index: number) => {
+    const item = TASKBAR_ITEMS[index];
+    if (item && item.id !== "settings" && item.id !== "menu") {
+      lastDialUsedIndexRef.current = index;
+    }
+  }, []);
+
+  // Auto-return from settings/menu after 5 seconds of idle
+  useEffect(() => {
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
+    }
+    const currentItem = TASKBAR_ITEMS[highlightedIndex];
+    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu") && !appMenuOpen) {
+      idleTimerRef.current = setTimeout(() => {
+        const targetIndex = lastDialUsedIndexRef.current;
+        setHighlightedIndex(targetIndex);
+        setPhonePopupOpen(TASKBAR_ITEMS[targetIndex]?.id === "phone");
+        if (TASKBAR_ITEMS[targetIndex]?.id === "phone") setPhoneIndex(0);
+      }, 5000);
+    }
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    };
+  }, [highlightedIndex, appMenuOpen]);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
