@@ -61,6 +61,7 @@ interface InfotainmentContextType {
   navigateRight: () => void;
   openApp: () => void;
   minimizeApp: () => void;
+  toggleApp: () => void;
   dialLeft: () => void;
   dialRight: () => void;
   dialUp: () => void;
