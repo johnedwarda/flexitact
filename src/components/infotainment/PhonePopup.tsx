@@ -32,8 +32,8 @@ const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
   if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 bottom-[4.5rem] z-[9999] flex justify-center px-4">
-      <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[5rem] z-[9999] flex justify-center px-4">
+      <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px] mb-2">
         {/* Favorites */}
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">Favorites</div>
         <div className="flex items-center justify-center gap-3 mb-3">
