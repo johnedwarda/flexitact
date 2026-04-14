@@ -313,6 +313,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     (dir: "cw" | "ccw") => {
       if (currentId === "menu" && appMenuOpen) {
         setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
+      } else if (currentId === "phone" && phonePopupOpen) {
+        setPhoneIndex((i) => dir === "cw" ? (i + 1) % PHONE_ITEMS_COUNT : (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
       } else if (currentId === "media") {
         setMedia((m) => ({
           ...m,
@@ -326,7 +328,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     },
-    [currentId, appMenuOpen]
+    [currentId, appMenuOpen, phonePopupOpen]
   );
 
   const dialCenter = useCallback(() => {
