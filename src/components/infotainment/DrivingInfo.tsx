@@ -44,10 +44,10 @@ const DrivingInfo = () => {
 
       {/* Info Grid */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-[260px]">
-        <InfoCard icon={<Fuel size={18} />} label="Battery / Range" value="78% · 342 km" color="text-success" />
-        <InfoCard icon={<Zap size={18} />} label="Drive Mode" value="Comfort" color="text-primary" />
-        <InfoCard icon={<Droplets size={18} />} label="Wipers" value="Auto" color="text-accent" />
-        <InfoCard icon={<Lightbulb size={18} />} label="Lights" value="Auto" color="text-accent" />
+        <InfoCard icon={<Fuel size={24} />} label="Battery / Range" value="78% · 342 km" color="text-success" />
+        <InfoCard icon={<Zap size={24} />} label="Drive Mode" value="Comfort" color="text-primary" />
+        <InfoCard icon={<Droplets size={24} />} label="Wipers" value="Auto" color="text-accent" />
+        <InfoCard icon={<Lightbulb size={24} />} label="Lights" value="Auto" color="text-accent" />
       </div>
     </div>
   );
