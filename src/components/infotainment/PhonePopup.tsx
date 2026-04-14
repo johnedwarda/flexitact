@@ -27,18 +27,12 @@ const callTypeIcon = (type: string) => {
   }
 };
 
-const PhonePopup = ({ phoneIndex, anchorRect }: { phoneIndex: number; anchorRect: DOMRect | null }) => {
-  if (typeof document === "undefined" || !anchorRect) return null;
-
-  const left = anchorRect.left + anchorRect.width / 2;
-  const bottom = window.innerHeight - anchorRect.top + 8;
+const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
+  if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div
-      className="fixed z-[99999]"
-      style={{ left, bottom, transform: "translateX(-50%)" }}
-    >
-      <div className="rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[20rem] z-[9999] flex justify-center px-4">
+      <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">Favorites</div>
         <div className="flex items-center justify-center gap-3 mb-3">
           {FAVORITES.map((fav, i) => {
@@ -55,11 +49,6 @@ const PhonePopup = ({ phoneIndex, anchorRect }: { phoneIndex: number; anchorRect
                 <span className={`text-[9px] ${isActive ? "text-accent" : "text-muted-foreground"}`}>
                   {fav.name}
                 </span>
-                <div
-                  className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-                    isActive ? "w-6 bg-accent shadow-[0_0_8px_hsl(var(--accent)/0.6)]" : "w-0 bg-transparent"
-                  }`}
-                />
               </div>
             );
           })}

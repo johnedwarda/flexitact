@@ -138,6 +138,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(APP_MENU_COUNT - 1);
+        setPhonePopupOpen(false);
       } else if (TASKBAR_ITEMS[next].id === "phone") {
         setPhonePopupOpen(true);
         setPhoneIndex(0);
@@ -164,6 +165,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(0);
+        setPhonePopupOpen(false);
       } else if (TASKBAR_ITEMS[next].id === "phone") {
         setPhonePopupOpen(true);
         setPhoneIndex(0);
