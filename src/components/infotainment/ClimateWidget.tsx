@@ -1,67 +1,79 @@
 import { useInfotainment } from "./InfotainmentContext";
-import { Minus, Plus, CircleDot, Heater, Wind } from "lucide-react";
+import { Thermometer, Wind, Heater } from "lucide-react";
 
 const ClimateWidget = () => {
   const { climate, setClimate } = useInfotainment();
-  const { temp, seatHeat, steeringHeat, defogger } = climate;
+  const { tempLeft, tempRight, zones, seatHeat, defogger } = climate;
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      {/* Temperature control */}
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+      {/* Driver temp */}
       <button
-        onClick={() => setClimate((c) => ({ ...c, temp: Math.max(16, c.temp - 0.5) }))}
-        className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
+        onClick={() =>
+          setClimate((c) => ({
+            ...c,
+            activeZone: "left",
+            tempLeft: Math.max(16, c.tempLeft - 0.5),
+            ...(c.zones === "single" ? { tempRight: Math.max(16, c.tempLeft - 0.5) } : {}),
+          }))
+        }
+        className="text-muted-foreground hover:text-foreground transition-colors text-xs px-1"
       >
-        <Minus size={14} />
+        −
       </button>
-      <span className="text-lg font-bold font-mono text-climate-warm min-w-[48px] text-center">
-        {temp}°
-      </span>
+      <div className="flex items-center gap-1">
+        <span className="text-base font-bold font-mono text-climate-warm">{tempLeft}°</span>
+        {zones === "dual" && (
+          <>
+            <span className="text-[9px] text-muted-foreground/60">|</span>
+            <span className="text-base font-bold font-mono text-climate-warm">{tempRight}°</span>
+          </>
+        )}
+      </div>
       <button
-        onClick={() => setClimate((c) => ({ ...c, temp: Math.min(30, c.temp + 0.5) }))}
-        className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
+        onClick={() =>
+          setClimate((c) => ({
+            ...c,
+            activeZone: zones === "dual" ? c.activeZone : "left",
+            tempLeft: zones === "single" ? Math.min(30, c.tempLeft + 0.5) : c.tempLeft,
+            tempRight: zones === "single" ? Math.min(30, c.tempLeft + 0.5) : c.tempRight,
+            ...(zones === "dual" && c.activeZone === "left"
+              ? { tempLeft: Math.min(30, c.tempLeft + 0.5) }
+              : zones === "dual"
+              ? { tempRight: Math.min(30, c.tempRight + 0.5) }
+              : {}),
+          }))
+        }
+        className="text-muted-foreground hover:text-foreground transition-colors text-xs px-1"
       >
-        <Plus size={14} />
+        +
       </button>
 
-      <div className="w-px h-6 bg-border mx-1" />
+      <div className="w-px h-5 bg-border" />
 
-      {/* Seat heating */}
+      {/* Seat heat indicator */}
       <button
         onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
-        className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+        className={`relative w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
           seatHeat > 0 ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
         }`}
-        title="Seat Heating"
       >
-        <Heater size={16} />
+        <Heater size={14} />
         {seatHeat > 0 && (
-          <span className="absolute -top-1 -right-1 text-[9px] font-bold font-mono text-climate-warm">
+          <span className="absolute -top-0.5 -right-0.5 text-[8px] font-bold font-mono text-climate-warm">
             {seatHeat}
           </span>
         )}
       </button>
 
-      {/* Steering heat */}
-      <button
-        onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
-        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          steeringHeat ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
-        }`}
-        title="Steering Wheel Heating"
-      >
-        <CircleDot size={16} />
-      </button>
-
       {/* Defogger */}
       <button
         onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
-        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+        className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
           defogger ? "text-climate-cool" : "text-muted-foreground hover:text-foreground"
         }`}
-        title="Windscreen Defogger"
       >
-        <Wind size={16} />
+        <Wind size={14} />
       </button>
     </div>
   );

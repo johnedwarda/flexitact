@@ -59,7 +59,7 @@ const ClimateAppView = () => {
         {/* Left zone */}
         <div className={`flex flex-col items-center gap-1 transition-opacity ${climate.zones === "dual" && climate.activeZone === "right" ? "opacity-40" : ""}`}>
           <span className="text-[10px] text-muted-foreground font-mono uppercase">Driver</span>
-          <span className="text-5xl font-bold font-mono text-climate-warm">{climate.temp}°</span>
+          <span className="text-5xl font-bold font-mono text-climate-warm">{climate.tempLeft}°</span>
         </div>
 
         {/* Zone toggle */}
@@ -75,7 +75,7 @@ const ClimateAppView = () => {
         {climate.zones === "dual" && (
           <div className={`flex flex-col items-center gap-1 transition-opacity ${climate.activeZone === "left" ? "opacity-40" : ""}`}>
             <span className="text-[10px] text-muted-foreground font-mono uppercase">Passenger</span>
-            <span className="text-5xl font-bold font-mono text-climate-warm">{climate.temp}°</span>
+            <span className="text-5xl font-bold font-mono text-climate-warm">{climate.tempRight}°</span>
           </div>
         )}
       </div>
