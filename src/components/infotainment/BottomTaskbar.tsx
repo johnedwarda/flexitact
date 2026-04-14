@@ -85,8 +85,12 @@ const BottomTaskbar = () => {
               >
                 <Phone size={20} />
               </button>
-              {(phoneHover || phonePopupOpen) && (
-                <PhonePopup phoneIndex={phoneIndex} anchorX={phoneRef.current ? phoneRef.current.getBoundingClientRect().left + phoneRef.current.getBoundingClientRect().width / 2 : 0} />
+              {(phoneHover || phonePopupOpen) && phoneRef.current && (
+                <PhonePopup
+                  phoneIndex={phoneIndex}
+                  anchorX={phoneRef.current.getBoundingClientRect().left + phoneRef.current.getBoundingClientRect().width / 2}
+                  anchorTop={phoneRef.current.getBoundingClientRect().top}
+                />
               )}
             </div>
           )}
