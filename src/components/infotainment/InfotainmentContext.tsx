@@ -134,7 +134,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     setHighlightedIndex((prev) => {
-      const next = (prev - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
+      if (prev <= 0) return prev; // stop at leftmost
+      const next = prev - 1;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(APP_MENU_COUNT - 1);
@@ -161,7 +162,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     setHighlightedIndex((prev) => {
-      const next = (prev + 1) % TASKBAR_ITEMS.length;
+      if (prev >= TASKBAR_ITEMS.length - 1) return prev; // stop at rightmost
+      const next = prev + 1;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(0);
