@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type Context, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useRef, useEffect, type Context, type ReactNode } from "react";
 
 const PHONE_ITEMS_COUNT = 9; // 5 favorites + 4 recent calls
 
@@ -125,6 +125,36 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [appMenuIndex, setAppMenuIndex] = useState(0);
   const [phonePopupOpen, setPhonePopupOpen] = useState(false);
   const [phoneIndex, setPhoneIndex] = useState(0);
+  const lastDialUsedIndexRef = useRef<number>(1); // default to climate
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Track dial usage on eligible items (not settings or menu)
+  const recordDialUsage = useCallback((index: number) => {
+    const item = TASKBAR_ITEMS[index];
+    if (item && item.id !== "settings" && item.id !== "menu") {
+      lastDialUsedIndexRef.current = index;
+    }
+  }, []);
+
+  // Auto-return from settings/menu after 5 seconds of idle
+  useEffect(() => {
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
+    }
+    const currentItem = TASKBAR_ITEMS[highlightedIndex];
+    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu") && !appMenuOpen) {
+      idleTimerRef.current = setTimeout(() => {
+        const targetIndex = lastDialUsedIndexRef.current;
+        setHighlightedIndex(targetIndex);
+        setPhonePopupOpen(TASKBAR_ITEMS[targetIndex]?.id === "phone");
+        if (TASKBAR_ITEMS[targetIndex]?.id === "phone") setPhoneIndex(0);
+      }, 5000);
+    }
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    };
+  }, [highlightedIndex, appMenuOpen]);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
@@ -288,6 +318,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -300,9 +331,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialRight = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -315,9 +347,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialUp = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 4 + APP_MENU_COUNT) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -325,9 +358,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialDown = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 4) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -335,10 +369,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
+      recordDialUsage(highlightedIndex);
       if (currentId === "menu" && appMenuOpen) {
         setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
       } else if (currentId === "phone" && phonePopupOpen) {
@@ -356,10 +391,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     },
-    [currentId, appMenuOpen, phonePopupOpen]
+    [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]
   );
 
   const dialCenter = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
@@ -367,7 +403,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         openAppFromMenu(selectedAppId);
       }
     } else if (currentId === "phone" && phonePopupOpen) {
-      // Dial center on phone = "call" the selected contact (placeholder)
       console.log("Calling contact at index", phoneIndex);
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
@@ -377,7 +412,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         zones: c.zones === "dual" ? "single" : "dual",
       }));
     }
-  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu]);
+  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
 
   return (
     <InfotainmentContext.Provider
