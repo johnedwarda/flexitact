@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 
 const DrivingInfo = () => {
   const [speed, setSpeed] = useState(72);
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -15,7 +21,13 @@ const DrivingInfo = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
+    <div className="relative flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
+      {/* Time */}
+      <div className="absolute top-3 left-3 text-xs font-medium tracking-wide text-foreground">
+        {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+      </div>
+      {/* Outside temperature */}
+      <div className="absolute top-3 right-3 text-xs text-muted-foreground font-mono">22°C</div>
       {/* Speed + Limit row */}
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-4">

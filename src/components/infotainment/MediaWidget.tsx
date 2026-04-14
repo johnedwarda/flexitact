@@ -5,6 +5,8 @@ import {
   SkipForward,
   Volume2,
   VolumeX,
+  Plus,
+  Minus,
   Radio,
   Music,
   Podcast,
@@ -32,7 +34,7 @@ const MediaWidget = () => {
             onClick={() => setMedia((m) => ({ ...m, source: s.id }))}
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
               source === s.id
-                ? "bg-primary/20 text-primary"
+                ? "text-primary"
                 : "text-muted-foreground hover:text-foreground"
             }`}
             title={s.label}
@@ -65,9 +67,9 @@ const MediaWidget = () => {
         </button>
         <button
           onClick={() => setMedia((m) => ({ ...m, playing: !m.playing }))}
-          className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-primary hover:text-primary/80 transition-colors"
         >
-          {playing ? <Pause size={16} /> : <Play size={16} />}
+          {playing ? <Pause size={18} /> : <Play size={18} />}
         </button>
         <button
           onClick={() =>
@@ -85,22 +87,41 @@ const MediaWidget = () => {
       <div className="w-px h-6 bg-border mx-1" />
 
       {/* Volume */}
-      <button
-        onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-        className="text-muted-foreground hover:text-foreground transition-colors"
-      >
-        {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-      </button>
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={muted ? 0 : volume}
-        onChange={(e) => {
-          setMedia((m) => ({ ...m, volume: Number(e.target.value), muted: false }));
-        }}
-        className="w-16 h-1 accent-primary cursor-pointer"
-      />
+      <div className="flex items-center gap-1">
+        <button
+          onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        </button>
+        <button
+          onClick={() =>
+            setMedia((m) => ({
+              ...m,
+              volume: Math.max(0, m.volume - 5),
+              muted: false,
+            }))
+          }
+          className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Minus size={12} />
+        </button>
+        <span className="text-[10px] font-mono text-muted-foreground min-w-[20px] text-center">
+          {muted ? 0 : volume}
+        </span>
+        <button
+          onClick={() =>
+            setMedia((m) => ({
+              ...m,
+              volume: Math.min(100, m.volume + 5),
+              muted: false,
+            }))
+          }
+          className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Plus size={12} />
+        </button>
+      </div>
     </div>
   );
 };
