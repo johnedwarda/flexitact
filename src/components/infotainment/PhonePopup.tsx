@@ -40,10 +40,9 @@ const PhonePopup = ({ phoneIndex, anchorX, anchorTop }: { phoneIndex: number; an
 
   return createPortal(
     <div
-      className="pointer-events-none fixed z-[9999]"
+      className="pointer-events-none fixed bottom-[20rem] z-[9999]"
       style={{
         left: clampedLeft,
-        bottom: `${window.innerHeight - anchorTop + 8}px`,
         transform: "translateX(-50%)",
       }}
     >
