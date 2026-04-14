@@ -143,10 +143,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       idleTimerRef.current = null;
     }
     const currentItem = TASKBAR_ITEMS[highlightedIndex];
-    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu") && !appMenuOpen) {
+    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu")) {
       idleTimerRef.current = setTimeout(() => {
         const targetIndex = lastDialUsedIndexRef.current;
         setHighlightedIndex(targetIndex);
+        setAppMenuOpen(false);
         setPhonePopupOpen(TASKBAR_ITEMS[targetIndex]?.id === "phone");
         if (TASKBAR_ITEMS[targetIndex]?.id === "phone") setPhoneIndex(0);
       }, 5000);
