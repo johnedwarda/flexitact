@@ -88,17 +88,22 @@ const NavigationButtons = () => {
             </button>
           ))}
 
-          {/* Center button */}
+          {/* Center button - toggle app */}
           <button
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-border/50 transition-all duration-100 ${
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-border/50 transition-all duration-100 flex items-center justify-center ${
               activeJoystick === "center"
                 ? "bg-primary/30 shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
                 : "bg-[hsl(var(--surface-elevated))] hover:bg-secondary"
             }`}
-            onPointerDown={() => setActiveJoystick("center")}
+            onPointerDown={() => {
+              setActiveJoystick("center");
+              handleJoystick("center");
+            }}
             onPointerUp={() => setActiveJoystick(null)}
             onPointerLeave={() => setActiveJoystick(null)}
-          />
+          >
+            <span className="text-[7px] font-mono text-muted-foreground">B</span>
+          </button>
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
           Task Switcher
