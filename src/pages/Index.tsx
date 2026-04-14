@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import StatusBar from "@/components/infotainment/StatusBar";
+
 import DrivingInfo from "@/components/infotainment/DrivingInfo";
 import MapView from "@/components/infotainment/MapView";
 import BottomTaskbar from "@/components/infotainment/BottomTaskbar";
@@ -55,7 +55,7 @@ const IndexContent = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-background relative">
-      <StatusBar />
+      
 
       <div className="flex flex-1 min-h-0">
         <div className="w-[340px] flex-shrink-0 border-r border-border bg-card/40">

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { PHONE_ITEMS_COUNT } from "./PhonePopup";
 
 export type TaskbarItem = {
   id: string;
@@ -10,6 +11,7 @@ export const TASKBAR_ITEMS: TaskbarItem[] = [
   { id: "settings", label: "Settings", type: "shortcut" },
   { id: "climate", label: "Climate", type: "widget" },
   { id: "media", label: "Media", type: "widget" },
+  { id: "phone", label: "Phone", type: "shortcut" },
   { id: "menu", label: "App Menu", type: "shortcut" },
 ];
 
@@ -52,6 +54,8 @@ interface InfotainmentContextType {
   tracks: typeof TRACKS;
   appMenuOpen: boolean;
   appMenuIndex: number;
+  phonePopupOpen: boolean;
+  phoneIndex: number;
   navigateLeft: () => void;
   navigateRight: () => void;
   openApp: () => void;
@@ -85,6 +89,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     settings: { id: "settings", state: "closed" },
     climate: { id: "climate", state: "closed" },
     media: { id: "media", state: "closed" },
+    phone: { id: "phone", state: "closed" },
     menu: { id: "menu", state: "closed" },
   });
 
@@ -107,6 +112,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const [appMenuOpen, setAppMenuOpen] = useState(false);
   const [appMenuIndex, setAppMenuIndex] = useState(0);
+  const [phonePopupOpen, setPhonePopupOpen] = useState(false);
+  const [phoneIndex, setPhoneIndex] = useState(0);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
@@ -126,7 +133,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       const next = (prev - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
-        setAppMenuIndex(APP_MENU_COUNT - 1); // enter from right side = last item
+        setAppMenuIndex(APP_MENU_COUNT - 1);
+      } else if (TASKBAR_ITEMS[next].id === "phone") {
+        setPhonePopupOpen(true);
+        setPhoneIndex(0);
+      } else {
+        setPhonePopupOpen(false);
       }
       return next;
     });
@@ -148,6 +160,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(0);
+      } else if (TASKBAR_ITEMS[next].id === "phone") {
+        setPhonePopupOpen(true);
+        setPhoneIndex(0);
+      } else {
+        setPhonePopupOpen(false);
       }
       return next;
     });
@@ -227,8 +244,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (item.id === "menu") {
       setAppMenuOpen(true);
       setAppMenuIndex(0);
+      setPhonePopupOpen(false);
+    } else if (item.id === "phone") {
+      setPhonePopupOpen(true);
+      setPhoneIndex(0);
+      setAppMenuOpen(false);
     } else {
       setAppMenuOpen(false);
+      setPhonePopupOpen(false);
     }
   }, []);
 
@@ -249,6 +272,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const dialLeft = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
     } else if (currentId === "media") {
       setMedia((m) => ({
         ...m,
@@ -257,11 +282,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialRight = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => (i + 1) % PHONE_ITEMS_COUNT);
     } else if (currentId === "media") {
       setMedia((m) => ({
         ...m,
@@ -270,28 +297,34 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialUp = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 4 + APP_MENU_COUNT) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => Math.max(0, i - 1));
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialDown = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 4) % APP_MENU_COUNT);
+    } else if (currentId === "phone" && phonePopupOpen) {
+      setPhoneIndex((i) => Math.min(PHONE_ITEMS_COUNT - 1, i + 1));
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
       if (currentId === "menu" && appMenuOpen) {
         setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
+      } else if (currentId === "phone" && phonePopupOpen) {
+        setPhoneIndex((i) => dir === "cw" ? (i + 1) % PHONE_ITEMS_COUNT : (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
       } else if (currentId === "media") {
         setMedia((m) => ({
           ...m,
@@ -305,18 +338,19 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     },
-    [currentId, appMenuOpen]
+    [currentId, appMenuOpen, phonePopupOpen]
   );
 
   const dialCenter = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
-      // Import the app menu items list to get the id
-      // We'll use a dynamic import approach - for now just use the index mapping
       const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         openAppFromMenu(selectedAppId);
       }
+    } else if (currentId === "phone" && phonePopupOpen) {
+      // Dial center on phone = "call" the selected contact (placeholder)
+      console.log("Calling contact at index", phoneIndex);
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
     } else if (currentId === "climate") {
@@ -337,6 +371,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         tracks: TRACKS,
         appMenuOpen,
         appMenuIndex,
+        phonePopupOpen,
+        phoneIndex,
         navigateLeft,
         navigateRight,
         openApp,
