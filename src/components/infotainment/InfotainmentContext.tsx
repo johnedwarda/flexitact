@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type Context, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useRef, type Context, type ReactNode } from "react";
 
 const PHONE_ITEMS_COUNT = 9; // 5 favorites + 4 recent calls
 
@@ -72,6 +72,7 @@ interface InfotainmentContextType {
   navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
   setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
+  lastDialWidgetIndex: number;
 }
 
 const INFOTAINMENT_CONTEXT_KEY = "__lovable_infotainment_context__";
@@ -125,6 +126,45 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [appMenuIndex, setAppMenuIndex] = useState(0);
   const [phonePopupOpen, setPhonePopupOpen] = useState(false);
   const [phoneIndex, setPhoneIndex] = useState(0);
+  const [lastDialWidgetIndex, setLastDialWidgetIndex] = useState(1); // default: climate
+  const autoReturnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Dial-eligible items (not settings=0 or menu=4)
+  const DIAL_ELIGIBLE_IDS = ["climate", "media", "phone"];
+
+  const trackDialUsage = useCallback(() => {
+    const id = TASKBAR_ITEMS[highlightedIndex]?.id;
+    if (DIAL_ELIGIBLE_IDS.includes(id)) {
+      setLastDialWidgetIndex(highlightedIndex);
+    }
+  }, [highlightedIndex]);
+
+  // Auto-return: when on settings or menu for >5s, snap back to last dial widget
+  useEffect(() => {
+    if (autoReturnTimer.current) {
+      clearTimeout(autoReturnTimer.current);
+      autoReturnTimer.current = null;
+    }
+    const id = TASKBAR_ITEMS[highlightedIndex]?.id;
+    if (id === "settings" || id === "menu") {
+      autoReturnTimer.current = setTimeout(() => {
+        setHighlightedIndex(lastDialWidgetIndex);
+        setAppMenuOpen(false);
+        // Re-open phone popup if returning to phone
+        if (TASKBAR_ITEMS[lastDialWidgetIndex]?.id === "phone") {
+          setPhonePopupOpen(true);
+          setPhoneIndex(0);
+        } else {
+          setPhonePopupOpen(false);
+        }
+      }, 5000);
+    }
+    return () => {
+      if (autoReturnTimer.current) {
+        clearTimeout(autoReturnTimer.current);
+      }
+    };
+  }, [highlightedIndex, lastDialWidgetIndex]);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
@@ -288,6 +328,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
+    trackDialUsage();
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -300,9 +341,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, trackDialUsage]);
 
   const dialRight = useCallback(() => {
+    trackDialUsage();
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -315,9 +357,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, trackDialUsage]);
 
   const dialUp = useCallback(() => {
+    trackDialUsage();
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - 4 + APP_MENU_COUNT) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -325,9 +368,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, trackDialUsage]);
 
   const dialDown = useCallback(() => {
+    trackDialUsage();
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 4) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -335,10 +379,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, trackDialUsage]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
+      trackDialUsage();
       if (currentId === "menu" && appMenuOpen) {
         setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
       } else if (currentId === "phone" && phonePopupOpen) {
@@ -356,10 +401,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     },
-    [currentId, appMenuOpen, phonePopupOpen]
+    [currentId, appMenuOpen, phonePopupOpen, trackDialUsage]
   );
 
   const dialCenter = useCallback(() => {
+    trackDialUsage();
     if (currentId === "menu" && appMenuOpen) {
       const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
@@ -377,7 +423,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         zones: c.zones === "dual" ? "single" : "dual",
       }));
     }
-  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu]);
+  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu, trackDialUsage]);
 
   return (
     <InfotainmentContext.Provider
@@ -406,6 +452,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         navigateToItem,
         setClimate,
         setMedia,
+        lastDialWidgetIndex,
       }}
     >
       {children}
