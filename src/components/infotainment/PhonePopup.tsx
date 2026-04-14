@@ -1,6 +1,4 @@
-import { createPortal } from "react-dom";
 import { Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, User } from "lucide-react";
-import { useInfotainment } from "./InfotainmentContext";
 
 const FAVORITES = [
   { id: "fav1", name: "Alice", color: "bg-primary/20 text-primary" },
@@ -21,7 +19,7 @@ export const PHONE_ITEMS_COUNT = FAVORITES.length + RECENT_CALLS.length;
 
 const callTypeIcon = (type: string) => {
   switch (type) {
-    case "incoming": return <PhoneIncoming size={12} className="text-green-400" />;
+    case "incoming": return <PhoneIncoming size={12} className="text-accent" />;
     case "outgoing": return <PhoneOutgoing size={12} className="text-primary" />;
     case "missed": return <PhoneMissed size={12} className="text-destructive" />;
     default: return <Phone size={12} />;
@@ -29,11 +27,9 @@ const callTypeIcon = (type: string) => {
 };
 
 const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
-  if (typeof document === "undefined") return null;
-
-  return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 bottom-[5rem] z-[9999] flex justify-center px-4">
-      <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px] mb-2">
+  return (
+    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-[9999]">
+      <div className="rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
         {/* Favorites */}
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">Favorites</div>
         <div className="flex items-center justify-center gap-3 mb-3">
@@ -82,15 +78,14 @@ const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
                 </span>
                 <span className="text-[10px] text-muted-foreground">{call.time}</span>
                 {isActive && (
-                  <Phone size={12} className="text-green-400 ml-1" />
+                  <Phone size={12} className="text-accent ml-1" />
                 )}
               </div>
             );
           })}
         </div>
       </div>
-    </div>,
-    document.body,
+    </div>
   );
 };
 
