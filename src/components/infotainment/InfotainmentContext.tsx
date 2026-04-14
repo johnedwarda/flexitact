@@ -24,7 +24,8 @@ interface AppInstance {
 }
 
 interface ClimateState {
-  temp: number;
+  tempLeft: number;
+  tempRight: number;
   seatHeat: number;
   steeringHeat: boolean;
   defogger: boolean;
