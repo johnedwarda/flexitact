@@ -110,6 +110,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const [appMenuOpen, setAppMenuOpen] = useState(false);
   const [appMenuIndex, setAppMenuIndex] = useState(0);
+  const [phonePopupOpen, setPhonePopupOpen] = useState(false);
+  const [phoneIndex, setPhoneIndex] = useState(0);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
@@ -230,8 +232,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (item.id === "menu") {
       setAppMenuOpen(true);
       setAppMenuIndex(0);
+      setPhonePopupOpen(false);
+    } else if (item.id === "phone") {
+      setPhonePopupOpen(true);
+      setPhoneIndex(0);
+      setAppMenuOpen(false);
     } else {
       setAppMenuOpen(false);
+      setPhonePopupOpen(false);
     }
   }, []);
 
@@ -340,6 +348,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         tracks: TRACKS,
         appMenuOpen,
         appMenuIndex,
+        phonePopupOpen,
+        phoneIndex,
         navigateLeft,
         navigateRight,
         openApp,
