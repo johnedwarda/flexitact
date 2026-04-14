@@ -361,6 +361,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialDown = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + 4) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -368,10 +369,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
+      recordDialUsage(highlightedIndex);
       if (currentId === "menu" && appMenuOpen) {
         setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
       } else if (currentId === "phone" && phonePopupOpen) {
@@ -389,10 +391,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     },
-    [currentId, appMenuOpen, phonePopupOpen]
+    [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]
   );
 
   const dialCenter = useCallback(() => {
+    recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
       const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
@@ -400,7 +403,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         openAppFromMenu(selectedAppId);
       }
     } else if (currentId === "phone" && phonePopupOpen) {
-      // Dial center on phone = "call" the selected contact (placeholder)
       console.log("Calling contact at index", phoneIndex);
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
@@ -410,7 +412,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         zones: c.zones === "dual" ? "single" : "dual",
       }));
     }
-  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu]);
+  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
 
   return (
     <InfotainmentContext.Provider
