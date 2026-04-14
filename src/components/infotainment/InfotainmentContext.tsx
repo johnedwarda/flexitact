@@ -333,13 +333,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const dialCenter = useCallback(() => {
     if (currentId === "menu" && appMenuOpen) {
-      // Import the app menu items list to get the id
-      // We'll use a dynamic import approach - for now just use the index mapping
       const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         openAppFromMenu(selectedAppId);
       }
+    } else if (currentId === "phone" && phonePopupOpen) {
+      // Dial center on phone = "call" the selected contact (placeholder)
+      console.log("Calling contact at index", phoneIndex);
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
     } else if (currentId === "climate") {
