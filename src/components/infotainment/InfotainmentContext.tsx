@@ -61,6 +61,7 @@ interface InfotainmentContextType {
   navigateRight: () => void;
   openApp: () => void;
   minimizeApp: () => void;
+  toggleApp: () => void;
   dialLeft: () => void;
   dialRight: () => void;
   dialUp: () => void;
@@ -258,9 +259,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [highlightedIndex, appMenuOpen, appMenuIndex]);
 
   const minimizeApp = useCallback(() => {
-    // Close app menu if open
     setAppMenuOpen(false);
-    // Close any opened app regardless of what's highlighted
     setApps((prev) => {
       const updated = { ...prev };
       for (const key of Object.keys(updated)) {
@@ -271,6 +270,22 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       return updated;
     });
   }, []);
+
+  const toggleApp = useCallback(() => {
+    const id = TASKBAR_ITEMS[highlightedIndex].id;
+    // If menu is open, select from menu
+    if (id === "menu" && appMenuOpen) {
+      openApp();
+      return;
+    }
+    // Check if any app is currently opened
+    const openedAppId = Object.keys(apps).find((k) => apps[k].state === "opened");
+    if (openedAppId) {
+      minimizeApp();
+    } else {
+      openApp();
+    }
+  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp]);
 
   const openAppById = useCallback((appId: string) => {
     setApps((prev) => {
@@ -431,6 +446,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         navigateRight,
         openApp,
         minimizeApp,
+        toggleApp,
         dialLeft,
         dialRight,
         dialUp,
