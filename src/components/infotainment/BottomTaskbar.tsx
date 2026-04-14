@@ -13,9 +13,14 @@ const BottomTaskbar = () => {
   const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number } | null>(null);
 
   // Determine which index should show the bright line (exclude menu)
-  const activeIndicatorIndex = TASKBAR_ITEMS[highlightedIndex]?.id === "menu" ? -1 : highlightedIndex;
+  const isMenuActive = TASKBAR_ITEMS[highlightedIndex]?.id === "menu";
+  const activeIndicatorIndex = isMenuActive ? -1 : highlightedIndex;
+  const prevIndexRef = useRef(activeIndicatorIndex);
 
   useEffect(() => {
+    if (activeIndicatorIndex >= 0) {
+      prevIndexRef.current = activeIndicatorIndex;
+    }
     if (activeIndicatorIndex < 0 || !containerRef.current) {
       setIndicatorStyle(null);
       return;

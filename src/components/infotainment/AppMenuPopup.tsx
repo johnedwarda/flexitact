@@ -9,6 +9,7 @@ import {
   Car,
   Info,
 } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useInfotainment } from "./InfotainmentContext";
 
@@ -26,6 +27,22 @@ export const APP_MENU_ITEMS = [
 
 const AppMenuPopup = () => {
   const { appMenuIndex } = useInfotainment();
+  const gridRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; top: number; width: number } | null>(null);
+
+  useEffect(() => {
+    const el = itemRefs.current[appMenuIndex];
+    const grid = gridRef.current;
+    if (!el || !grid) return;
+    const gridRect = grid.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    setIndicatorStyle({
+      left: elRect.left - gridRect.left + elRect.width / 2 - 16,
+      top: elRect.bottom - gridRect.top + 2,
+      width: 32,
+    });
+  }, [appMenuIndex]);
 
   if (typeof document === "undefined") {
     return null;
@@ -34,11 +51,11 @@ const AppMenuPopup = () => {
   return createPortal(
     <div className="pointer-events-none fixed inset-x-0 bottom-[20rem] z-[9999] flex justify-end px-4">
       <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl">
-        <div className="grid grid-cols-3 gap-2">
+        <div ref={gridRef} className="relative grid grid-cols-3 gap-2">
           {APP_MENU_ITEMS.map((app, i) => {
             const isActive = appMenuIndex === i;
             return (
-              <div key={app.id} className="relative flex flex-col items-center">
+              <div key={app.id} ref={(el) => { itemRefs.current[i] = el; }} className="relative flex flex-col items-center">
                 <button
                   className="flex w-16 flex-col items-center gap-1.5 rounded-xl p-2.5 transition-colors hover:bg-muted/30"
                 >
@@ -54,17 +71,14 @@ const AppMenuPopup = () => {
                     {app.label}
                   </span>
                 </button>
-                {/* Bright line indicator — same as taskbar */}
-                <div
-                  className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ${
-                    isActive
-                      ? "w-8 bg-accent shadow-[0_0_8px_hsl(var(--accent)/0.6)]"
-                      : "w-0 bg-transparent"
-                  }`}
-                />
               </div>
             );
           })}
+          {/* Sliding bright line indicator */}
+          <div
+            className="absolute h-[3px] rounded-full bg-accent shadow-[0_0_8px_hsl(var(--accent)/0.6)] transition-all duration-500 ease-in-out"
+            style={indicatorStyle ? { left: indicatorStyle.left, top: indicatorStyle.top, width: indicatorStyle.width } : { left: 0, top: 0, width: 0 }}
+          />
         </div>
       </div>
     </div>,
