@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { PHONE_ITEMS_COUNT } from "./PhonePopup";
+
+const PHONE_ITEMS_COUNT = 9; // 5 favorites + 4 recent calls
 
 export type TaskbarItem = {
   id: string;
