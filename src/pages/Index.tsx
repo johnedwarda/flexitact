@@ -11,32 +11,60 @@ import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
 const IndexContent = () => {
-  const { apps, appMenuOpen, navigateLeft, navigateRight, openApp, minimizeApp } = useInfotainment();
+  const { apps, appMenuOpen, navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter } = useInfotainment();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
-        case "ArrowLeft":
+        // Task Switcher: v=left, b=toggle, n=right
+        case "v":
           e.preventDefault();
           navigateLeft();
           break;
-        case "ArrowRight":
+        case "b":
+          e.preventDefault();
+          toggleApp();
+          break;
+        case "n":
           e.preventDefault();
           navigateRight();
           break;
+        // Control Dial directional: arrow keys
+        case "ArrowLeft":
+          e.preventDefault();
+          dialLeft();
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          dialRight();
+          break;
         case "ArrowUp":
           e.preventDefault();
-          openApp();
+          dialUp();
           break;
         case "ArrowDown":
           e.preventDefault();
-          minimizeApp();
+          dialDown();
+          break;
+        // Control Dial rotate: PgUp/PgDown
+        case "PageUp":
+          e.preventDefault();
+          dialRotate("ccw");
+          break;
+        case "PageDown":
+          e.preventDefault();
+          dialRotate("cw");
+          break;
+        // Control Dial center: Enter
+        case "Enter":
+          e.preventDefault();
+          dialCenter();
           break;
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [navigateLeft, navigateRight, openApp, minimizeApp]);
+  }, [navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter]);
 
   const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened");
 

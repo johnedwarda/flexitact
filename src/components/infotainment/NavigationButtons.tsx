@@ -6,8 +6,7 @@ const NavigationButtons = () => {
     highlightedIndex,
     navigateLeft,
     navigateRight,
-    openApp,
-    minimizeApp,
+    toggleApp,
     dialLeft,
     dialRight,
     dialUp,
@@ -25,8 +24,7 @@ const NavigationButtons = () => {
   const handleJoystick = (dir: string) => {
     if (dir === "left") navigateLeft();
     if (dir === "right") navigateRight();
-    if (dir === "up") openApp();
-    if (dir === "down") minimizeApp();
+    if (dir === "center") toggleApp();
   };
 
   const handleDialDirection = (dir: string) => {
@@ -42,8 +40,6 @@ const NavigationButtons = () => {
   };
 
   const joystickDirs = [
-    { key: "up", label: "▲", style: "top-0 left-1/2 -translate-x-1/2" },
-    { key: "down", label: "▼", style: "bottom-0 left-1/2 -translate-x-1/2" },
     { key: "left", label: "◀", style: "left-0 top-1/2 -translate-y-1/2" },
     { key: "right", label: "▶", style: "right-0 top-1/2 -translate-y-1/2" },
   ];
