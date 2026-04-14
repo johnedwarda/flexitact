@@ -66,8 +66,8 @@ const InfoCard = ({
 }) => (
   <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-muted/40 border border-border/50">
     <div className={color}>{icon}</div>
-    <span className="text-[10px] text-muted-foreground uppercase tracking-wider text-center">{label}</span>
-    <span className="text-sm font-semibold font-mono text-center">{value}</span>
+    <span className="text-[9px] text-muted-foreground uppercase tracking-wider text-center">{label}</span>
+    <span className="text-xs font-semibold font-mono text-center">{value}</span>
   </div>
 );
 
