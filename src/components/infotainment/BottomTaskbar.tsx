@@ -6,7 +6,7 @@ import PhonePopup from "./PhonePopup";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, apps, openAppById, navigateToItem, phonePopupOpen } = useInfotainment();
+  const { highlightedIndex, apps, openAppById, navigateToItem, phonePopupOpen, phoneIndex } = useInfotainment();
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
@@ -83,7 +83,7 @@ const BottomTaskbar = () => {
               >
                 <Phone size={20} />
               </button>
-              {(phoneHover || phonePopupOpen) && <PhonePopup phoneIndex={useInfotainment().phoneIndex} />}
+              {(phoneHover || phonePopupOpen) && <PhonePopup phoneIndex={phoneIndex} />}
             </div>
           )}
           {item.id === "menu" && (

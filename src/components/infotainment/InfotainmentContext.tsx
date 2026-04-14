@@ -120,11 +120,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateLeft = useCallback(() => {
     if (appMenuOpen) {
       if (appMenuIndex === 0) {
-        // Past first item — exit menu, go to rightmost non-menu taskbar item
         setAppMenuOpen(false);
         const menuIdx = TASKBAR_ITEMS.findIndex((t) => t.id === "menu");
         const prev = (menuIdx - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
         setHighlightedIndex(prev);
+        if (TASKBAR_ITEMS[prev].id === "phone") {
+          setPhonePopupOpen(true);
+          setPhoneIndex(0);
+        }
       } else {
         setAppMenuIndex((i) => i - 1);
       }
@@ -148,9 +151,9 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateRight = useCallback(() => {
     if (appMenuOpen) {
       if (appMenuIndex === APP_MENU_COUNT - 1) {
-        // Past last item — exit menu, go to first taskbar item
         setAppMenuOpen(false);
         setHighlightedIndex(0);
+        setPhonePopupOpen(false);
       } else {
         setAppMenuIndex((i) => i + 1);
       }
