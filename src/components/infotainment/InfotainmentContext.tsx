@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, type Context, type ReactNode } from "react";
 
 const PHONE_ITEMS_COUNT = 9; // 5 favorites + 4 recent calls
 
@@ -74,7 +74,17 @@ interface InfotainmentContextType {
   setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
 }
 
-const InfotainmentContext = createContext<InfotainmentContextType | null>(null);
+const INFOTAINMENT_CONTEXT_KEY = "__lovable_infotainment_context__";
+
+const globalInfotainmentContext = globalThis as typeof globalThis & {
+  [INFOTAINMENT_CONTEXT_KEY]?: Context<InfotainmentContextType | null>;
+};
+
+const InfotainmentContext =
+  globalInfotainmentContext[INFOTAINMENT_CONTEXT_KEY] ??
+  (globalInfotainmentContext[INFOTAINMENT_CONTEXT_KEY] = createContext<InfotainmentContextType | null>(null));
+
+InfotainmentContext.displayName = "InfotainmentContext";
 
 export const useInfotainment = () => {
   const ctx = useContext(InfotainmentContext);
