@@ -10,7 +10,7 @@ const ClimateWidget = () => {
       {/* Temperature control */}
       <button
         onClick={() => setClimate((c) => ({ ...c, temp: Math.max(16, c.temp - 0.5) }))}
-        className="w-7 h-7 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors text-secondary-foreground"
+        className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
       >
         <Minus size={14} />
       </button>
@@ -19,7 +19,7 @@ const ClimateWidget = () => {
       </span>
       <button
         onClick={() => setClimate((c) => ({ ...c, temp: Math.min(30, c.temp + 0.5) }))}
-        className="w-7 h-7 rounded-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors text-secondary-foreground"
+        className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
       >
         <Plus size={14} />
       </button>
@@ -30,7 +30,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
         className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          seatHeat > 0 ? "bg-climate-warm/20 text-climate-warm" : "bg-secondary text-muted-foreground"
+          seatHeat > 0 ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Seat Heating"
       >
@@ -46,7 +46,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          steeringHeat ? "bg-climate-warm/20 text-climate-warm" : "bg-secondary text-muted-foreground"
+          steeringHeat ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Steering Wheel Heating"
       >
@@ -57,7 +57,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          defogger ? "bg-climate-cool/20 text-climate-cool" : "bg-secondary text-muted-foreground"
+          defogger ? "text-climate-cool" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Windscreen Defogger"
       >

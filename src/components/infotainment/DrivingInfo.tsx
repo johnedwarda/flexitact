@@ -15,7 +15,9 @@ const DrivingInfo = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
+    <div className="relative flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
+      {/* Outside temperature */}
+      <div className="absolute top-3 right-3 text-xs text-muted-foreground font-mono">22°C</div>
       {/* Speed + Limit row */}
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-4">
