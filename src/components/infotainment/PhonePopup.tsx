@@ -27,11 +27,26 @@ const callTypeIcon = (type: string) => {
   }
 };
 
-const PhonePopup = ({ phoneIndex, anchorX }: { phoneIndex: number; anchorX: number }) => {
+const POPUP_WIDTH = 280;
+const PADDING = 16;
+
+const PhonePopup = ({ phoneIndex, anchorX, anchorTop }: { phoneIndex: number; anchorX: number; anchorTop: number }) => {
   if (typeof document === "undefined") return null;
 
+  // Clamp horizontally so the popup stays within viewport with padding
+  const viewportWidth = window.innerWidth;
+  const halfWidth = POPUP_WIDTH / 2;
+  const clampedLeft = Math.max(halfWidth + PADDING, Math.min(viewportWidth - halfWidth - PADDING, anchorX));
+
   return createPortal(
-    <div className="pointer-events-none fixed bottom-[5.5rem] z-[9999] px-4" style={{ left: Math.max(160, anchorX), transform: "translateX(-50%)" }}>
+    <div
+      className="pointer-events-none fixed z-[9999]"
+      style={{
+        left: clampedLeft,
+        bottom: `${window.innerHeight - anchorTop + 8}px`,
+        transform: "translateX(-50%)",
+      }}
+    >
       <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">Favorites</div>
         <div className="flex items-center justify-center gap-3 mb-3">
