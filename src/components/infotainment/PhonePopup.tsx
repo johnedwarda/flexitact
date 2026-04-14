@@ -1,4 +1,5 @@
 import { Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, User } from "lucide-react";
+import { createPortal } from "react-dom";
 
 const FAVORITES = [
   { id: "fav1", name: "Alice", color: "bg-primary/20 text-primary" },
@@ -26,11 +27,18 @@ const callTypeIcon = (type: string) => {
   }
 };
 
-const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
-  return (
-    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-[9999]">
+const PhonePopup = ({ phoneIndex, anchorRect }: { phoneIndex: number; anchorRect: DOMRect | null }) => {
+  if (typeof document === "undefined" || !anchorRect) return null;
+
+  const left = anchorRect.left + anchorRect.width / 2;
+  const bottom = window.innerHeight - anchorRect.top + 8;
+
+  return createPortal(
+    <div
+      className="fixed z-[99999]"
+      style={{ left, bottom, transform: "translateX(-50%)" }}
+    >
       <div className="rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl min-w-[280px]">
-        {/* Favorites */}
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">Favorites</div>
         <div className="flex items-center justify-center gap-3 mb-3">
           {FAVORITES.map((fav, i) => {
@@ -59,7 +67,6 @@ const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
 
         <div className="h-px bg-border/50 mb-2" />
 
-        {/* Recent calls */}
         <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1.5 px-1">Recent</div>
         <div className="flex flex-col gap-0.5">
           {RECENT_CALLS.map((call, i) => {
@@ -77,15 +84,14 @@ const PhonePopup = ({ phoneIndex }: { phoneIndex: number }) => {
                   {call.name}
                 </span>
                 <span className="text-[10px] text-muted-foreground">{call.time}</span>
-                {isActive && (
-                  <Phone size={12} className="text-accent ml-1" />
-                )}
+                {isActive && <Phone size={12} className="text-accent ml-1" />}
               </div>
             );
           })}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

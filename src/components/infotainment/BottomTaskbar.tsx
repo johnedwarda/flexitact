@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Settings, LayoutGrid, Phone } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
@@ -7,6 +7,7 @@ import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
   const { highlightedIndex, apps, openAppById, navigateToItem, phonePopupOpen, phoneIndex } = useInfotainment();
+  const phoneButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
@@ -78,12 +79,18 @@ const BottomTaskbar = () => {
               onMouseLeave={() => setPhoneHover(false)}
             >
               <button
+                ref={phoneButtonRef}
                 onClick={() => navigateToItem(index)}
                 className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
               >
                 <Phone size={20} />
               </button>
-              {(phoneHover || phonePopupOpen) && <PhonePopup phoneIndex={phoneIndex} />}
+              {(phoneHover || phonePopupOpen) && (
+                <PhonePopup
+                  phoneIndex={phoneIndex}
+                  anchorRect={phoneButtonRef.current?.getBoundingClientRect() ?? null}
+                />
+              )}
             </div>
           )}
           {item.id === "menu" && (
