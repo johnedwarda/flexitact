@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type Context, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useRef, useEffect, type Context, type ReactNode } from "react";
 
 const PHONE_ITEMS_COUNT = 9; // 5 favorites + 4 recent calls
 
