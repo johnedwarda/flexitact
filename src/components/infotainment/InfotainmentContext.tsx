@@ -10,6 +10,7 @@ export const TASKBAR_ITEMS: TaskbarItem[] = [
   { id: "settings", label: "Settings", type: "shortcut" },
   { id: "climate", label: "Climate", type: "widget" },
   { id: "media", label: "Media", type: "widget" },
+  { id: "phone", label: "Phone", type: "shortcut" },
   { id: "menu", label: "App Menu", type: "shortcut" },
 ];
 
@@ -52,6 +53,8 @@ interface InfotainmentContextType {
   tracks: typeof TRACKS;
   appMenuOpen: boolean;
   appMenuIndex: number;
+  phonePopupOpen: boolean;
+  phoneIndex: number;
   navigateLeft: () => void;
   navigateRight: () => void;
   openApp: () => void;
