@@ -133,7 +133,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       const next = (prev - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
-        setAppMenuIndex(APP_MENU_COUNT - 1); // enter from right side = last item
+        setAppMenuIndex(APP_MENU_COUNT - 1);
+      } else if (TASKBAR_ITEMS[next].id === "phone") {
+        setPhonePopupOpen(true);
+        setPhoneIndex(0);
+      } else {
+        setPhonePopupOpen(false);
       }
       return next;
     });
@@ -155,6 +160,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(0);
+      } else if (TASKBAR_ITEMS[next].id === "phone") {
+        setPhonePopupOpen(true);
+        setPhoneIndex(0);
+      } else {
+        setPhonePopupOpen(false);
       }
       return next;
     });
