@@ -227,7 +227,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       }
       return next;
     });
-  }, [appMenuOpen, appMenuIndex]);
+  }, [appMenuOpen, appMenuIndex, recordActivity]);
 
   const currentId = TASKBAR_ITEMS[highlightedIndex].id;
 
