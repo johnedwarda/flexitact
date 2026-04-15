@@ -167,6 +167,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
+    recordActivity();
     if (appMenuOpen) {
       if (appMenuIndex === 0) {
         setAppMenuOpen(false);
