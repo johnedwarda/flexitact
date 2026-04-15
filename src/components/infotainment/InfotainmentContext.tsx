@@ -128,6 +128,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [phoneIndex, setPhoneIndex] = useState(0);
   const lastDialUsedIndexRef = useRef<number>(1); // default to climate
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [lastActivity, setLastActivity] = useState(0);
 
   // Track dial usage on eligible items (not settings or menu)
   const recordDialUsage = useCallback((index: number) => {
@@ -135,6 +136,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (item && item.id !== "settings" && item.id !== "menu") {
       lastDialUsedIndexRef.current = index;
     }
+    setLastActivity(Date.now());
+  }, []);
+
+  // Reset idle timer on any navigation action
+  const recordActivity = useCallback(() => {
+    setLastActivity(Date.now());
   }, []);
 
   // Auto-return from settings/menu after 5 seconds of idle
@@ -156,7 +163,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
-  }, [highlightedIndex, appMenuOpen]);
+  }, [highlightedIndex, appMenuOpen, lastActivity]);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
