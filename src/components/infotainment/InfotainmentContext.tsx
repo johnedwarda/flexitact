@@ -158,7 +158,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         setAppMenuOpen(false);
         setPhonePopupOpen(TASKBAR_ITEMS[targetIndex]?.id === "phone");
         if (TASKBAR_ITEMS[targetIndex]?.id === "phone") setPhoneIndex(0);
-      }, 5000);
+      }, 10000);
     }
     return () => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);

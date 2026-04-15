@@ -3,6 +3,8 @@ import {
   Pause,
   SkipBack,
   SkipForward,
+  Volume,
+  Volume1,
   Volume2,
   VolumeX,
   Plus,
@@ -89,12 +91,6 @@ const MediaWidget = () => {
       {/* Volume */}
       <div className="flex items-center gap-1">
         <button
-          onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
-        <button
           onClick={() =>
             setMedia((m) => ({
               ...m,
@@ -106,9 +102,12 @@ const MediaWidget = () => {
         >
           <Minus size={12} />
         </button>
-        <span className="text-[10px] font-mono text-muted-foreground min-w-[20px] text-center">
-          {muted ? 0 : volume}
-        </span>
+        <button
+          onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {muted || volume === 0 ? <VolumeX size={16} /> : volume < 33 ? <Volume size={16} /> : volume < 66 ? <Volume1 size={16} /> : <Volume2 size={16} />}
+        </button>
         <button
           onClick={() =>
             setMedia((m) => ({
