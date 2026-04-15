@@ -86,7 +86,7 @@ const IndexContent = () => {
       
 
       <div className="flex flex-1 min-h-0">
-        <div className="w-[340px] flex-shrink-0 border-r border-border bg-card/40">
+        <div className="w-[340px] flex-shrink-0 bg-card/40">
           <DrivingInfo />
         </div>
 
