@@ -201,6 +201,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [appMenuOpen, appMenuIndex, recordActivity]);
 
   const navigateRight = useCallback(() => {
+    recordActivity();
     if (appMenuOpen) {
       if (appMenuIndex === APP_MENU_COUNT - 1) {
         setAppMenuOpen(false);
