@@ -3,11 +3,13 @@ import { Settings, LayoutGrid, Phone } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
 import PhonePopup from "./PhonePopup";
+import AppMenuPopup from "./AppMenuPopup";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, apps, openAppById, navigateToItem, phonePopupOpen, phoneIndex } = useInfotainment();
+  const { highlightedIndex, apps, appMenuOpen, openAppById, navigateToItem, phonePopupOpen, phoneIndex } = useInfotainment();
   const phoneRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLButtonElement>(null);
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
@@ -95,12 +97,20 @@ const BottomTaskbar = () => {
             </div>
           )}
           {item.id === "menu" && (
-            <button
-              onClick={() => navigateToItem(index)}
-              className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
-            >
-              <LayoutGrid size={20} />
-            </button>
+            <div className="relative">
+              <button
+                ref={menuRef}
+                onClick={() => navigateToItem(index)}
+                className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
+              >
+                <LayoutGrid size={20} />
+              </button>
+              {appMenuOpen && menuRef.current && (
+                <AppMenuPopup
+                  anchorX={menuRef.current.getBoundingClientRect().left + menuRef.current.getBoundingClientRect().width / 2}
+                />
+              )}
+            </div>
           )}
         </div>
 
