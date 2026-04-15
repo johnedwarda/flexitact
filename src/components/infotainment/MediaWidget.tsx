@@ -3,6 +3,8 @@ import {
   Pause,
   SkipBack,
   SkipForward,
+  Volume,
+  Volume1,
   Volume2,
   VolumeX,
   Plus,
