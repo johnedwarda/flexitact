@@ -24,15 +24,29 @@ export const APP_MENU_ITEMS = [
   { id: "about", label: "About", icon: Info },
 ];
 
-const AppMenuPopup = () => {
+const AppMenuPopup = ({ anchorX }: { anchorX?: number }) => {
   const { appMenuIndex } = useInfotainment();
 
   if (typeof document === "undefined") {
     return null;
   }
 
+  const POPUP_WIDTH = 228;
+  const PADDING = 16;
+  const viewportWidth = window.innerWidth;
+  const halfWidth = POPUP_WIDTH / 2;
+  const x = anchorX ?? viewportWidth - 40;
+  const clampedLeft = Math.max(halfWidth + PADDING, Math.min(viewportWidth - halfWidth - PADDING, x));
+
   return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 bottom-[20rem] z-[9999] flex justify-end px-4">
+    <div
+      className="pointer-events-none fixed z-[9999] flex flex-col items-center"
+      style={{
+        left: clampedLeft,
+        bottom: "4.5rem",
+        transform: "translateX(-50%)",
+      }}
+    >
       <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl">
         <div className="grid grid-cols-3 gap-2">
           {APP_MENU_ITEMS.map((app, i) => {
@@ -66,6 +80,11 @@ const AppMenuPopup = () => {
             );
           })}
         </div>
+      </div>
+      {/* Connector stem + caret */}
+      <div className="flex flex-col items-center">
+        <div className="w-px h-3 bg-border/50" />
+        <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-border/50" />
       </div>
     </div>,
     document.body,

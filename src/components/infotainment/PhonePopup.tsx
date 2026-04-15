@@ -40,9 +40,10 @@ const PhonePopup = ({ phoneIndex, anchorX, anchorTop }: { phoneIndex: number; an
 
   return createPortal(
     <div
-      className="pointer-events-none fixed bottom-[20rem] z-[9999]"
+      className="pointer-events-none fixed z-[9999] flex flex-col items-center"
       style={{
         left: clampedLeft,
+        bottom: "4.5rem",
         transform: "translateX(-50%)",
       }}
     >
@@ -92,6 +93,11 @@ const PhonePopup = ({ phoneIndex, anchorX, anchorTop }: { phoneIndex: number; an
             );
           })}
         </div>
+      </div>
+      {/* Connector stem + caret */}
+      <div className="flex flex-col items-center">
+        <div className="w-px h-3 bg-border/50" />
+        <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-border/50" />
       </div>
     </div>,
     document.body,

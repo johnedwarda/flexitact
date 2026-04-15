@@ -7,11 +7,10 @@ import NavigationButtons from "@/components/infotainment/NavigationButtons";
 import ClimateAppView from "@/components/infotainment/ClimateAppView";
 import MediaAppView from "@/components/infotainment/MediaAppView";
 import SettingsAppView from "@/components/infotainment/SettingsAppView";
-import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
 const IndexContent = () => {
-  const { apps, appMenuOpen, navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter } = useInfotainment();
+  const { apps, navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter } = useInfotainment();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -97,8 +96,6 @@ const IndexContent = () => {
 
       <BottomTaskbar />
       <NavigationButtons />
-
-      {appMenuOpen && <AppMenuPopup />}
     </div>
   );
 };
