@@ -144,7 +144,7 @@ const IndexContent = () => {
 
         <div ref={paneRef} className="flex-1 min-w-0 relative overflow-hidden">
           {/* Persistent map background */}
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 z-0">
             <MapView />
           </div>
 
@@ -152,7 +152,7 @@ const IndexContent = () => {
           {overlayAppId && (
             <div
               key={overlayAppId}
-              className={`absolute inset-0 bg-background ${
+              className={`absolute inset-0 z-[2000] bg-background ${
                 phase === "in" ? "animate-genie-in" : phase === "out" ? "animate-genie-out" : ""
               }`}
               style={
