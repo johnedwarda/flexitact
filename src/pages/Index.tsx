@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import DrivingInfo from "@/components/infotainment/DrivingInfo";
 import MapView from "@/components/infotainment/MapView";
