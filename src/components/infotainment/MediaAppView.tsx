@@ -1,10 +1,4 @@
 import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  VolumeX,
   Music,
   Radio,
   Podcast,
@@ -12,6 +6,8 @@ import {
   Heart,
   Disc3,
   Search,
+  Shuffle,
+  Repeat,
 } from "lucide-react";
 import { useState } from "react";
 import { useInfotainment } from "./InfotainmentContext";
