@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import DrivingInfo from "@/components/infotainment/DrivingInfo";
 import MapView from "@/components/infotainment/MapView";
@@ -66,10 +66,26 @@ const IndexContent = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter]);
 
-  const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened");
+  const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened") ?? null;
+
+  // Manage transitions between app views (and back to map)
+  const [displayedAppId, setDisplayedAppId] = useState<string | null>(openedAppId);
+  const [phase, setPhase] = useState<"in" | "out">("in");
+  const prevRef = useRef<string | null>(openedAppId);
+
+  useEffect(() => {
+    if (openedAppId === prevRef.current) return;
+    setPhase("out");
+    const t = setTimeout(() => {
+      setDisplayedAppId(openedAppId);
+      setPhase("in");
+      prevRef.current = openedAppId;
+    }, 220);
+    return () => clearTimeout(t);
+  }, [openedAppId]);
 
   const renderRightPane = () => {
-    switch (openedAppId) {
+    switch (displayedAppId) {
       case "climate":
         return <ClimateAppView />;
       case "media":
@@ -90,8 +106,13 @@ const IndexContent = () => {
           <DrivingInfo />
         </div>
 
-        <div className="flex-1 min-w-0 relative">
-          {renderRightPane()}
+        <div className="flex-1 min-w-0 relative overflow-hidden">
+          <div
+            key={displayedAppId ?? "map"}
+            className={`absolute inset-0 ${phase === "in" ? "animate-app-in" : "animate-app-out"}`}
+          >
+            {renderRightPane()}
+          </div>
         </div>
       </div>
 
