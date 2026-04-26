@@ -1,27 +1,21 @@
 import {
-  Map,
-  Phone,
-  Camera,
+  Video,
+  Gamepad2,
+  Film,
   Calendar,
   MessageSquare,
-  Bluetooth,
-  Wifi,
-  Car,
-  Info,
+  Map,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useInfotainment } from "./InfotainmentContext";
 
 export const APP_MENU_ITEMS = [
-  { id: "navigation", label: "Navigation", icon: Map },
-  { id: "phone", label: "Phone", icon: Phone },
-  { id: "camera", label: "Camera", icon: Camera },
+  { id: "dashcam", label: "Dashcam", icon: Video },
+  { id: "games", label: "Games", icon: Gamepad2 },
+  { id: "videos", label: "Videos", icon: Film },
   { id: "calendar", label: "Calendar", icon: Calendar },
   { id: "messages", label: "Messages", icon: MessageSquare },
-  { id: "bluetooth", label: "Bluetooth", icon: Bluetooth },
-  { id: "wifi", label: "Wi-Fi", icon: Wifi },
-  { id: "vehicle", label: "Vehicle", icon: Car },
-  { id: "about", label: "About", icon: Info },
+  { id: "navigation", label: "Maps", icon: Map },
 ];
 
 const AppMenuPopup = () => {

@@ -93,7 +93,9 @@ export const useInfotainment = () => {
   return ctx;
 };
 
-const APP_MENU_COUNT = 9;
+const APP_MENU_COUNT = 6;
+const APP_MENU_COLS = 3;
+const APP_MENU_IDS = ["dashcam", "games", "videos", "calendar", "messages", "navigation"];
 
 export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(1);
@@ -234,7 +236,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
     if (id === "menu" && appMenuOpen) {
-      const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         setAppMenuOpen(false);
@@ -377,7 +378,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const dialUp = useCallback(() => {
     recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
-      setAppMenuIndex((i) => (i - 4 + APP_MENU_COUNT) % APP_MENU_COUNT);
+      setAppMenuIndex((i) => (i - APP_MENU_COLS + APP_MENU_COUNT) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => Math.max(0, i - 1));
     } else if (currentId === "climate") {
@@ -388,7 +389,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const dialDown = useCallback(() => {
     recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
-      setAppMenuIndex((i) => (i + 4) % APP_MENU_COUNT);
+      setAppMenuIndex((i) => (i + APP_MENU_COLS) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => Math.min(PHONE_ITEMS_COUNT - 1, i + 1));
     } else if (currentId === "climate") {
@@ -422,7 +423,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const dialCenter = useCallback(() => {
     recordDialUsage(highlightedIndex);
     if (currentId === "menu" && appMenuOpen) {
-      const APP_MENU_IDS = ["navigation", "phone", "camera", "calendar", "messages", "bluetooth", "wifi", "vehicle", "about"];
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
         openAppFromMenu(selectedAppId);

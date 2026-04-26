@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react";
-import { Settings, LayoutGrid, Phone } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, Phone } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
 import PhonePopup from "./PhonePopup";
@@ -52,7 +52,7 @@ const BottomTaskbar = () => {
               }}
               className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
             >
-              <Settings size={20} />
+              <SlidersHorizontal size={20} />
             </button>
           )}
           {item.id === "climate" && (
