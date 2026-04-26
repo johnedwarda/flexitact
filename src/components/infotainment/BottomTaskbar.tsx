@@ -42,7 +42,7 @@ const BottomTaskbar = () => {
     const isHighlighted = highlightedIndex === index && item.id !== "menu";
 
     return (
-      <div key={item.id} className="relative flex flex-col items-center">
+      <div key={item.id} data-taskbar-id={item.id} className="relative flex flex-col items-center">
         <div className="rounded-2xl">
           {item.id === "settings" && (
             <button
