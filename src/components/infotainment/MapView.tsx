@@ -44,7 +44,7 @@ const MapView = () => {
     <div className="relative h-full w-full">
       <div ref={mapElementRef} className="h-full w-full" aria-label="Navigation map" />
 
-      <div className="absolute left-1/2 top-4 z-[1000] -translate-x-1/2">
+      <div className="absolute left-4 top-4 z-[1000]">
         <div className="flex w-[280px] flex-col gap-3 rounded-2xl border border-border/50 bg-card/90 px-4 py-4 backdrop-blur-md">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/20">
@@ -58,15 +58,15 @@ const MapView = () => {
 
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">2.1 km total</span>
               <span className="font-mono text-primary">1.2 km</span>
-              <span className="text-muted-foreground">3 min left</span>
             </div>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary/60">
               <div className="h-full rounded-full bg-primary transition-all" style={{ width: "65%" }} />
             </div>
             <div className="flex items-center justify-between text-[10px] text-muted-foreground">
               <span>ETA 14:32</span>
-              <span>2.1 km total</span>
+              <span>3 min left</span>
             </div>
           </div>
         </div>
