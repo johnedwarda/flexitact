@@ -91,6 +91,7 @@ const MapView = () => {
         <div className="absolute bottom-4 left-4 z-[1000] flex gap-2">
           <button
             type="button"
+            onClick={() => setTripActive(true)}
             className="flex items-center gap-2 rounded-full border border-border/50 bg-card/90 px-4 py-2 text-sm font-medium text-foreground backdrop-blur-md transition-colors hover:bg-card"
           >
             <Home className="h-4 w-4 text-primary" />
@@ -98,6 +99,7 @@ const MapView = () => {
           </button>
           <button
             type="button"
+            onClick={() => setTripActive(true)}
             className="flex items-center gap-2 rounded-full border border-border/50 bg-card/90 px-4 py-2 text-sm font-medium text-foreground backdrop-blur-md transition-colors hover:bg-card"
           >
             <Briefcase className="h-4 w-4 text-primary" />
