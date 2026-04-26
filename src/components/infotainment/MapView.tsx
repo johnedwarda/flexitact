@@ -80,15 +80,15 @@ const MapView = () => {
             <button
               type="button"
               onClick={() => setTripActive(false)}
-              className="flex items-center gap-2 rounded-full border border-destructive/40 bg-destructive/90 px-4 py-2 text-sm font-medium text-destructive-foreground shadow-lg backdrop-blur-md transition-colors hover:bg-destructive"
+              className="flex items-center gap-2 rounded-full border border-border/50 bg-card/80 px-4 py-2 text-sm font-medium text-muted-foreground backdrop-blur-md transition-colors hover:bg-card hover:text-foreground"
             >
-              <Square className="h-3.5 w-3.5 fill-current" />
+              <Square className="h-3.5 w-3.5 fill-current text-destructive/80" />
               Stop Trip
             </button>
           </div>
         </>
       ) : (
-        <div className="absolute left-4 top-4 z-[1000] flex gap-2">
+        <div className="absolute bottom-4 left-4 z-[1000] flex gap-2">
           <button
             type="button"
             className="flex items-center gap-2 rounded-full border border-border/50 bg-card/90 px-4 py-2 text-sm font-medium text-foreground backdrop-blur-md transition-colors hover:bg-card"
