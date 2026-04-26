@@ -71,18 +71,39 @@ const IndexContent = () => {
   // Manage transitions between app views (and back to map)
   const [displayedAppId, setDisplayedAppId] = useState<string | null>(openedAppId);
   const [phase, setPhase] = useState<"in" | "out">("in");
+  const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
   const prevRef = useRef<string | null>(openedAppId);
+  const paneRef = useRef<HTMLDivElement>(null);
+
+  // Compute transform-origin based on taskbar item position
+  const computeOrigin = (appId: string | null) => {
+    if (!paneRef.current) return null;
+    const paneRect = paneRef.current.getBoundingClientRect();
+    // Map "map" (no app open) to the menu icon as a sensible anchor
+    const id = appId ?? "menu";
+    const el = document.querySelector<HTMLElement>(`[data-taskbar-id="${id}"]`);
+    if (!el) return { x: paneRect.width / 2, y: paneRect.height };
+    const r = el.getBoundingClientRect();
+    return {
+      x: r.left + r.width / 2 - paneRect.left,
+      y: paneRect.height, // bottom edge of pane (taskbar sits just below)
+    };
+  };
 
   useEffect(() => {
     if (openedAppId === prevRef.current) return;
+    // Anchor the OUT animation to whatever is currently displayed
+    setOrigin(computeOrigin(displayedAppId));
     setPhase("out");
     const t = setTimeout(() => {
       setDisplayedAppId(openedAppId);
+      // Anchor the IN animation to the newly opened app
+      setOrigin(computeOrigin(openedAppId));
       setPhase("in");
       prevRef.current = openedAppId;
-    }, 220);
+    }, 240);
     return () => clearTimeout(t);
-  }, [openedAppId]);
+  }, [openedAppId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const renderRightPane = () => {
     switch (displayedAppId) {
@@ -106,10 +127,15 @@ const IndexContent = () => {
           <DrivingInfo />
         </div>
 
-        <div className="flex-1 min-w-0 relative overflow-hidden">
+        <div ref={paneRef} className="flex-1 min-w-0 relative overflow-hidden">
           <div
             key={displayedAppId ?? "map"}
-            className={`absolute inset-0 ${phase === "in" ? "animate-app-in" : "animate-app-out"}`}
+            className={`absolute inset-0 ${phase === "in" ? "animate-genie-in" : "animate-genie-out"}`}
+            style={
+              origin
+                ? { transformOrigin: `${origin.x}px ${origin.y}px` }
+                : { transformOrigin: "50% 100%" }
+            }
           >
             {renderRightPane()}
           </div>
