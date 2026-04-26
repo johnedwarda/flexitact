@@ -68,45 +68,60 @@ const IndexContent = () => {
 
   const openedAppId = Object.keys(apps).find((id) => apps[id].state === "opened") ?? null;
 
-  // Manage transitions between app views (and back to map)
-  const [displayedAppId, setDisplayedAppId] = useState<string | null>(openedAppId);
-  const [phase, setPhase] = useState<"in" | "out">("in");
+  // Map is always rendered in the background. Apps animate in/out as overlays.
+  const [overlayAppId, setOverlayAppId] = useState<string | null>(openedAppId);
+  const [phase, setPhase] = useState<"in" | "out" | "idle">(openedAppId ? "in" : "idle");
   const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
   const prevRef = useRef<string | null>(openedAppId);
   const paneRef = useRef<HTMLDivElement>(null);
 
   // Compute transform-origin based on taskbar item position
   const computeOrigin = (appId: string | null) => {
-    if (!paneRef.current) return null;
+    if (!paneRef.current || !appId) return null;
     const paneRect = paneRef.current.getBoundingClientRect();
-    // Map "map" (no app open) to the menu icon as a sensible anchor
-    const id = appId ?? "menu";
-    const el = document.querySelector<HTMLElement>(`[data-taskbar-id="${id}"]`);
+    const el = document.querySelector<HTMLElement>(`[data-taskbar-id="${appId}"]`);
     if (!el) return { x: paneRect.width / 2, y: paneRect.height };
     const r = el.getBoundingClientRect();
     return {
       x: r.left + r.width / 2 - paneRect.left,
-      y: paneRect.height, // bottom edge of pane (taskbar sits just below)
+      y: paneRect.height,
     };
   };
 
   useEffect(() => {
     if (openedAppId === prevRef.current) return;
-    // Anchor the OUT animation to whatever is currently displayed
-    setOrigin(computeOrigin(displayedAppId));
-    setPhase("out");
-    const t = setTimeout(() => {
-      setDisplayedAppId(openedAppId);
-      // Anchor the IN animation to the newly opened app
+    const prev = prevRef.current;
+    prevRef.current = openedAppId;
+
+    if (openedAppId && !prev) {
+      // No overlay → opening one
       setOrigin(computeOrigin(openedAppId));
+      setOverlayAppId(openedAppId);
       setPhase("in");
-      prevRef.current = openedAppId;
-    }, 240);
-    return () => clearTimeout(t);
+    } else if (!openedAppId && prev) {
+      // Closing current overlay → reveal map
+      setOrigin(computeOrigin(prev));
+      setPhase("out");
+      const t = setTimeout(() => {
+        setOverlayAppId(null);
+        setPhase("idle");
+      }, 240);
+      return () => clearTimeout(t);
+    } else if (openedAppId && prev) {
+      // Switching from one overlay to another: shrink old, then grow new
+      setOrigin(computeOrigin(prev));
+      setPhase("out");
+      const t = setTimeout(() => {
+        setOrigin(computeOrigin(openedAppId));
+        setOverlayAppId(openedAppId);
+        setPhase("in");
+      }, 240);
+      return () => clearTimeout(t);
+    }
   }, [openedAppId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const renderRightPane = () => {
-    switch (displayedAppId) {
+  const renderOverlay = () => {
+    switch (overlayAppId) {
       case "climate":
         return <ClimateAppView />;
       case "media":
@@ -114,7 +129,7 @@ const IndexContent = () => {
       case "settings":
         return <SettingsAppView />;
       default:
-        return <MapView />;
+        return null;
     }
   };
 
@@ -128,17 +143,27 @@ const IndexContent = () => {
         </div>
 
         <div ref={paneRef} className="flex-1 min-w-0 relative overflow-hidden">
-          <div
-            key={displayedAppId ?? "map"}
-            className={`absolute inset-0 ${phase === "in" ? "animate-genie-in" : "animate-genie-out"}`}
-            style={
-              origin
-                ? { transformOrigin: `${origin.x}px ${origin.y}px` }
-                : { transformOrigin: "50% 100%" }
-            }
-          >
-            {renderRightPane()}
+          {/* Persistent map background */}
+          <div className="absolute inset-0">
+            <MapView />
           </div>
+
+          {/* Overlay app */}
+          {overlayAppId && (
+            <div
+              key={overlayAppId}
+              className={`absolute inset-0 bg-background ${
+                phase === "in" ? "animate-genie-in" : phase === "out" ? "animate-genie-out" : ""
+              }`}
+              style={
+                origin
+                  ? { transformOrigin: `${origin.x}px ${origin.y}px` }
+                  : { transformOrigin: "50% 100%" }
+              }
+            >
+              {renderOverlay()}
+            </div>
+          )}
         </div>
       </div>
 
