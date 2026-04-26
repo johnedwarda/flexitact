@@ -146,48 +146,44 @@ const MediaAppView = () => {
         )}
       </div>
 
-      {/* Persistent mini playback bar */}
+      {/* Persistent mini bar: now-playing + shuffle/repeat */}
       <div className="border-t border-border/40 bg-card/60 px-5 py-3 flex items-center gap-4">
         <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden">
-          <SourceIcon size={18} className="text-primary/70" />
+          {media.playing ? (
+            <Disc3 size={18} className="text-primary animate-spin" style={{ animationDuration: "3s" }} />
+          ) : (
+            <SourceIcon size={18} className="text-primary/70" />
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold truncate">{currentTrack.title}</div>
           <div className="text-[10px] text-muted-foreground truncate">{currentTrack.artist}</div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setMedia((m) => ({ ...m, trackIndex: (m.trackIndex - 1 + tracks.length) % tracks.length }))}
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => setShuffle(!shuffle)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-wider border transition-colors ${
+              shuffle
+                ? "bg-primary/15 text-primary border-primary/40"
+                : "bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
+            }`}
+            title="Shuffle"
           >
-            <SkipBack size={18} />
+            <Shuffle size={13} />
+            Shuffle
           </button>
           <button
-            onClick={() => setMedia((m) => ({ ...m, playing: !m.playing }))}
-            className="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/90 transition-colors"
+            onClick={() => setRepeat((r) => (r === "off" ? "all" : r === "all" ? "one" : "off"))}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-wider border transition-colors ${
+              repeat !== "off"
+                ? "bg-primary/15 text-primary border-primary/40"
+                : "bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
+            }`}
+            title="Repeat"
           >
-            {media.playing ? <Pause size={20} /> : <Play size={20} />}
+            <Repeat size={13} />
+            {repeat === "one" ? "Repeat 1" : "Repeat"}
           </button>
-          <button
-            onClick={() => setMedia((m) => ({ ...m, trackIndex: (m.trackIndex + 1) % tracks.length }))}
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <SkipForward size={18} />
-          </button>
-        </div>
-        <div className="hidden sm:flex items-center gap-2 w-32">
-          <button
-            onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {media.muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-          </button>
-          <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-150"
-              style={{ width: `${media.muted ? 0 : media.volume}%` }}
-            />
-          </div>
         </div>
       </div>
     </div>
