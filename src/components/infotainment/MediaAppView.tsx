@@ -52,6 +52,8 @@ const MediaAppView = () => {
   const SourceIcon = SOURCES.find((s) => s.id === media.source)?.icon || Music;
   const items = LIBRARY[media.source] ?? LIBRARY.music;
   const [query, setQuery] = useState("");
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState<"off" | "all" | "one">("off");
 
   const filtered = items.filter(
     (t) =>
