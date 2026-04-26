@@ -1,18 +1,14 @@
 import {
-  Thermometer,
   Wind,
   CircleDot,
   Heater,
-  Columns2,
-  Square,
   Fan,
   Snowflake,
   RotateCcw,
-  ArrowUp,
-  ArrowDown,
-  Car,
-  Gauge,
-  Power,
+  Minus,
+  Plus,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import { useState } from "react";
@@ -27,181 +23,311 @@ const ClimateAppView = () => {
   const [recirculation, setRecirculation] = useState(false);
   const [rearDefogger, setRearDefogger] = useState(false);
   const [airDirection, setAirDirection] = useState<AirDirection>("face");
+  const [driverTemp, setDriverTemp] = useState(climate.temp);
+  const [passengerTemp, setPassengerTemp] = useState(climate.temp);
 
-  const airDirections: { id: AirDirection; label: string }[] = [
-    { id: "face", label: "Face" },
-    { id: "feet", label: "Feet" },
-    { id: "both", label: "Both" },
-    { id: "windshield", label: "W/S" },
-  ];
+  const setTemp = (side: "driver" | "passenger", delta: number) => {
+    if (climate.zones === "single") {
+      const t = Math.max(16, Math.min(30, driverTemp + delta));
+      setDriverTemp(t);
+      setPassengerTemp(t);
+      setClimate((c) => ({ ...c, temp: t }));
+      return;
+    }
+    if (side === "driver") {
+      const t = Math.max(16, Math.min(30, driverTemp + delta));
+      setDriverTemp(t);
+      setClimate((c) => ({ ...c, temp: t }));
+    } else {
+      setPassengerTemp((p) => Math.max(16, Math.min(30, p + delta)));
+    }
+  };
+
+  const cycleAir = () => {
+    const order: AirDirection[] = ["face", "both", "feet", "windshield"];
+    setAirDirection(order[(order.indexOf(airDirection) + 1) % order.length]);
+  };
 
   return (
-    <div className="flex flex-col h-full p-6 gap-5 overflow-y-auto">
+    <div className="flex flex-col h-full p-5 gap-4 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold tracking-wide uppercase text-foreground/80 font-mono">
-          Climate Control
+        <h2 className="text-sm font-semibold tracking-wider uppercase text-foreground/70 font-mono">
+          Climate
         </h2>
-        <button
-          onClick={() => setAutoMode(!autoMode)}
-          className={`px-4 py-1.5 rounded-lg text-xs font-mono font-semibold uppercase tracking-wider transition-colors ${
-            autoMode
-              ? "bg-primary/20 text-primary border border-primary/40"
-              : "bg-muted/40 text-muted-foreground border border-border/40"
-          }`}
-        >
-          Auto
-        </button>
+        <div className="flex items-center gap-2">
+          <ChipToggle label="Auto" active={autoMode} onClick={() => setAutoMode(!autoMode)} />
+          <ChipToggle label="A/C" icon={<Snowflake size={12} />} active={acOn} onClick={() => setAcOn(!acOn)} accent="cool" />
+          <ChipToggle label="Recirc" icon={<RotateCcw size={12} />} active={recirculation} onClick={() => setRecirculation(!recirculation)} />
+          <ChipToggle
+            label="Sync"
+            active={climate.zones === "single"}
+            onClick={() => setClimate((c) => ({ ...c, zones: c.zones === "dual" ? "single" : "dual" }))}
+          />
+        </div>
       </div>
 
-      {/* Temperature + Zones */}
-      <div className="flex items-center justify-center gap-8">
-        {/* Left zone */}
-        <div className={`flex flex-col items-center gap-1 transition-opacity ${climate.zones === "dual" && climate.activeZone === "right" ? "opacity-40" : ""}`}>
-          <span className="text-[10px] text-muted-foreground font-mono uppercase">Driver</span>
-          <span className="text-5xl font-bold font-mono text-climate-warm">{climate.temp}°</span>
-        </div>
-
-        {/* Zone toggle */}
-        <button
-          onClick={() => setClimate((c) => ({ ...c, zones: c.zones === "dual" ? "single" : "dual" }))}
-          className="flex flex-col items-center gap-1"
-        >
-          {climate.zones === "dual" ? <Columns2 size={20} className="text-primary" /> : <Square size={20} className="text-muted-foreground" />}
-          <span className="text-[9px] font-mono text-muted-foreground">{climate.zones === "dual" ? "DUAL" : "SYNC"}</span>
-        </button>
-
-        {/* Right zone (only in dual) */}
-        {climate.zones === "dual" && (
-          <div className={`flex flex-col items-center gap-1 transition-opacity ${climate.activeZone === "left" ? "opacity-40" : ""}`}>
-            <span className="text-[10px] text-muted-foreground font-mono uppercase">Passenger</span>
-            <span className="text-5xl font-bold font-mono text-climate-warm">{climate.temp}°</span>
+      {/* Cabin diagram */}
+      <div className="flex-1 flex items-stretch gap-4 min-h-0">
+        {/* Fan slider (left side, like a vertical control) */}
+        <div className="flex flex-col items-center justify-between bg-muted/20 rounded-2xl border border-border/30 px-3 py-4 w-16">
+          <button
+            onClick={() => setFanSpeed(Math.min(7, fanSpeed + 1))}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ChevronUp size={18} />
+          </button>
+          <div className="flex-1 flex flex-col-reverse gap-1 py-2 w-full items-center">
+            {[1, 2, 3, 4, 5, 6, 7].map((level) => (
+              <button
+                key={level}
+                onClick={() => setFanSpeed(level)}
+                className={`w-2 rounded-full transition-all ${
+                  level <= fanSpeed ? "bg-primary h-3" : "bg-muted/60 h-2"
+                }`}
+                aria-label={`Fan ${level}`}
+              />
+            ))}
           </div>
-        )}
-      </div>
-
-      {/* Fan Speed */}
-      <div className="bg-muted/30 rounded-2xl p-4 border border-border/30">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Fan size={16} className={fanSpeed > 0 ? "text-primary" : "text-muted-foreground"} />
-            <span className="text-xs font-mono text-muted-foreground uppercase">Fan Speed</span>
+          <button
+            onClick={() => setFanSpeed(Math.max(0, fanSpeed - 1))}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ChevronDown size={18} />
+          </button>
+          <div className="flex flex-col items-center mt-1">
+            <Fan size={14} className={fanSpeed > 0 ? "text-primary" : "text-muted-foreground"} />
+            <span className="text-[10px] font-mono text-muted-foreground mt-0.5">{fanSpeed}</span>
           </div>
-          <span className="text-sm font-mono font-semibold">{fanSpeed}</span>
         </div>
-        <div className="flex gap-1.5">
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((level) => (
-            <button
-              key={level}
-              onClick={() => setFanSpeed(level)}
-              className={`flex-1 h-2 rounded-full transition-colors ${
-                level <= fanSpeed ? "bg-primary" : "bg-muted/60"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
 
-      {/* Air Direction */}
-      <div className="bg-muted/30 rounded-2xl p-4 border border-border/30">
-        <div className="flex items-center gap-2 mb-3">
-          <ArrowUp size={16} className="text-muted-foreground" />
-          <span className="text-xs font-mono text-muted-foreground uppercase">Air Direction</span>
-        </div>
-        <div className="flex gap-2">
-          {airDirections.map((dir) => (
+        {/* Cabin (top-down) */}
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 rounded-[2.5rem] border border-border/40 bg-gradient-to-b from-muted/10 via-transparent to-muted/10 overflow-hidden">
+            {/* Windshield band */}
             <button
-              key={dir.id}
-              onClick={() => setAirDirection(dir.id)}
-              className={`flex-1 py-2 rounded-xl text-xs font-mono font-semibold transition-colors ${
-                airDirection === dir.id
-                  ? "bg-primary/20 text-primary border border-primary/40"
-                  : "bg-muted/40 text-muted-foreground border border-border/30"
+              onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
+              className={`absolute top-0 left-0 right-0 h-12 flex items-center justify-center gap-2 border-b border-border/40 transition-colors ${
+                climate.defogger ? "bg-climate-cool/15 text-climate-cool" : "bg-muted/10 text-muted-foreground hover:text-foreground"
               }`}
+              title="Front defogger"
             >
-              {dir.label}
+              <Wind size={14} />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Windshield</span>
             </button>
-          ))}
-        </div>
-      </div>
 
-      {/* Controls Grid */}
-      <div className="grid grid-cols-3 gap-3">
-        <ToggleCard
-          icon={<Snowflake size={20} />}
-          label="A/C"
-          active={acOn}
-          onToggle={() => setAcOn(!acOn)}
-          color="text-climate-cool"
-        />
-        <ToggleCard
-          icon={<RotateCcw size={20} />}
-          label="Recirc"
-          active={recirculation}
-          onToggle={() => setRecirculation(!recirculation)}
-          color="text-primary"
-        />
-        <ToggleCard
-          icon={<Wind size={20} />}
-          label="Front Defog"
-          active={climate.defogger}
-          onToggle={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
-          color="text-climate-cool"
-        />
-        <ToggleCard
-          icon={<Car size={20} />}
-          label="Rear Defog"
-          active={rearDefogger}
-          onToggle={() => setRearDefogger(!rearDefogger)}
-          color="text-climate-cool"
-        />
-        <ToggleCard
-          icon={<Heater size={20} />}
-          label={`Seat Heat ${climate.seatHeat > 0 ? climate.seatHeat : ""}`}
-          active={climate.seatHeat > 0}
-          onToggle={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
-          color="text-climate-warm"
-        />
-        <ToggleCard
-          icon={<CircleDot size={20} />}
-          label="Steering"
-          active={climate.steeringHeat}
-          onToggle={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
-          color="text-climate-warm"
-        />
+            {/* Vents row */}
+            <button
+              onClick={cycleAir}
+              className="absolute top-14 left-1/2 -translate-x-1/2 flex items-center gap-3 px-3 py-1 rounded-lg bg-muted/30 border border-border/40 hover:border-primary/40 transition-colors"
+              title="Air direction"
+            >
+              <VentIcon dir={airDirection} />
+              <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                {airDirection === "face" && "Face"}
+                {airDirection === "feet" && "Feet"}
+                {airDirection === "both" && "Face + Feet"}
+                {airDirection === "windshield" && "Defrost"}
+              </span>
+            </button>
+
+            {/* Steering wheel (driver-only indicator) */}
+            <button
+              onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
+              className={`absolute top-[6.5rem] left-[22%] -translate-x-1/2 w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all ${
+                climate.steeringHeat
+                  ? "border-climate-warm/70 bg-climate-warm/15 text-climate-warm shadow-[0_0_20px_hsl(var(--climate-warm)/0.3)]"
+                  : "border-border/50 bg-muted/20 text-muted-foreground hover:text-foreground"
+              }`}
+              title="Steering wheel heating"
+            >
+              <CircleDot size={22} />
+            </button>
+
+            {/* Seats */}
+            <Seat
+              side="left"
+              label="Driver"
+              temp={driverTemp}
+              heat={climate.seatHeat}
+              onTempUp={() => setTemp("driver", 0.5)}
+              onTempDown={() => setTemp("driver", -0.5)}
+              onHeat={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
+            />
+            <Seat
+              side="right"
+              label="Passenger"
+              temp={climate.zones === "single" ? driverTemp : passengerTemp}
+              heat={climate.seatHeat}
+              dimmed={climate.zones === "single"}
+              onTempUp={() => setTemp("passenger", 0.5)}
+              onTempDown={() => setTemp("passenger", -0.5)}
+              onHeat={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
+            />
+
+            {/* Rear window defog */}
+            <button
+              onClick={() => setRearDefogger(!rearDefogger)}
+              className={`absolute bottom-0 left-0 right-0 h-12 flex items-center justify-center gap-2 border-t border-border/40 transition-colors ${
+                rearDefogger ? "bg-climate-cool/15 text-climate-cool" : "bg-muted/10 text-muted-foreground hover:text-foreground"
+              }`}
+              title="Rear defogger"
+            >
+              <Wind size={14} className="rotate-180" />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Rear Defog</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
-        Control Dial: Rotate = Temp • Left/Right = Zones • Up = Steering • Down = Defog • Center = Sync
+        Dial: Rotate = Temp • L/R = Zones • Up = Steering • Down = Defog • Center = Sync
       </p>
     </div>
   );
 };
 
-const ToggleCard = ({
-  icon,
+/* ---------- Sub-components ---------- */
+
+const ChipToggle = ({
   label,
+  icon,
   active,
-  onToggle,
-  color,
+  onClick,
+  accent,
 }: {
-  icon: React.ReactNode;
   label: string;
+  icon?: React.ReactNode;
   active: boolean;
-  onToggle: () => void;
-  color: string;
-}) => (
-  <button
-    onClick={onToggle}
-    className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
-      active
-        ? "bg-muted/60 border-border/60"
-        : "bg-muted/20 border-border/20"
-    }`}
-  >
-    <div className={active ? color : "text-muted-foreground/40"}>{icon}</div>
-    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono">{label}</span>
-  </button>
-);
+  onClick: () => void;
+  accent?: "cool" | "warm";
+}) => {
+  const activeColor =
+    accent === "cool"
+      ? "bg-climate-cool/15 text-climate-cool border-climate-cool/40"
+      : accent === "warm"
+        ? "bg-climate-warm/15 text-climate-warm border-climate-warm/40"
+        : "bg-primary/15 text-primary border-primary/40";
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold uppercase tracking-wider border transition-colors ${
+        active ? activeColor : "bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+};
+
+const Seat = ({
+  side,
+  label,
+  temp,
+  heat,
+  dimmed,
+  onTempUp,
+  onTempDown,
+  onHeat,
+}: {
+  side: "left" | "right";
+  label: string;
+  temp: number;
+  heat: number;
+  dimmed?: boolean;
+  onTempUp: () => void;
+  onTempDown: () => void;
+  onHeat: () => void;
+}) => {
+  const positionClass = side === "left" ? "left-[10%]" : "right-[10%]";
+  return (
+    <div
+      className={`absolute top-[11rem] ${positionClass} flex flex-col items-center gap-2 transition-opacity ${
+        dimmed ? "opacity-50" : ""
+      }`}
+    >
+      {/* Temp readout */}
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={onTempDown}
+          className="w-6 h-6 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-foreground flex items-center justify-center"
+        >
+          <Minus size={12} />
+        </button>
+        <div className="flex flex-col items-center min-w-[52px]">
+          <span className="text-2xl font-bold font-mono text-climate-warm leading-none">
+            {temp}°
+          </span>
+          <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mt-0.5">
+            {label}
+          </span>
+        </div>
+        <button
+          onClick={onTempUp}
+          className="w-6 h-6 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-foreground flex items-center justify-center"
+        >
+          <Plus size={12} />
+        </button>
+      </div>
+
+      {/* Seat shape */}
+      <button
+        onClick={onHeat}
+        className={`relative w-20 h-20 rounded-t-3xl rounded-b-xl border-2 flex flex-col items-center justify-end pb-2 transition-all ${
+          heat > 0
+            ? "border-climate-warm/60 bg-climate-warm/10 text-climate-warm"
+            : "border-border/50 bg-muted/20 text-muted-foreground hover:text-foreground"
+        }`}
+        title={`Seat heating: ${heat}`}
+      >
+        {/* Headrest */}
+        <div
+          className={`absolute -top-2 left-1/2 -translate-x-1/2 w-12 h-3 rounded-full ${
+            heat > 0 ? "bg-climate-warm/40" : "bg-muted/50"
+          }`}
+        />
+        <Heater size={18} />
+        <div className="flex gap-0.5 mt-1">
+          {[1, 2, 3].map((lvl) => (
+            <div
+              key={lvl}
+              className={`w-1.5 h-1 rounded-full ${
+                lvl <= heat ? "bg-climate-warm" : "bg-muted/50"
+              }`}
+            />
+          ))}
+        </div>
+      </button>
+    </div>
+  );
+};
+
+const VentIcon = ({ dir }: { dir: AirDirection }) => {
+  const base = "text-primary";
+  if (dir === "face")
+    return (
+      <div className="flex flex-col items-center">
+        <ChevronUp size={14} className={base} />
+        <div className="w-4 h-0.5 bg-primary/70 rounded" />
+      </div>
+    );
+  if (dir === "feet")
+    return (
+      <div className="flex flex-col items-center">
+        <div className="w-4 h-0.5 bg-primary/70 rounded" />
+        <ChevronDown size={14} className={base} />
+      </div>
+    );
+  if (dir === "both")
+    return (
+      <div className="flex flex-col items-center">
+        <ChevronUp size={12} className={base} />
+        <div className="w-4 h-0.5 bg-primary/70 rounded" />
+        <ChevronDown size={12} className={base} />
+      </div>
+    );
+  return <Wind size={14} className={base} />;
+};
 
 export default ClimateAppView;
