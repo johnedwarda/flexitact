@@ -139,30 +139,7 @@ const ClimateAppView = () => {
         </button>
       </div>
 
-          <ChipToggle
-            label="Rear Sync"
-            active={climate.rearSync}
-            onClick={() => setClimate((c) => ({ ...c, rearSync: !c.rearSync }))}
-          />
-          <FanStepper
-            value={climate.fanSpeed}
-            onChange={(v) => setClimate((c) => ({ ...c, fanSpeed: v }))}
-          />
-          <button
-            onClick={cycleAir}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold uppercase tracking-wider border bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
-            title="Air direction"
-          >
-            <VentIcon dir={climate.airDirection} />
-            <span>
-              {climate.airDirection === "face" && "Face"}
-              {climate.airDirection === "feet" && "Feet"}
-              {climate.airDirection === "both" && "Face+Feet"}
-              {climate.airDirection === "windshield" && "Defrost"}
-            </span>
-          </button>
-        </div>
-      </div>
+
 
       {/* Cabin (top-down car) */}
       <div className="flex-1 min-h-0 relative flex items-center justify-center">
