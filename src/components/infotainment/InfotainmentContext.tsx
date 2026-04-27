@@ -23,14 +23,30 @@ interface AppInstance {
   state: AppState;
 }
 
+export type ClimateZone = "driver" | "passenger" | "rearL" | "rearC" | "rearR";
+
 interface ClimateState {
-  temp: number;
-  seatHeat: number;
+  temp: number; // driver temp (also single-zone temp)
+  passengerTemp: number;
+  rearTemp: number;
+  seatHeat: number; // legacy alias for driver heat (kept for widget compat)
+  frontSeatHeat: { driver: number; passenger: number };
+  rearSeatHeat: [number, number, number];
   steeringHeat: boolean;
   defogger: boolean;
+  rearDefogger: boolean;
+  mirrorHeat: { left: boolean; right: boolean };
+  fanSpeed: number;
+  acOn: boolean;
+  autoMode: boolean;
+  recirculation: boolean;
+  airDirection: "face" | "feet" | "both" | "windshield";
   zones: "dual" | "single";
-  activeZone: "left" | "right";
+  rearSync: boolean;
+  activeZone: ClimateZone;
 }
+
+const ZONE_ORDER: ClimateZone[] = ["driver", "passenger", "rearL", "rearC", "rearR"];
 
 interface MediaState {
   playing: boolean;
@@ -109,11 +125,23 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const [climate, setClimate] = useState<ClimateState>({
     temp: 22,
+    passengerTemp: 22,
+    rearTemp: 21,
     seatHeat: 1,
+    frontSeatHeat: { driver: 1, passenger: 0 },
+    rearSeatHeat: [0, 0, 0],
     steeringHeat: false,
     defogger: false,
+    rearDefogger: false,
+    mirrorHeat: { left: false, right: false },
+    fanSpeed: 3,
+    acOn: true,
+    autoMode: false,
+    recirculation: false,
+    airDirection: "face",
     zones: "dual",
-    activeZone: "left",
+    rearSync: true,
+    activeZone: "driver",
   });
 
   const [media, setMedia] = useState<MediaState>({
@@ -355,7 +383,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         trackIndex: (m.trackIndex - 1 + TRACKS.length) % TRACKS.length,
       }));
     } else if (currentId === "climate") {
-      setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
+      setClimate((c) => {
+        const idx = ZONE_ORDER.indexOf(c.activeZone);
+        const next = ZONE_ORDER[(idx - 1 + ZONE_ORDER.length) % ZONE_ORDER.length];
+        return { ...c, activeZone: next };
+      });
     }
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
@@ -371,7 +403,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         trackIndex: (m.trackIndex + 1) % TRACKS.length,
       }));
     } else if (currentId === "climate") {
-      setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
+      setClimate((c) => {
+        const idx = ZONE_ORDER.indexOf(c.activeZone);
+        const next = ZONE_ORDER[(idx + 1) % ZONE_ORDER.length];
+        return { ...c, activeZone: next };
+      });
     }
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
@@ -411,10 +447,25 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
           muted: false,
         }));
       } else if (currentId === "climate") {
-        setClimate((c) => ({
-          ...c,
-          temp: Math.max(16, Math.min(30, c.temp + (dir === "cw" ? 0.5 : -0.5))),
-        }));
+        const delta = dir === "cw" ? 0.5 : -0.5;
+        setClimate((c) => {
+          const clamp = (v: number) => Math.max(16, Math.min(30, v));
+          if (c.activeZone === "driver") {
+            const t = clamp(c.temp + delta);
+            return c.zones === "single"
+              ? { ...c, temp: t, passengerTemp: t }
+              : { ...c, temp: t };
+          }
+          if (c.activeZone === "passenger") {
+            if (c.zones === "single") {
+              const t = clamp(c.temp + delta);
+              return { ...c, temp: t, passengerTemp: t };
+            }
+            return { ...c, passengerTemp: clamp(c.passengerTemp + delta) };
+          }
+          // any rear zone shares rearTemp
+          return { ...c, rearTemp: clamp(c.rearTemp + delta) };
+        });
       }
     },
     [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]
