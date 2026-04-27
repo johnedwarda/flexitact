@@ -449,22 +449,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       } else if (currentId === "climate") {
         const delta = dir === "cw" ? 0.5 : -0.5;
         setClimate((c) => {
-          const clamp = (v: number) => Math.max(16, Math.min(30, v));
-          if (c.activeZone === "driver") {
-            const t = clamp(c.temp + delta);
-            return c.zones === "single"
-              ? { ...c, temp: t, passengerTemp: t }
-              : { ...c, temp: t };
-          }
-          if (c.activeZone === "passenger") {
-            if (c.zones === "single") {
-              const t = clamp(c.temp + delta);
-              return { ...c, temp: t, passengerTemp: t };
-            }
-            return { ...c, passengerTemp: clamp(c.passengerTemp + delta) };
-          }
-          // any rear zone shares rearTemp
-          return { ...c, rearTemp: clamp(c.rearTemp + delta) };
+          const t = Math.max(16, Math.min(30, c.temp + delta));
+          return { ...c, temp: t, passengerTemp: t, rearTemp: t };
         });
       }
     },
