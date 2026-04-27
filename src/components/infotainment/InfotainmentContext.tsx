@@ -469,10 +469,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
     } else if (currentId === "climate") {
-      setClimate((c) => ({
-        ...c,
-        zones: c.zones === "dual" ? "single" : "dual",
-      }));
+      setClimate((c) => ({ ...c, autoMode: !c.autoMode }));
     }
   }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
 
