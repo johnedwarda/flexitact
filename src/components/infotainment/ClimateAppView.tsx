@@ -356,73 +356,53 @@ const ClimateAppView = () => {
 
           {/* Driver seat */}
           <CarSeat
-            zone="driver"
             label="Driver"
-            temp={climate.temp}
             heat={climate.frontSeatHeat.driver}
             active={climate.activeZone === "driver"}
             position={{ left: "9%", top: "42%", width: "30%", height: "22%" }}
-            onTempUp={() => adjustZoneTemp("driver", 0.5)}
-            onTempDown={() => adjustZoneTemp("driver", -0.5)}
             onHeat={() => cycleSeatHeat("driver")}
             onSelect={() => setActiveZone("driver")}
           />
 
           {/* Passenger seat */}
           <CarSeat
-            zone="passenger"
             label="Passenger"
-            temp={passengerDisplayTemp}
             heat={climate.frontSeatHeat.passenger}
             active={climate.activeZone === "passenger"}
-            dimmed={climate.zones === "single"}
             position={{ right: "9%", top: "42%", width: "30%", height: "22%" }}
-            onTempUp={() => adjustZoneTemp("passenger", 0.5)}
-            onTempDown={() => adjustZoneTemp("passenger", -0.5)}
             onHeat={() => cycleSeatHeat("passenger")}
             onSelect={() => setActiveZone("passenger")}
           />
 
           {/* Rear seats (bench: L / C / R) */}
           <CarSeat
-            zone="rearL"
             label="Rear L"
-            temp={climate.rearTemp}
             heat={climate.rearSeatHeat[0]}
             active={climate.activeZone === "rearL"}
             compact
             position={{ left: "9%", top: "70%", width: "23%", height: "16%" }}
-            onTempUp={() => adjustZoneTemp("rearL", 0.5)}
-            onTempDown={() => adjustZoneTemp("rearL", -0.5)}
             onHeat={() => cycleSeatHeat(0)}
             onSelect={() => setActiveZone("rearL")}
           />
           <CarSeat
-            zone="rearC"
             label="Rear C"
-            temp={climate.rearTemp}
             heat={climate.rearSeatHeat[1]}
             active={climate.activeZone === "rearC"}
             compact
             position={{ left: "38.5%", top: "70%", width: "23%", height: "16%" }}
-            onTempUp={() => adjustZoneTemp("rearC", 0.5)}
-            onTempDown={() => adjustZoneTemp("rearC", -0.5)}
             onHeat={() => cycleSeatHeat(1)}
             onSelect={() => setActiveZone("rearC")}
           />
           <CarSeat
-            zone="rearR"
             label="Rear R"
-            temp={climate.rearTemp}
             heat={climate.rearSeatHeat[2]}
             active={climate.activeZone === "rearR"}
             compact
             position={{ right: "9%", top: "70%", width: "23%", height: "16%" }}
-            onTempUp={() => adjustZoneTemp("rearR", 0.5)}
-            onTempDown={() => adjustZoneTemp("rearR", -0.5)}
             onHeat={() => cycleSeatHeat(2)}
             onSelect={() => setActiveZone("rearR")}
           />
+
         </div>
       </div>
 
