@@ -114,12 +114,9 @@ const ClimateAppView = () => {
       </div>
 
       {/* Cabin (top-down car) + side temperature control */}
-      <div className="flex-1 min-h-0 flex items-center justify-center gap-6">
+      <div className="flex-1 min-h-0 relative flex items-center justify-center gap-6">
         <div className="relative h-full aspect-[5/8] max-h-full">
 
-      {/* Cabin (top-down car) */}
-      <div className="flex-1 min-h-0 relative flex items-center justify-center">
-        <div className="relative h-full aspect-[5/8] max-h-full">
           {/* Car silhouette via SVG */}
           <svg
             viewBox="0 0 500 800"
