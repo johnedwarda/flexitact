@@ -407,7 +407,7 @@ const ClimateAppView = () => {
       </div>
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
-        Dial: Rotate = Temp • L/R = Cycle Zones • Up = Steering • Down = Defrost • Center = Sync
+        Dial: Rotate = Temp • L/R = Cycle Seats • Up = Steering • Down = Defrost • Center = Auto
       </p>
     </div>
   );
