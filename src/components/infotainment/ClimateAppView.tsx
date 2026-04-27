@@ -518,25 +518,17 @@ const MirrorTab = ({
 };
 
 const CarSeat = ({
-  zone,
   label,
-  temp,
   heat,
   active,
-  dimmed,
   compact,
   position,
-  onTempUp,
-  onTempDown,
   onHeat,
   onSelect,
 }: {
-  zone: ClimateZone;
   label: string;
-  temp: number;
   heat: number;
   active: boolean;
-  dimmed?: boolean;
   compact?: boolean;
   position: {
     left?: string;
@@ -546,8 +538,6 @@ const CarSeat = ({
     width: string;
     height: string;
   };
-  onTempUp: () => void;
-  onTempDown: () => void;
   onHeat: () => void;
   onSelect: () => void;
 }) => {
@@ -555,9 +545,7 @@ const CarSeat = ({
     <div
       onClick={onSelect}
       style={position}
-      className={`absolute cursor-pointer transition-opacity ${
-        dimmed ? "opacity-50" : ""
-      }`}
+      className="absolute cursor-pointer"
     >
       {/* Seat shape: backrest (top) + cushion (bottom), top-down view */}
       <button
@@ -597,50 +585,26 @@ const CarSeat = ({
         />
       </button>
 
-      {/* Temp readout overlay (centered on seat cushion) */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-[10%]">
+      {/* Label + heat dots (centered on cushion) */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-1 mt-[18%]">
         <span
           className={`${
-            compact ? "text-base" : "text-xl"
-          } font-bold font-mono text-climate-warm leading-none drop-shadow-[0_1px_2px_hsl(220_20%_5%/0.8)]`}
+            compact ? "text-[8px]" : "text-[9px]"
+          } font-mono text-foreground/70 uppercase tracking-wider`}
         >
-          {temp}°
-        </span>
-        <span className="text-[8px] font-mono text-foreground/70 uppercase tracking-wider">
           {label}
         </span>
-        {/* Heat dots */}
-        <div className="flex gap-0.5 mt-0.5">
+        <div className="flex gap-0.5">
           {[1, 2, 3].map((lvl) => (
             <div
               key={lvl}
-              className={`w-1 h-1 rounded-full ${
+              className={`${compact ? "w-1 h-1" : "w-1.5 h-1.5"} rounded-full ${
                 lvl <= heat ? "bg-climate-warm" : "bg-muted-foreground/30"
               }`}
             />
           ))}
         </div>
       </div>
-
-      {/* Temp +/- buttons floating on the seat sides */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onTempDown();
-        }}
-        className="absolute -left-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/50 flex items-center justify-center shadow-md"
-      >
-        <Minus size={10} />
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onTempUp();
-        }}
-        className="absolute -right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/50 flex items-center justify-center shadow-md"
-      >
-        <Plus size={10} />
-      </button>
     </div>
   );
 };
