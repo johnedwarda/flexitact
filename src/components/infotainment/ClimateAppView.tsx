@@ -18,22 +18,10 @@ const ClimateAppView = () => {
 
   const clampTemp = (v: number) => Math.max(16, Math.min(30, v));
 
-  const adjustZoneTemp = (zone: ClimateZone, delta: number) => {
+  const adjustTemp = (delta: number) => {
     setClimate((c) => {
-      if (zone === "driver") {
-        const t = clampTemp(c.temp + delta);
-        return c.zones === "single"
-          ? { ...c, temp: t, passengerTemp: t }
-          : { ...c, temp: t };
-      }
-      if (zone === "passenger") {
-        if (c.zones === "single") {
-          const t = clampTemp(c.temp + delta);
-          return { ...c, temp: t, passengerTemp: t };
-        }
-        return { ...c, passengerTemp: clampTemp(c.passengerTemp + delta) };
-      }
-      return { ...c, rearTemp: clampTemp(c.rearTemp + delta) };
+      const t = clampTemp(c.temp + delta);
+      return { ...c, temp: t, passengerTemp: t, rearTemp: t };
     });
   };
 
@@ -65,9 +53,6 @@ const ClimateAppView = () => {
     }));
   };
 
-  const passengerDisplayTemp =
-    climate.zones === "single" ? climate.temp : climate.passengerTemp;
-
   return (
     <div className="flex flex-col h-full p-5 gap-3 overflow-hidden">
       {/* Header */}
@@ -89,27 +74,24 @@ const ClimateAppView = () => {
             accent="cool"
           />
           <ChipToggle
+            label="Auto"
+            active={climate.autoMode}
+            onClick={() => setClimate((c) => ({ ...c, autoMode: !c.autoMode }))}
+          />
+          <ChipToggle
+            label="A/C"
+            icon={<Snowflake size={12} />}
+            active={climate.acOn}
+            onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
+            accent="cool"
+          />
+          <ChipToggle
             label="Recirc"
             icon={<RotateCcw size={12} />}
             active={climate.recirculation}
             onClick={() =>
               setClimate((c) => ({ ...c, recirculation: !c.recirculation }))
             }
-          />
-          <ChipToggle
-            label="Sync"
-            active={climate.zones === "single"}
-            onClick={() =>
-              setClimate((c) => ({
-                ...c,
-                zones: c.zones === "dual" ? "single" : "dual",
-              }))
-            }
-          />
-          <ChipToggle
-            label="Rear Sync"
-            active={climate.rearSync}
-            onClick={() => setClimate((c) => ({ ...c, rearSync: !c.rearSync }))}
           />
           <FanStepper
             value={climate.fanSpeed}
@@ -130,6 +112,34 @@ const ClimateAppView = () => {
           </button>
         </div>
       </div>
+
+      {/* Big shared temperature readout / control */}
+      <div className="flex items-center justify-center gap-4 py-1">
+        <button
+          onClick={() => adjustTemp(-0.5)}
+          className="w-10 h-10 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
+          aria-label="Decrease temperature"
+        >
+          <Minus size={18} />
+        </button>
+        <div className="flex flex-col items-center min-w-[110px]">
+          <span className="text-4xl font-bold font-mono text-climate-warm leading-none">
+            {climate.temp.toFixed(1)}°
+          </span>
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em] mt-1">
+            Cabin Temp
+          </span>
+        </div>
+        <button
+          onClick={() => adjustTemp(0.5)}
+          className="w-10 h-10 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
+          aria-label="Increase temperature"
+        >
+          <Plus size={18} />
+        </button>
+      </div>
+
+
 
       {/* Cabin (top-down car) */}
       <div className="flex-1 min-h-0 relative flex items-center justify-center">
@@ -346,78 +356,58 @@ const ClimateAppView = () => {
 
           {/* Driver seat */}
           <CarSeat
-            zone="driver"
             label="Driver"
-            temp={climate.temp}
             heat={climate.frontSeatHeat.driver}
             active={climate.activeZone === "driver"}
             position={{ left: "9%", top: "42%", width: "30%", height: "22%" }}
-            onTempUp={() => adjustZoneTemp("driver", 0.5)}
-            onTempDown={() => adjustZoneTemp("driver", -0.5)}
             onHeat={() => cycleSeatHeat("driver")}
             onSelect={() => setActiveZone("driver")}
           />
 
           {/* Passenger seat */}
           <CarSeat
-            zone="passenger"
             label="Passenger"
-            temp={passengerDisplayTemp}
             heat={climate.frontSeatHeat.passenger}
             active={climate.activeZone === "passenger"}
-            dimmed={climate.zones === "single"}
             position={{ right: "9%", top: "42%", width: "30%", height: "22%" }}
-            onTempUp={() => adjustZoneTemp("passenger", 0.5)}
-            onTempDown={() => adjustZoneTemp("passenger", -0.5)}
             onHeat={() => cycleSeatHeat("passenger")}
             onSelect={() => setActiveZone("passenger")}
           />
 
           {/* Rear seats (bench: L / C / R) */}
           <CarSeat
-            zone="rearL"
             label="Rear L"
-            temp={climate.rearTemp}
             heat={climate.rearSeatHeat[0]}
             active={climate.activeZone === "rearL"}
             compact
             position={{ left: "9%", top: "70%", width: "23%", height: "16%" }}
-            onTempUp={() => adjustZoneTemp("rearL", 0.5)}
-            onTempDown={() => adjustZoneTemp("rearL", -0.5)}
             onHeat={() => cycleSeatHeat(0)}
             onSelect={() => setActiveZone("rearL")}
           />
           <CarSeat
-            zone="rearC"
             label="Rear C"
-            temp={climate.rearTemp}
             heat={climate.rearSeatHeat[1]}
             active={climate.activeZone === "rearC"}
             compact
             position={{ left: "38.5%", top: "70%", width: "23%", height: "16%" }}
-            onTempUp={() => adjustZoneTemp("rearC", 0.5)}
-            onTempDown={() => adjustZoneTemp("rearC", -0.5)}
             onHeat={() => cycleSeatHeat(1)}
             onSelect={() => setActiveZone("rearC")}
           />
           <CarSeat
-            zone="rearR"
             label="Rear R"
-            temp={climate.rearTemp}
             heat={climate.rearSeatHeat[2]}
             active={climate.activeZone === "rearR"}
             compact
             position={{ right: "9%", top: "70%", width: "23%", height: "16%" }}
-            onTempUp={() => adjustZoneTemp("rearR", 0.5)}
-            onTempDown={() => adjustZoneTemp("rearR", -0.5)}
             onHeat={() => cycleSeatHeat(2)}
             onSelect={() => setActiveZone("rearR")}
           />
+
         </div>
       </div>
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
-        Dial: Rotate = Temp • L/R = Cycle Zones • Up = Steering • Down = Defrost • Center = Sync
+        Dial: Rotate = Temp • L/R = Cycle Seats • Up = Steering • Down = Defrost • Center = Auto
       </p>
     </div>
   );
@@ -528,25 +518,17 @@ const MirrorTab = ({
 };
 
 const CarSeat = ({
-  zone,
   label,
-  temp,
   heat,
   active,
-  dimmed,
   compact,
   position,
-  onTempUp,
-  onTempDown,
   onHeat,
   onSelect,
 }: {
-  zone: ClimateZone;
   label: string;
-  temp: number;
   heat: number;
   active: boolean;
-  dimmed?: boolean;
   compact?: boolean;
   position: {
     left?: string;
@@ -556,8 +538,6 @@ const CarSeat = ({
     width: string;
     height: string;
   };
-  onTempUp: () => void;
-  onTempDown: () => void;
   onHeat: () => void;
   onSelect: () => void;
 }) => {
@@ -565,9 +545,7 @@ const CarSeat = ({
     <div
       onClick={onSelect}
       style={position}
-      className={`absolute cursor-pointer transition-opacity ${
-        dimmed ? "opacity-50" : ""
-      }`}
+      className="absolute cursor-pointer"
     >
       {/* Seat shape: backrest (top) + cushion (bottom), top-down view */}
       <button
@@ -607,50 +585,26 @@ const CarSeat = ({
         />
       </button>
 
-      {/* Temp readout overlay (centered on seat cushion) */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-[10%]">
+      {/* Label + heat dots (centered on cushion) */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-1 mt-[18%]">
         <span
           className={`${
-            compact ? "text-base" : "text-xl"
-          } font-bold font-mono text-climate-warm leading-none drop-shadow-[0_1px_2px_hsl(220_20%_5%/0.8)]`}
+            compact ? "text-[8px]" : "text-[9px]"
+          } font-mono text-foreground/70 uppercase tracking-wider`}
         >
-          {temp}°
-        </span>
-        <span className="text-[8px] font-mono text-foreground/70 uppercase tracking-wider">
           {label}
         </span>
-        {/* Heat dots */}
-        <div className="flex gap-0.5 mt-0.5">
+        <div className="flex gap-0.5">
           {[1, 2, 3].map((lvl) => (
             <div
               key={lvl}
-              className={`w-1 h-1 rounded-full ${
+              className={`${compact ? "w-1 h-1" : "w-1.5 h-1.5"} rounded-full ${
                 lvl <= heat ? "bg-climate-warm" : "bg-muted-foreground/30"
               }`}
             />
           ))}
         </div>
       </div>
-
-      {/* Temp +/- buttons floating on the seat sides */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onTempDown();
-        }}
-        className="absolute -left-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/50 flex items-center justify-center shadow-md"
-      >
-        <Minus size={10} />
-      </button>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onTempUp();
-        }}
-        className="absolute -right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/50 flex items-center justify-center shadow-md"
-      >
-        <Plus size={10} />
-      </button>
     </div>
   );
 };
