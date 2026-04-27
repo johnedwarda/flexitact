@@ -74,6 +74,18 @@ const ClimateAppView = () => {
             accent="cool"
           />
           <ChipToggle
+            label="Auto"
+            active={climate.autoMode}
+            onClick={() => setClimate((c) => ({ ...c, autoMode: !c.autoMode }))}
+          />
+          <ChipToggle
+            label="A/C"
+            icon={<Snowflake size={12} />}
+            active={climate.acOn}
+            onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
+            accent="cool"
+          />
+          <ChipToggle
             label="Recirc"
             icon={<RotateCcw size={12} />}
             active={climate.recirculation}
@@ -81,16 +93,52 @@ const ClimateAppView = () => {
               setClimate((c) => ({ ...c, recirculation: !c.recirculation }))
             }
           />
-          <ChipToggle
-            label="Sync"
-            active={climate.zones === "single"}
-            onClick={() =>
-              setClimate((c) => ({
-                ...c,
-                zones: c.zones === "dual" ? "single" : "dual",
-              }))
-            }
+          <FanStepper
+            value={climate.fanSpeed}
+            onChange={(v) => setClimate((c) => ({ ...c, fanSpeed: v }))}
           />
+          <button
+            onClick={cycleAir}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold uppercase tracking-wider border bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
+            title="Air direction"
+          >
+            <VentIcon dir={climate.airDirection} />
+            <span>
+              {climate.airDirection === "face" && "Face"}
+              {climate.airDirection === "feet" && "Feet"}
+              {climate.airDirection === "both" && "Face+Feet"}
+              {climate.airDirection === "windshield" && "Defrost"}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* Big shared temperature readout / control */}
+      <div className="flex items-center justify-center gap-4 py-1">
+        <button
+          onClick={() => adjustTemp(-0.5)}
+          className="w-10 h-10 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
+          aria-label="Decrease temperature"
+        >
+          <Minus size={18} />
+        </button>
+        <div className="flex flex-col items-center min-w-[110px]">
+          <span className="text-4xl font-bold font-mono text-climate-warm leading-none">
+            {climate.temp.toFixed(1)}°
+          </span>
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em] mt-1">
+            Cabin Temp
+          </span>
+        </div>
+        <button
+          onClick={() => adjustTemp(0.5)}
+          className="w-10 h-10 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
+          aria-label="Increase temperature"
+        >
+          <Plus size={18} />
+        </button>
+      </div>
+
           <ChipToggle
             label="Rear Sync"
             active={climate.rearSync}
