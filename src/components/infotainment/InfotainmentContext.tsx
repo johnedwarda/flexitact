@@ -125,11 +125,23 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const [climate, setClimate] = useState<ClimateState>({
     temp: 22,
+    passengerTemp: 22,
+    rearTemp: 21,
     seatHeat: 1,
+    frontSeatHeat: { driver: 1, passenger: 0 },
+    rearSeatHeat: [0, 0, 0],
     steeringHeat: false,
     defogger: false,
+    rearDefogger: false,
+    mirrorHeat: { left: false, right: false },
+    fanSpeed: 3,
+    acOn: true,
+    autoMode: false,
+    recirculation: false,
+    airDirection: "face",
     zones: "dual",
-    activeZone: "left",
+    rearSync: true,
+    activeZone: "driver",
   });
 
   const [media, setMedia] = useState<MediaState>({
