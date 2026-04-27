@@ -23,14 +23,30 @@ interface AppInstance {
   state: AppState;
 }
 
+export type ClimateZone = "driver" | "passenger" | "rearL" | "rearC" | "rearR";
+
 interface ClimateState {
-  temp: number;
-  seatHeat: number;
+  temp: number; // driver temp (also single-zone temp)
+  passengerTemp: number;
+  rearTemp: number;
+  seatHeat: number; // legacy alias for driver heat (kept for widget compat)
+  frontSeatHeat: { driver: number; passenger: number };
+  rearSeatHeat: [number, number, number];
   steeringHeat: boolean;
   defogger: boolean;
+  rearDefogger: boolean;
+  mirrorHeat: { left: boolean; right: boolean };
+  fanSpeed: number;
+  acOn: boolean;
+  autoMode: boolean;
+  recirculation: boolean;
+  airDirection: "face" | "feet" | "both" | "windshield";
   zones: "dual" | "single";
-  activeZone: "left" | "right";
+  rearSync: boolean;
+  activeZone: ClimateZone;
 }
+
+const ZONE_ORDER: ClimateZone[] = ["driver", "passenger", "rearL", "rearC", "rearR"];
 
 interface MediaState {
   playing: boolean;
