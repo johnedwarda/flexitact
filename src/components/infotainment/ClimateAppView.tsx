@@ -113,37 +113,10 @@ const ClimateAppView = () => {
         </div>
       </div>
 
-      {/* Big shared temperature readout / control */}
-      <div className="flex items-center justify-center gap-4 py-1">
-        <button
-          onClick={() => adjustTemp(-0.5)}
-          className="w-10 h-10 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
-          aria-label="Decrease temperature"
-        >
-          <Minus size={18} />
-        </button>
-        <div className="flex flex-col items-center min-w-[110px]">
-          <span className="text-4xl font-bold font-mono text-climate-warm leading-none">
-            {climate.temp.toFixed(1)}°
-          </span>
-          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em] mt-1">
-            Cabin Temp
-          </span>
-        </div>
-        <button
-          onClick={() => adjustTemp(0.5)}
-          className="w-10 h-10 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors"
-          aria-label="Increase temperature"
-        >
-          <Plus size={18} />
-        </button>
-      </div>
-
-
-
-      {/* Cabin (top-down car) */}
-      <div className="flex-1 min-h-0 relative flex items-center justify-center">
+      {/* Cabin (top-down car) + side temperature control */}
+      <div className="flex-1 min-h-0 relative flex items-center justify-center gap-6">
         <div className="relative h-full aspect-[5/8] max-h-full">
+
           {/* Car silhouette via SVG */}
           <svg
             viewBox="0 0 500 800"
@@ -404,7 +377,32 @@ const ClimateAppView = () => {
           />
 
         </div>
+
+        {/* Side temperature control */}
+        <div className="flex flex-col items-center justify-center gap-3 py-2 px-4 rounded-2xl bg-muted/20 border border-border/40 min-w-[120px]">
+          <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.25em]">
+            Cabin Temp
+          </span>
+          <button
+            onClick={() => adjustTemp(0.5)}
+            className="w-11 h-11 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
+            aria-label="Increase temperature"
+          >
+            <Plus size={20} />
+          </button>
+          <span className="text-5xl font-bold font-mono text-climate-warm leading-none">
+            {climate.temp.toFixed(1)}°
+          </span>
+          <button
+            onClick={() => adjustTemp(-0.5)}
+            className="w-11 h-11 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
+            aria-label="Decrease temperature"
+          >
+            <Minus size={20} />
+          </button>
+        </div>
       </div>
+
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
         Dial: Rotate = Temp • L/R = Cycle Seats • Up = Steering • Down = Defrost • Center = Auto
