@@ -18,22 +18,10 @@ const ClimateAppView = () => {
 
   const clampTemp = (v: number) => Math.max(16, Math.min(30, v));
 
-  const adjustZoneTemp = (zone: ClimateZone, delta: number) => {
+  const adjustTemp = (delta: number) => {
     setClimate((c) => {
-      if (zone === "driver") {
-        const t = clampTemp(c.temp + delta);
-        return c.zones === "single"
-          ? { ...c, temp: t, passengerTemp: t }
-          : { ...c, temp: t };
-      }
-      if (zone === "passenger") {
-        if (c.zones === "single") {
-          const t = clampTemp(c.temp + delta);
-          return { ...c, temp: t, passengerTemp: t };
-        }
-        return { ...c, passengerTemp: clampTemp(c.passengerTemp + delta) };
-      }
-      return { ...c, rearTemp: clampTemp(c.rearTemp + delta) };
+      const t = clampTemp(c.temp + delta);
+      return { ...c, temp: t, passengerTemp: t, rearTemp: t };
     });
   };
 
@@ -64,9 +52,6 @@ const ClimateAppView = () => {
       airDirection: order[(order.indexOf(c.airDirection) + 1) % order.length],
     }));
   };
-
-  const passengerDisplayTemp =
-    climate.zones === "single" ? climate.temp : climate.passengerTemp;
 
   return (
     <div className="flex flex-col h-full p-5 gap-3 overflow-hidden">
