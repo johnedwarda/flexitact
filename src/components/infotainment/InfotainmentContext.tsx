@@ -383,7 +383,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         trackIndex: (m.trackIndex - 1 + TRACKS.length) % TRACKS.length,
       }));
     } else if (currentId === "climate") {
-      setClimate((c) => ({ ...c, activeZone: c.activeZone === "left" ? "right" : "left" }));
+      setClimate((c) => {
+        const idx = ZONE_ORDER.indexOf(c.activeZone);
+        const next = ZONE_ORDER[(idx - 1 + ZONE_ORDER.length) % ZONE_ORDER.length];
+        return { ...c, activeZone: next };
+      });
     }
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
