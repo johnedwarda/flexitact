@@ -74,6 +74,7 @@ interface InfotainmentContextType {
   phonePopupOpen: boolean;
   phoneIndex: number;
   activeCallIndex: number | null;
+  endCall: () => void;
   navigateLeft: () => void;
   navigateRight: () => void;
   openApp: () => void;
@@ -488,6 +489,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         phonePopupOpen,
         phoneIndex,
         activeCallIndex,
+        endCall: () => setActiveCallIndex(null),
         navigateLeft,
         navigateRight,
         openApp,
