@@ -54,9 +54,8 @@ const PhoneWidget = () => {
           <span className="text-xs font-semibold">{contact.name}</span>
           <span className="text-[10px] font-mono text-muted-foreground">{formatDuration(duration)}</span>
         </div>
-        <div className="flex items-center gap-1.5 text-muted-foreground" title={`Call volume ${callVolume}`}>
-          <VolumeIcon size={14} />
-          <VolumeDonut value={callVolume} muted={callMuted} size={18} />
+        <div className="text-muted-foreground" title={`Call volume ${callVolume}`}>
+          <VolumeDonut value={callVolume} muted={callMuted} size={26} />
         </div>
         <button
           onClick={(e) => {
