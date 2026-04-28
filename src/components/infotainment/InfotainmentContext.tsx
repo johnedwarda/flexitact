@@ -324,9 +324,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       openApp();
       return;
     }
-    // Check if any app is currently opened
-    const openedAppId = Object.keys(apps).find((k) => apps[k].state === "opened");
-    if (openedAppId) {
+    if (id === "menu") return;
+    // If the focused app is already the open one, close it (reveal map).
+    // Otherwise open the focused app (replacing any other open app).
+    if (apps[id]?.state === "opened") {
       minimizeApp();
     } else {
       openApp();
