@@ -89,7 +89,7 @@ const PhoneWidget = () => {
           <div key={fav.id} className="flex flex-col items-center gap-0.5">
             <div
               className={`relative w-7 h-7 rounded-full overflow-hidden transition-all ${
-                isActive ? "ring-2 ring-accent" : ""
+                isActive ? "border-2 border-accent" : "border-2 border-transparent"
               }`}
               title={fav.name}
             >
@@ -99,13 +99,8 @@ const PhoneWidget = () => {
                 width={28}
                 height={28}
                 loading="lazy"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover opacity-70"
               />
-              {isActive && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                  <Phone size={12} className="text-accent" />
-                </div>
-              )}
             </div>
             <span
               className={`text-[9px] leading-none transition-colors ${
