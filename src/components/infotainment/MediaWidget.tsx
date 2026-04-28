@@ -11,6 +11,7 @@ import {
   Minus,
 } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
+import VolumeDonut from "./VolumeDonut";
 
 const MediaWidget = () => {
   const { media, setMedia, tracks } = useInfotainment();
@@ -75,9 +76,11 @@ const MediaWidget = () => {
         </button>
         <button
           onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+          title={`Volume ${muted ? "muted" : `${volume}%`}`}
         >
           {muted || volume === 0 ? <VolumeX size={16} /> : volume < 33 ? <Volume size={16} /> : volume < 66 ? <Volume1 size={16} /> : <Volume2 size={16} />}
+          <VolumeDonut value={volume} muted={muted} size={18} />
         </button>
         <button
           onClick={() =>
