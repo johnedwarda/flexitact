@@ -75,6 +75,9 @@ interface InfotainmentContextType {
   phoneIndex: number;
   activeCallIndex: number | null;
   endCall: () => void;
+  callVolume: number;
+  callMuted: boolean;
+  setCallMuted: (m: boolean) => void;
   navigateLeft: () => void;
   navigateRight: () => void;
   openApp: () => void;
@@ -159,6 +162,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [phonePopupOpen, setPhonePopupOpen] = useState(false);
   const [phoneIndex, setPhoneIndex] = useState(0);
   const [activeCallIndex, setActiveCallIndex] = useState<number | null>(null);
+  const [callVolume, setCallVolume] = useState(60);
+  const [callMuted, setCallMuted] = useState(false);
   const lastDialUsedIndexRef = useRef<number>(1); // default to climate
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [lastActivity, setLastActivity] = useState(0);
