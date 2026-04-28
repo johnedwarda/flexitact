@@ -8,7 +8,7 @@ const mapCenter: L.LatLngExpression = [48.8566, 2.3522];
 const MapView = () => {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
-  const [tripActive, setTripActive] = useState(true);
+  const [tripActive, setTripActive] = useState(false);
 
   useEffect(() => {
     if (!mapElementRef.current || mapInstanceRef.current) return;
