@@ -12,7 +12,7 @@ interface VolumeDonutProps {
 const VolumeDonut = ({
   value,
   size = 26,
-  strokeWidth = 2.5,
+  strokeWidth = 1.25,
   muted = false,
   iconSize,
   className,
