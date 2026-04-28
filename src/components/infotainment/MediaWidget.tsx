@@ -1,4 +1,4 @@
-import { Play, Pause, SkipBack, SkipForward, Plus, Minus } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import VolumeDonut from "./VolumeDonut";
 
@@ -50,39 +50,13 @@ const MediaWidget = () => {
       <div className="w-px h-6 bg-border mx-1" />
 
       {/* Volume */}
-      <div className="flex items-center gap-1">
-        <button
-          onClick={() =>
-            setMedia((m) => ({
-              ...m,
-              volume: Math.max(0, m.volume - 5),
-              muted: false,
-            }))
-          }
-          className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <Minus size={12} />
-        </button>
-        <button
-          onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-          className="text-muted-foreground hover:text-foreground transition-colors"
-          title={`Volume ${muted ? "muted" : `${volume}%`}`}
-        >
-          <VolumeDonut value={volume} muted={muted} size={26} />
-        </button>
-        <button
-          onClick={() =>
-            setMedia((m) => ({
-              ...m,
-              volume: Math.min(100, m.volume + 5),
-              muted: false,
-            }))
-          }
-          className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <Plus size={12} />
-        </button>
-      </div>
+      <button
+        onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
+        className="text-muted-foreground hover:text-foreground transition-colors"
+        title={`Volume ${muted ? "muted" : `${volume}%`}`}
+      >
+        <VolumeDonut value={volume} muted={muted} size={26} />
+      </button>
     </div>
   );
 };
