@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useRef, useEffect, type Context, type ReactNode } from "react";
 
-const PHONE_ITEMS_COUNT = 9; // 5 favorites + 4 recent calls
+const PHONE_ITEMS_COUNT = 4; // 4 favorites
 
 export type TaskbarItem = {
   id: string;

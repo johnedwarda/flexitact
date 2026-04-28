@@ -1,13 +1,12 @@
-import { useState, useCallback, useRef } from "react";
-import { SlidersHorizontal, LayoutGrid, Phone } from "lucide-react";
+import { useState, useCallback } from "react";
+import { SlidersHorizontal, LayoutGrid } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
-import PhonePopup from "./PhonePopup";
+import PhoneWidget from "./PhoneWidget";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, apps, openAppById, navigateToItem, phonePopupOpen, phoneIndex } = useInfotainment();
-  const phoneRef = useRef<HTMLButtonElement>(null);
+  const { highlightedIndex, openAppById, navigateToItem } = useInfotainment();
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
@@ -34,8 +33,6 @@ const BottomTaskbar = () => {
       </div>
     );
   };
-
-  const [phoneHover, setPhoneHover] = useState(false);
 
   const renderItem = (index: number) => {
     const item = TASKBAR_ITEMS[index];
@@ -70,28 +67,8 @@ const BottomTaskbar = () => {
             </SwipeWrapper>
           )}
           {item.id === "phone" && (
-            <div
-              className="relative"
-              onMouseEnter={() => {
-                setPhoneHover(true);
-                navigateToItem(index);
-              }}
-              onMouseLeave={() => setPhoneHover(false)}
-            >
-              <button
-                ref={phoneRef}
-                onClick={() => navigateToItem(index)}
-                className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
-              >
-                <Phone size={20} />
-              </button>
-              {(phoneHover || phonePopupOpen) && phoneRef.current && (
-                <PhonePopup
-                  phoneIndex={phoneIndex}
-                  anchorX={phoneRef.current.getBoundingClientRect().left + phoneRef.current.getBoundingClientRect().width / 2}
-                  anchorTop={phoneRef.current.getBoundingClientRect().top}
-                />
-              )}
+            <div onClick={() => navigateToItem(index)} className="cursor-pointer">
+              <PhoneWidget />
             </div>
           )}
           {item.id === "menu" && (
