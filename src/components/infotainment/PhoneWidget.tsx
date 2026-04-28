@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Phone, PhoneOff, Mic, MicOff, Volume, Volume1, Volume2, VolumeX } from "lucide-react";
+import { Phone, PhoneOff, Mic, MicOff } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import VolumeDonut from "./VolumeDonut";
 import aliceImg from "@/assets/contact-alice.jpg";
@@ -36,7 +36,7 @@ const PhoneWidget = () => {
     return () => clearInterval(interval);
   }, [activeCallIndex]);
 
-  const VolumeIcon = callMuted || callVolume === 0 ? VolumeX : callVolume < 33 ? Volume : callVolume < 66 ? Volume1 : Volume2;
+
 
   if (activeCallIndex !== null) {
     const contact = PHONE_FAVORITES[activeCallIndex];
