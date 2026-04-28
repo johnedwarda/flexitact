@@ -421,6 +421,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const dialUp = useCallback(() => {
     recordDialUsage(highlightedIndex);
+    if (currentId === "phone" && activeCallIndex !== null) {
+      setCallMuted(false);
+      return;
+    }
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i - APP_MENU_COLS + APP_MENU_COUNT) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -428,10 +432,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
 
   const dialDown = useCallback(() => {
     recordDialUsage(highlightedIndex);
+    if (currentId === "phone" && activeCallIndex !== null) {
+      setCallMuted(true);
+      return;
+    }
     if (currentId === "menu" && appMenuOpen) {
       setAppMenuIndex((i) => (i + APP_MENU_COLS) % APP_MENU_COUNT);
     } else if (currentId === "phone" && phonePopupOpen) {
@@ -439,11 +447,16 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
+  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
       recordDialUsage(highlightedIndex);
+      if (currentId === "phone" && activeCallIndex !== null) {
+        setCallVolume((v) => Math.max(0, Math.min(100, v + (dir === "cw" ? 5 : -5))));
+        setCallMuted(false);
+        return;
+      }
       if (currentId === "menu" && appMenuOpen) {
         setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
       } else if (currentId === "phone" && phonePopupOpen) {
@@ -462,7 +475,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]
+    [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]
   );
 
   const dialCenter = useCallback(() => {
