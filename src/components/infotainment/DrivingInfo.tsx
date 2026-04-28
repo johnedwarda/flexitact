@@ -1,4 +1,4 @@
-import { Zap, Fuel, Droplets, Lightbulb } from "lucide-react";
+import { Gauge, BatteryMedium, CloudRain, CarFront } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const DrivingInfo = () => {
@@ -44,10 +44,10 @@ const DrivingInfo = () => {
 
       {/* Info Grid */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-[260px]">
-        <InfoCard icon={<Fuel size={24} />} label="Battery / Range" value="78% · 342 km" color="text-success" />
-        <InfoCard icon={<Zap size={24} />} label="Drive Mode" value="Comfort" color="text-primary" />
-        <InfoCard icon={<Droplets size={24} />} label="Wipers" value="Auto" color="text-accent" />
-        <InfoCard icon={<Lightbulb size={24} />} label="Lights" value="Auto" color="text-accent" />
+        <InfoCard icon={<BatteryMedium size={24} />} label="Battery / Range" value="78% · 342 km" color="text-success" />
+        <InfoCard icon={<Gauge size={24} />} label="Drive Mode" value="Comfort" color="text-primary" />
+        <InfoCard icon={<CloudRain size={24} />} label="Wipers" value="Auto" color="text-accent" />
+        <InfoCard icon={<CarFront size={24} />} label="Lights" value="Auto" color="text-accent" />
       </div>
     </div>
   );
@@ -64,7 +64,7 @@ const InfoCard = ({
   value: string;
   color: string;
 }) => (
-  <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-muted/40 border border-border/50">
+  <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-muted/40">
     <div className="text-muted-foreground">{icon}</div>
     <span className="text-[8px] text-muted-foreground uppercase tracking-wider text-center">{label}</span>
     <span className="text-[10px] font-semibold font-mono text-center">{value}</span>
