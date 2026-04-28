@@ -487,6 +487,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         appMenuIndex,
         phonePopupOpen,
         phoneIndex,
+        activeCallIndex,
         navigateLeft,
         navigateRight,
         openApp,
