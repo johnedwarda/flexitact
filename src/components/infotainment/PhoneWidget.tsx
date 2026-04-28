@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Phone, PhoneOff, Mic, MicOff, Volume2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Phone, PhoneOff, Mic, MicOff, Volume, Volume1, Volume2, VolumeX } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import aliceImg from "@/assets/contact-alice.jpg";
 import bobImg from "@/assets/contact-bob.jpg";
