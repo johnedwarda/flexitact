@@ -83,6 +83,7 @@ const PhoneWidget = () => {
 
   return (
     <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+      <Phone size={16} className="text-muted-foreground" />
       {PHONE_FAVORITES.map((fav, i) => {
         const isActive = phoneActive && phoneIndex === i;
         return (
