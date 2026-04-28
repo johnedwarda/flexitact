@@ -73,6 +73,7 @@ interface InfotainmentContextType {
   appMenuIndex: number;
   phonePopupOpen: boolean;
   phoneIndex: number;
+  activeCallIndex: number | null;
   navigateLeft: () => void;
   navigateRight: () => void;
   openApp: () => void;
@@ -156,6 +157,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [appMenuIndex, setAppMenuIndex] = useState(0);
   const [phonePopupOpen, setPhonePopupOpen] = useState(false);
   const [phoneIndex, setPhoneIndex] = useState(0);
+  const [activeCallIndex, setActiveCallIndex] = useState<number | null>(null);
   const lastDialUsedIndexRef = useRef<number>(1); // default to climate
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [lastActivity, setLastActivity] = useState(0);
@@ -464,8 +466,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (selectedAppId) {
         openAppFromMenu(selectedAppId);
       }
-    } else if (currentId === "phone" && phonePopupOpen) {
-      console.log("Calling contact at index", phoneIndex);
+    } else if (currentId === "phone") {
+      setActiveCallIndex((cur) => (cur === phoneIndex ? null : phoneIndex));
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
     } else if (currentId === "climate") {
@@ -485,6 +487,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         appMenuIndex,
         phonePopupOpen,
         phoneIndex,
+        activeCallIndex,
         navigateLeft,
         navigateRight,
         openApp,
