@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Phone, PhoneOff, Mic, MicOff, Volume2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Phone, PhoneOff, Mic, MicOff, Volume, Volume1, Volume2, VolumeX } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import aliceImg from "@/assets/contact-alice.jpg";
 import bobImg from "@/assets/contact-bob.jpg";
@@ -24,6 +24,10 @@ const PhoneWidget = () => {
   const phoneActive = highlightedIndex === 3;
 
   const [duration, setDuration] = useState(0);
+  const [volumeChanging, setVolumeChanging] = useState(false);
+  const volumeTimerRef = useRef<number | null>(null);
+  const prevVolumeRef = useRef(callVolume);
+  const prevMutedRef = useRef(callMuted);
 
   useEffect(() => {
     if (activeCallIndex === null) {
@@ -34,6 +38,21 @@ const PhoneWidget = () => {
     const interval = setInterval(() => setDuration((d) => d + 1), 1000);
     return () => clearInterval(interval);
   }, [activeCallIndex]);
+
+  useEffect(() => {
+    if (activeCallIndex === null) return;
+    if (prevVolumeRef.current === callVolume && prevMutedRef.current === callMuted) return;
+    prevVolumeRef.current = callVolume;
+    prevMutedRef.current = callMuted;
+    setVolumeChanging(true);
+    if (volumeTimerRef.current) window.clearTimeout(volumeTimerRef.current);
+    volumeTimerRef.current = window.setTimeout(() => setVolumeChanging(false), 1200);
+    return () => {
+      if (volumeTimerRef.current) window.clearTimeout(volumeTimerRef.current);
+    };
+  }, [callVolume, callMuted, activeCallIndex]);
+
+  const VolumeIcon = callMuted || callVolume === 0 ? VolumeX : callVolume < 33 ? Volume : callVolume < 66 ? Volume1 : Volume2;
 
   if (activeCallIndex !== null) {
     const contact = PHONE_FAVORITES[activeCallIndex];
@@ -51,9 +70,11 @@ const PhoneWidget = () => {
           <span className="text-xs font-semibold">{contact.name}</span>
           <span className="text-[10px] font-mono text-muted-foreground">{formatDuration(duration)}</span>
         </div>
-        <div className="flex items-center gap-1 text-[10px] font-mono text-muted-foreground" title="Call volume">
-          <Volume2 size={12} />
-          <span className="w-6 text-right">{callVolume}</span>
+        <div className="flex items-center gap-1 text-muted-foreground" title={`Call volume ${callVolume}`}>
+          <VolumeIcon size={16} />
+          {volumeChanging && (
+            <span className="text-[10px] font-mono w-6 text-right">{callMuted ? "—" : callVolume}</span>
+          )}
         </div>
         <button
           onClick={(e) => {
