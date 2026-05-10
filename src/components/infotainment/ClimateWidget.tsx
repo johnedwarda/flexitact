@@ -66,4 +66,48 @@ const ClimateWidget = () => {
   );
 };
 
+const TempDonut = ({ temp }: { temp: number }) => {
+  const size = 40;
+  const strokeWidth = 1.5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const min = 16;
+  const max = 30;
+  const pct = Math.max(0, Math.min(1, (temp - min) / (max - min)));
+  const dash = pct * circumference;
+
+  return (
+    <div
+      className="relative inline-flex items-center justify-center text-climate-warm min-w-[48px]"
+      style={{ width: size, height: size }}
+      aria-label={`Temperature ${temp}°`}
+      role="img"
+    >
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="absolute inset-0">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          className="opacity-20"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${circumference}`}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        />
+      </svg>
+      <span className="relative text-xs font-bold font-mono leading-none">{temp}°</span>
+    </div>
+  );
+};
+
 export default ClimateWidget;
