@@ -14,9 +14,8 @@ const ClimateWidget = () => {
       >
         <Minus size={14} />
       </button>
-      <span className="text-lg font-bold font-mono text-climate-warm min-w-[48px] text-center">
-        {temp}°
-      </span>
+      <TempDonut temp={temp} />
+
       <button
         onClick={() => setClimate((c) => ({ ...c, temp: Math.min(30, c.temp + 0.5) }))}
         className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
