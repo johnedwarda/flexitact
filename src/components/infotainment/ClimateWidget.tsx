@@ -1,5 +1,5 @@
 import { useInfotainment } from "./InfotainmentContext";
-import { Minus, Plus, CircleDot, Heater, Wind } from "lucide-react";
+import { CircleDot, Heater, Wind } from "lucide-react";
 
 const ClimateWidget = () => {
   const { climate, setClimate } = useInfotainment();
@@ -7,21 +7,8 @@ const ClimateWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      {/* Temperature control */}
-      <button
-        onClick={() => setClimate((c) => ({ ...c, temp: Math.max(16, c.temp - 0.5) }))}
-        className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
-      >
-        <Minus size={14} />
-      </button>
+      {/* Temperature display */}
       <TempDonut temp={temp} />
-
-      <button
-        onClick={() => setClimate((c) => ({ ...c, temp: Math.min(30, c.temp + 0.5) }))}
-        className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
-      >
-        <Plus size={14} />
-      </button>
 
       <div className="w-px h-6 bg-border mx-1" />
 
