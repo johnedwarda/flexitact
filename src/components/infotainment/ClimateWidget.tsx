@@ -14,9 +14,8 @@ const ClimateWidget = () => {
       >
         <Minus size={14} />
       </button>
-      <span className="text-lg font-bold font-mono text-climate-warm min-w-[48px] text-center">
-        {temp}°
-      </span>
+      <TempDonut temp={temp} />
+
       <button
         onClick={() => setClimate((c) => ({ ...c, temp: Math.min(30, c.temp + 0.5) }))}
         className="w-7 h-7 rounded-full flex items-center justify-center hover:text-foreground transition-colors text-muted-foreground"
@@ -63,6 +62,50 @@ const ClimateWidget = () => {
       >
         <Wind size={16} />
       </button>
+    </div>
+  );
+};
+
+const TempDonut = ({ temp }: { temp: number }) => {
+  const size = 40;
+  const strokeWidth = 1.5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const min = 16;
+  const max = 30;
+  const pct = Math.max(0, Math.min(1, (temp - min) / (max - min)));
+  const dash = pct * circumference;
+
+  return (
+    <div
+      className="relative inline-flex items-center justify-center text-climate-warm min-w-[48px]"
+      style={{ width: size, height: size }}
+      aria-label={`Temperature ${temp}°`}
+      role="img"
+    >
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="absolute inset-0">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          className="opacity-20"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${circumference}`}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        />
+      </svg>
+      <span className="relative text-xs font-bold font-mono leading-none">{temp}°</span>
     </div>
   );
 };

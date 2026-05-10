@@ -65,8 +65,8 @@ const NavigationButtons = () => {
       {/* Task Switcher - 4-way Joystick */}
       <div className="flex flex-col items-center gap-2">
         <div className="relative w-28 h-28">
-          {/* Base ring */}
-          <div className="absolute inset-0 rounded-full bg-[hsl(var(--surface-glass))] border-2 border-border/40 shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]" />
+          {/* Outer ring removed */}
+
 
           {/* Direction buttons */}
           {joystickDirs.map(({ key, label, style }) => (
