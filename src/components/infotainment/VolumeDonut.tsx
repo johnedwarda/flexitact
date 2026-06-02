@@ -26,22 +26,23 @@ const VolumeDonut = ({
   const innerIconSize = iconSize ?? Math.round(size * 0.5);
 
   const [showNumber, setShowNumber] = useState(false);
-  const prevValueRef = useRef(value);
+  const mountedRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (prevValueRef.current !== value) {
-      prevValueRef.current = value;
-      if (!muted) {
-        setShowNumber(true);
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setShowNumber(false), 1000);
-      }
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
     }
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
+    if (muted) return;
+    setShowNumber(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setShowNumber(false), 1000);
   }, [value, muted]);
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
 
   return (
     <div
