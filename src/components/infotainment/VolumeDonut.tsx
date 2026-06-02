@@ -80,8 +80,8 @@ const VolumeDonut = ({
       </svg>
       {showNumber ? (
         <span
-          className="relative z-10 font-mono font-bold leading-none text-foreground tabular-nums"
-          style={{ fontSize: Math.max(10, Math.round(size * 0.44)) }}
+          className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-background/90 font-mono font-black leading-none text-primary tabular-nums ring-1 ring-primary/50"
+          style={{ fontSize: Math.max(11, Math.round(size * 0.46)) }}
         >
           {clamped}
         </span>
