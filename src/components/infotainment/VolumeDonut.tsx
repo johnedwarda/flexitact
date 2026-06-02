@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Volume, Volume1, Volume2, VolumeX } from "lucide-react";
 
 interface VolumeDonutProps {
@@ -23,6 +24,24 @@ const VolumeDonut = ({
   const dash = (muted ? 0 : clamped / 100) * circumference;
   const Icon = muted || clamped === 0 ? VolumeX : clamped < 33 ? Volume : clamped < 66 ? Volume1 : Volume2;
   const innerIconSize = iconSize ?? Math.round(size * 0.5);
+
+  const [showNumber, setShowNumber] = useState(false);
+  const prevValueRef = useRef(value);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (prevValueRef.current !== value) {
+      prevValueRef.current = value;
+      if (!muted) {
+        setShowNumber(true);
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setShowNumber(false), 1000);
+      }
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [value, muted]);
 
   return (
     <div
@@ -54,7 +73,16 @@ const VolumeDonut = ({
           className={muted ? "opacity-0" : "text-primary"}
         />
       </svg>
-      <Icon size={innerIconSize} className="relative" />
+      {showNumber && !muted ? (
+        <span
+          className="relative font-mono font-bold leading-none"
+          style={{ fontSize: Math.round(size * 0.42) }}
+        >
+          {clamped}
+        </span>
+      ) : (
+        <Icon size={innerIconSize} className="relative" />
+      )}
     </div>
   );
 };

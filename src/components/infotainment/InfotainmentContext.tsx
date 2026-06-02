@@ -469,7 +469,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
           muted: false,
         }));
       } else if (currentId === "climate") {
-        const delta = dir === "cw" ? 0.5 : -0.5;
+        const delta = dir === "cw" ? 1 : -1;
         setClimate((c) => {
           const t = Math.max(16, Math.min(30, c.temp + delta));
           return { ...c, temp: t, passengerTemp: t, rearTemp: t };
