@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Volume, Volume1, Volume2, VolumeX } from "lucide-react";
 
 interface VolumeDonutProps {
@@ -31,17 +31,17 @@ const VolumeDonut = ({
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const showNumber = !muted && now < numberVisibleUntil;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (previousValueRef.current === clamped) {
       return;
     }
     previousValueRef.current = clamped;
     if (muted) return;
-    const visibleUntil = Date.now() + 1600;
+    const visibleUntil = Date.now() + 3000;
     setNumberVisibleUntil(visibleUntil);
     setNow(Date.now());
     if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => setNow(Date.now()), 1600);
+    timerRef.current = setTimeout(() => setNow(Date.now()), 3000);
   }, [clamped, muted]);
 
   useEffect(() => () => {
