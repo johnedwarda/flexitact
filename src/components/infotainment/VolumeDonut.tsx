@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Volume, Volume1, Volume2, VolumeX } from "lucide-react";
 
 interface VolumeDonutProps {
@@ -25,20 +25,24 @@ const VolumeDonut = ({
   const Icon = muted || clamped === 0 ? VolumeX : clamped < 33 ? Volume : clamped < 66 ? Volume1 : Volume2;
   const innerIconSize = iconSize ?? Math.round(size * 0.5);
 
-  const [showNumber, setShowNumber] = useState(false);
-  const mountedRef = useRef(false);
+  const [numberVisibleUntil, setNumberVisibleUntil] = useState(0);
+  const [now, setNow] = useState(Date.now());
+  const previousValueRef = useRef(clamped);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const showNumber = !muted && now < numberVisibleUntil;
 
-  useEffect(() => {
-    if (!mountedRef.current) {
-      mountedRef.current = true;
+  useLayoutEffect(() => {
+    if (previousValueRef.current === clamped) {
       return;
     }
+    previousValueRef.current = clamped;
     if (muted) return;
-    setShowNumber(true);
+    const visibleUntil = Date.now() + 3000;
+    setNumberVisibleUntil(visibleUntil);
+    setNow(Date.now());
     if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => setShowNumber(false), 1000);
-  }, [value, muted]);
+    timerRef.current = setTimeout(() => setNow(Date.now()), 3000);
+  }, [clamped, muted]);
 
   useEffect(() => () => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -74,10 +78,10 @@ const VolumeDonut = ({
           className={muted ? "opacity-0" : "text-primary"}
         />
       </svg>
-      {showNumber && !muted ? (
+      {showNumber ? (
         <span
-          className="relative font-mono font-bold leading-none"
-          style={{ fontSize: Math.round(size * 0.42) }}
+          className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-background/90 font-mono font-black leading-none text-primary tabular-nums ring-1 ring-primary/50"
+          style={{ fontSize: Math.max(11, Math.round(size * 0.46)) }}
         >
           {clamped}
         </span>
