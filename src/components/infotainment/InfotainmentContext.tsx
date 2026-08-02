@@ -347,12 +347,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else {
       openApp();
     }
-    // Icons (non-widgets) hand the highlight straight back to the last widget
-    if (!isWidgetIndex(highlightedIndex)) {
-      returnToLastWidget();
-    } else {
-      lastDialUsedIndexRef.current = highlightedIndex;
-    }
+    // Opening/closing an app never claims the highlight — hand it back to the
+    // last widget the control cluster was actually used with.
+    returnToLastWidget();
+
   }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, returnToLastWidget]);
 
   const openAppById = useCallback((appId: string) => {
