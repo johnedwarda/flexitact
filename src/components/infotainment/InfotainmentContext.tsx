@@ -434,9 +434,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const openAppFromMenu = useCallback((appId: string) => {
     rememberGridApp(appId);
-    setAppMenuOpen(false);
-    const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === appId);
-    if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
+    // Grid stays open until the idle timeout reverts the highlight.
     setApps((prev) => {
       const updated = { ...prev };
       for (const key of Object.keys(updated)) {
