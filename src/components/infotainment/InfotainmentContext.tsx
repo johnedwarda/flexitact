@@ -381,6 +381,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  const openAppMenu = useCallback(() => {
+    setAppMenuOpen(true);
+    setAppMenuIndex(0);
+    setPhonePopupOpen(false);
+  }, []);
+
   const navigateToItem = useCallback((index: number) => {
     const item = TASKBAR_ITEMS[index];
     setHighlightedIndex(index);
