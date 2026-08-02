@@ -25,7 +25,7 @@ const MediaWidget = () => {
               trackIndex: (m.trackIndex - 1 + tracks.length) % tracks.length,
             }))
           }
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <SkipBack size={16} />
         </button>
@@ -42,7 +42,7 @@ const MediaWidget = () => {
               trackIndex: (m.trackIndex + 1) % tracks.length,
             }))
           }
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <SkipForward size={16} />
         </button>
@@ -53,7 +53,7 @@ const MediaWidget = () => {
       {/* Volume */}
       <button
         onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-        className="text-foreground/80 hover:text-foreground transition-colors"
+        className="text-muted-foreground hover:text-foreground transition-colors"
         title={`Volume ${muted ? "muted" : `${volume}%`}`}
       >
         <VolumeDonut value={volume} muted={muted} />
