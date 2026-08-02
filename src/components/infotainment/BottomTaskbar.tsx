@@ -116,9 +116,14 @@ const BottomTaskbar = () => {
     );
   };
 
+  // The recent-app slot only appears after a grid app has been opened.
+  const visibleItems = TASKBAR_ITEMS
+    .map((item, originalIndex) => ({ item, originalIndex }))
+    .filter(({ item }) => !(item.id === "recent" && !recentGridAppId));
+
   return (
     <div className="flex items-center justify-between px-4 py-3 bg-card/80 backdrop-blur-md border-t border-border z-50">
-      {TASKBAR_ITEMS.map((_, i) => renderItem(i))}
+      {visibleItems.map(({ item, originalIndex }) => renderItem(originalIndex, item))}
     </div>
   );
 };
