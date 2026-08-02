@@ -452,10 +452,9 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
+    if (appMenuOpen) return;
     recordDialUsage(highlightedIndex);
-    if (currentId === "menu" && appMenuOpen) {
-      setAppMenuIndex((i) => (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
-    } else if (currentId === "phone" && phonePopupOpen) {
+    if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
     } else if (currentId === "media") {
       setMedia((m) => ({
@@ -472,10 +471,9 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialRight = useCallback(() => {
+    if (appMenuOpen) return;
     recordDialUsage(highlightedIndex);
-    if (currentId === "menu" && appMenuOpen) {
-      setAppMenuIndex((i) => (i + 1) % APP_MENU_COUNT);
-    } else if (currentId === "phone" && phonePopupOpen) {
+    if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => (i + 1) % PHONE_ITEMS_COUNT);
     } else if (currentId === "media") {
       setMedia((m) => ({
@@ -492,14 +490,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialUp = useCallback(() => {
+    if (appMenuOpen) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && activeCallIndex !== null) {
       setCallMuted(false);
       return;
     }
-    if (currentId === "menu" && appMenuOpen) {
-      setAppMenuIndex((i) => (i - APP_MENU_COLS + APP_MENU_COUNT) % APP_MENU_COUNT);
-    } else if (currentId === "phone" && phonePopupOpen) {
+    if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => Math.max(0, i - 1));
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
@@ -507,14 +504,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
 
   const dialDown = useCallback(() => {
+    if (appMenuOpen) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && activeCallIndex !== null) {
       setCallMuted(true);
       return;
     }
-    if (currentId === "menu" && appMenuOpen) {
-      setAppMenuIndex((i) => (i + APP_MENU_COLS) % APP_MENU_COUNT);
-    } else if (currentId === "phone" && phonePopupOpen) {
+    if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => Math.min(PHONE_ITEMS_COUNT - 1, i + 1));
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
@@ -523,15 +519,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
+      if (appMenuOpen) return;
       recordDialUsage(highlightedIndex);
       if (currentId === "phone" && activeCallIndex !== null) {
         setCallVolume((v) => Math.max(0, Math.min(100, v + (dir === "cw" ? 5 : -5))));
         setCallMuted(false);
         return;
       }
-      if (currentId === "menu" && appMenuOpen) {
-        setAppMenuIndex((i) => dir === "cw" ? (i + 1) % APP_MENU_COUNT : (i - 1 + APP_MENU_COUNT) % APP_MENU_COUNT);
-      } else if (currentId === "phone" && phonePopupOpen) {
+      if (currentId === "phone" && phonePopupOpen) {
         setPhoneIndex((i) => dir === "cw" ? (i + 1) % PHONE_ITEMS_COUNT : (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
       } else if (currentId === "media") {
         setMedia((m) => ({
@@ -551,13 +546,9 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const dialCenter = useCallback(() => {
+    if (appMenuOpen) return;
     recordDialUsage(highlightedIndex);
-    if (currentId === "menu" && appMenuOpen) {
-      const selectedAppId = APP_MENU_IDS[appMenuIndex];
-      if (selectedAppId) {
-        openAppFromMenu(selectedAppId);
-      }
-    } else if (currentId === "phone") {
+    if (currentId === "phone") {
       setActiveCallIndex((cur) => (cur === phoneIndex ? null : phoneIndex));
     } else if (currentId === "media") {
       setMedia((m) => ({ ...m, playing: !m.playing }));
