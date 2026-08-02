@@ -307,6 +307,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [appMenuOpen, appMenuIndex, recordActivity]);
 
   const currentId = TASKBAR_ITEMS[highlightedIndex].id;
+  const controlClusterDisabled = appMenuOpen || apps.settings?.state === "opened" || apps.calendar?.state === "opened";
 
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
