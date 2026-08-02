@@ -123,7 +123,7 @@ const NavigationButtons = () => {
           {/* Outer rotating ring */}
           <div
             className={`absolute inset-0 rounded-full border-[3px] border-border/50 bg-[hsl(var(--surface-glass))] shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_0_20px_rgba(0,0,0,0.3)] transition-transform duration-150 ${
-              appMenuOpen ? "opacity-30" : ""
+              controlClusterDisabled ? "opacity-30" : ""
             }`}
             style={{ transform: `rotate(${dialRotation}deg)` }}
           >
