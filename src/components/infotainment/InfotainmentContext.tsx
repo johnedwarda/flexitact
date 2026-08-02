@@ -521,7 +521,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
-      if (appMenuOpen) return;
+      if (controlClusterDisabled) return;
       recordDialUsage(highlightedIndex);
       if (currentId === "phone" && activeCallIndex !== null) {
         setCallVolume((v) => Math.max(0, Math.min(100, v + (dir === "cw" ? 5 : -5))));
@@ -544,7 +544,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]
+    [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]
   );
 
   const dialCenter = useCallback(() => {
