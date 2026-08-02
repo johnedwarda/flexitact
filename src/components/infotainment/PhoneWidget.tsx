@@ -41,7 +41,7 @@ const PhoneWidget = () => {
   if (activeCallIndex !== null) {
     const contact = PHONE_FAVORITES[activeCallIndex];
     return (
-      <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+      <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
         <img
           src={contact.photo}
           alt={contact.name}
@@ -84,7 +84,7 @@ const PhoneWidget = () => {
   }
 
   return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+    <div className="flex items-center gap-2 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
       <Phone size={16} className="text-muted-foreground" />
       {PHONE_FAVORITES.map((fav, i) => {
         const isActive = phoneActive && phoneIndex === i;
