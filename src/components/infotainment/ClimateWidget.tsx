@@ -1,5 +1,5 @@
 import { useInfotainment } from "./InfotainmentContext";
-import { CircleDot, Heater, Wind } from "lucide-react";
+import { CircleDot, Heater, Thermometer, Wind } from "lucide-react";
 
 const ClimateWidget = () => {
   const { climate, setClimate } = useInfotainment();
@@ -7,6 +7,7 @@ const ClimateWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+      <Thermometer size={16} className="text-muted-foreground" aria-label="Climate" />
       {/* Temperature display */}
       <TempDonut temp={temp} />
 

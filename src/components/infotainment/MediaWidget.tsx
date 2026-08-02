@@ -1,4 +1,4 @@
-import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Music } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import VolumeDonut from "./VolumeDonut";
 
@@ -9,6 +9,7 @@ const MediaWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+      <Music size={16} className="text-muted-foreground" aria-label="Media" />
       {/* Track info */}
       <div className="flex flex-col min-w-[100px]">
         <span className="text-xs font-semibold truncate">{currentTrack.title}</span>
