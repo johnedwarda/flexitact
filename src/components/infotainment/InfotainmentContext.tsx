@@ -548,7 +548,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const dialCenter = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone") {
       setActiveCallIndex((cur) => (cur === phoneIndex ? null : phoneIndex));
@@ -557,7 +557,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, autoMode: !c.autoMode }));
     }
-  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
+  }, [currentId, controlClusterDisabled, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
 
   return (
     <InfotainmentContext.Provider
