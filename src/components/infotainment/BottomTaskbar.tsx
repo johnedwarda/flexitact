@@ -54,7 +54,7 @@ const BottomTaskbar = () => {
         {item.id === "settings" && (
             <button
               onClick={() => openAppById("settings")}
-              className={iconClass("settings")}
+              className={iconClass()}
             >
               <SlidersHorizontal size={20} />
             </button>
@@ -75,7 +75,7 @@ const BottomTaskbar = () => {
           {item.id === "calendar" && (
             <button
               onClick={() => openAppById("calendar")}
-              className={iconClass("calendar")}
+              className={iconClass()}
             >
               <Calendar size={20} />
             </button>
@@ -89,7 +89,7 @@ const BottomTaskbar = () => {
               <button
                 onClick={() => openAppById(recentGridAppId)}
                 aria-label={entry.label}
-                className={iconClass(recentGridAppId)}
+                className={iconClass()}
               >
                 <RecentIcon size={20} />
               </button>
