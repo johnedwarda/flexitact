@@ -39,11 +39,11 @@ const AppMenuPopup = () => {
 
                   <app.icon
                     size={22}
-                    className={isActive ? "text-primary" : "text-muted-foreground"}
+                    className={isActive ? "text-primary" : "text-foreground/80"}
                   />
                   <span
                     className={`text-center text-[8px] font-medium leading-tight ${
-                      isActive ? "text-primary" : "text-muted-foreground"
+                      isActive ? "text-primary" : "text-foreground/80"
                     }`}
                   >
                     {app.label}

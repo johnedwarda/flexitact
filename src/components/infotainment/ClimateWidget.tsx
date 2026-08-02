@@ -7,7 +7,7 @@ const ClimateWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Thermometer size={16} className="text-muted-foreground" aria-label="Climate" />
+      <Thermometer size={16} className="text-foreground/80" aria-label="Climate" />
       {/* Temperature display */}
       <TempDonut temp={temp} />
 
@@ -17,7 +17,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
         className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          seatHeat > 0 ? "text-accent" : "text-muted-foreground hover:text-foreground"
+          seatHeat > 0 ? "text-accent" : "text-foreground/80 hover:text-foreground"
         }`}
         title="Seat Heating"
       >
@@ -33,7 +33,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          steeringHeat ? "text-accent" : "text-muted-foreground hover:text-foreground"
+          steeringHeat ? "text-accent" : "text-foreground/80 hover:text-foreground"
         }`}
         title="Steering Wheel Heating"
       >
@@ -44,7 +44,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          defogger ? "text-accent" : "text-muted-foreground hover:text-foreground"
+          defogger ? "text-accent" : "text-foreground/80 hover:text-foreground"
         }`}
         title="Windscreen Defogger"
       >

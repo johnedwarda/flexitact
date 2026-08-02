@@ -16,7 +16,7 @@ const BottomTaskbar = () => {
   const { highlightedIndex, openAppById, openAppMenu, recentGridAppId } = useInfotainment();
 
   const iconClass = () =>
-    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors outline-none focus:outline-none focus-visible:outline-none text-muted-foreground hover:text-foreground";
+    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors outline-none focus:outline-none focus-visible:outline-none text-foreground/80 hover:text-foreground";
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
@@ -98,7 +98,7 @@ const BottomTaskbar = () => {
           {item.id === "menu" && (
             <button
               onClick={() => openAppMenu()}
-              className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
+              className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-foreground/80 transition-colors outline-none focus:outline-none focus-visible:outline-none"
             >
               <LayoutGrid size={20} />
             </button>
