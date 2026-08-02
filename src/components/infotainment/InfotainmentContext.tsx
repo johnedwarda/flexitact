@@ -211,9 +211,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       clearTimeout(idleTimerRef.current);
       idleTimerRef.current = null;
     }
+    // While the highlight sits on an app-grid icon, keep the grid open (no auto-return).
+    if (appMenuOpen) {
+      return;
+    }
     if (highlightedIndex === lastDialUsedIndexRef.current && isWidgetIndex(highlightedIndex)) {
       return;
     }
+
     idleTimerRef.current = setTimeout(returnToLastWidget, IDLE_TIMEOUT_MS);
     return () => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
