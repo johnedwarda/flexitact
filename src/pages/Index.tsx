@@ -136,6 +136,16 @@ const IndexContent = () => {
         return <SettingsAppView />;
       case "calendar":
         return <CalendarAppView />;
+      case "phone":
+        return <PhoneAppView />;
+      case "dashcam":
+        return <DashcamAppView />;
+      case "games":
+        return <GamesAppView />;
+      case "videos":
+        return <VideosAppView />;
+      case "messages":
+        return <MessagesAppView />;
       default:
         return null;
     }
