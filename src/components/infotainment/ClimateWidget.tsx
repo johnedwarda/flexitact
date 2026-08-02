@@ -17,13 +17,13 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
         className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          seatHeat > 0 ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
+          seatHeat > 0 ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Seat Heating"
       >
         <Heater size={16} />
         {seatHeat > 0 && (
-          <span className="absolute -top-1 -right-1 text-[9px] font-bold font-mono text-climate-warm">
+          <span className="absolute -top-1 -right-1 text-[9px] font-bold font-mono text-accent">
             {seatHeat}
           </span>
         )}
@@ -33,7 +33,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          steeringHeat ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
+          steeringHeat ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Steering Wheel Heating"
       >
@@ -44,7 +44,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          defogger ? "text-climate-cool" : "text-muted-foreground hover:text-foreground"
+          defogger ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Windscreen Defogger"
       >
@@ -66,7 +66,7 @@ const TempDonut = ({ temp }: { temp: number }) => {
 
   return (
     <div
-      className="relative inline-flex items-center justify-center text-climate-warm min-w-[48px]"
+      className="relative inline-flex items-center justify-center text-accent min-w-[48px]"
       style={{ width: size, height: size }}
       aria-label={`Temperature ${temp}°`}
       role="img"

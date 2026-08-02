@@ -31,7 +31,7 @@ const MediaWidget = () => {
         </button>
         <button
           onClick={() => setMedia((m) => ({ ...m, playing: !m.playing }))}
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-primary hover:text-primary/80 transition-colors"
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-accent hover:text-accent/80 transition-colors"
         >
           {playing ? <Pause size={18} /> : <Play size={18} />}
         </button>

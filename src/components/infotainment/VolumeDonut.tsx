@@ -75,12 +75,12 @@ const VolumeDonut = ({
           strokeLinecap="round"
           strokeDasharray={`${dash} ${circumference}`}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
-          className={muted ? "opacity-0" : "text-primary"}
+          className={muted ? "opacity-0" : "text-accent"}
         />
       </svg>
       {showNumber ? (
         <span
-          className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-background/90 font-mono font-black leading-none text-primary tabular-nums ring-1 ring-primary/50"
+          className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-background/90 font-mono font-black leading-none text-accent tabular-nums ring-1 ring-accent/50"
           style={{ fontSize: Math.max(11, Math.round(size * 0.46)) }}
         >
           {clamped}
