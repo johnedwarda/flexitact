@@ -9,10 +9,7 @@ const MediaWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      {/* App icon — widget identifier */}
-      <div className="w-7 h-7 rounded-lg bg-background/40 border border-border/40 flex items-center justify-center">
-        <Music size={16} className="text-muted-foreground" aria-label="Media" />
-      </div>
+      <Music size={16} className="text-muted-foreground" aria-label="Media" />
       {/* Track info */}
       <div className="flex flex-col min-w-[100px]">
         <span className="text-xs font-semibold truncate">{currentTrack.title}</span>
@@ -28,13 +25,13 @@ const MediaWidget = () => {
               trackIndex: (m.trackIndex - 1 + tracks.length) % tracks.length,
             }))
           }
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-background/40 border border-border/40 text-muted-foreground hover:text-foreground transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <SkipBack size={16} />
         </button>
         <button
           onClick={() => setMedia((m) => ({ ...m, playing: !m.playing }))}
-          className="w-9 h-9 rounded-xl flex items-center justify-center bg-background/40 border border-border/40 text-accent hover:text-accent/80 transition-colors"
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-accent hover:text-accent/80 transition-colors"
         >
           {playing ? <Pause size={18} /> : <Play size={18} />}
         </button>
@@ -45,7 +42,7 @@ const MediaWidget = () => {
               trackIndex: (m.trackIndex + 1) % tracks.length,
             }))
           }
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-background/40 border border-border/40 text-muted-foreground hover:text-foreground transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <SkipForward size={16} />
         </button>
