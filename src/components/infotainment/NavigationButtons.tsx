@@ -4,6 +4,7 @@ import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 const NavigationButtons = () => {
   const {
     highlightedIndex,
+    appMenuOpen,
     navigateLeft,
     navigateRight,
     toggleApp,
