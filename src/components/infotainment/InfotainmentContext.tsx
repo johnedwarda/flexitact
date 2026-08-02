@@ -331,12 +331,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
-    // Note: pressing B does NOT reset the idle timer — only control cluster interaction does.
+    // Open/close restarts the idle timer but never claims the highlight:
+    // after 5s without control-cluster interaction it returns to the last widget.
+    recordActivity();
 
-    // If menu is open, select from menu, then return highlight to last widget
     if (id === "menu" && appMenuOpen) {
       openApp();
-      returnToLastWidget();
       return;
     }
     if (id === "menu") return;
@@ -347,11 +347,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else {
       openApp();
     }
-    // Opening/closing an app never claims the highlight — hand it back to the
-    // last widget the control cluster was actually used with.
-    returnToLastWidget();
-
-  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, returnToLastWidget]);
+  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity]);
 
   const openAppById = useCallback((appId: string) => {
     setApps((prev) => {
