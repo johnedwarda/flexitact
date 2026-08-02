@@ -201,7 +201,7 @@ const NavigationButtons = () => {
           </div>
 
           {/* Disabled overlay */}
-          {appMenuOpen && (
+          {controlClusterDisabled && (
             <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-[hsl(var(--surface-elevated))]/60 backdrop-blur-sm">
               <span className="text-[10px] font-mono font-semibold tracking-widest text-muted-foreground">
                 DISABLED
@@ -210,9 +210,9 @@ const NavigationButtons = () => {
           )}
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-          {appMenuOpen ? "Disabled" : hints.label}
+          {controlClusterDisabled ? "Disabled" : hints.label}
         </span>
-        <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {appMenuOpen ? "—" : hints.dial}</span>
+        <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {controlClusterDisabled ? "—" : hints.dial}</span>
       </div>
     </div>
   );
