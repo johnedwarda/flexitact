@@ -76,6 +76,7 @@ interface InfotainmentContextType {
   phonePopupOpen: boolean;
   phoneIndex: number;
   activeCallIndex: number | null;
+  controlClusterDisabled: boolean;
   startCall: (index: number) => void;
   endCall: () => void;
   callVolume: number;
