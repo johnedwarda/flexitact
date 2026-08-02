@@ -218,16 +218,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // After 5s without any control-cluster interaction, return the highlight to
-  // the last widget the control cluster was used with.
+  // the last widget the control cluster was used with. The app grid stays open
+  // as long as the highlight sits in it; the revert closes it.
   useEffect(() => {
     if (idleTimerRef.current) {
       clearTimeout(idleTimerRef.current);
       idleTimerRef.current = null;
     }
-    // While the highlight sits on an app-grid icon, keep the grid open (no auto-return).
-    if (appMenuOpen) {
-      return;
-    }
+    // A widget that was last interacted with via the control cluster is locked.
     if (highlightedIndex === lastDialUsedIndexRef.current && isWidgetIndex(highlightedIndex)) {
       return;
     }
@@ -237,6 +235,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, [highlightedIndex, appMenuOpen, lastActivity, returnToLastWidget]);
+
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
