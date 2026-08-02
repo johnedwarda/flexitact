@@ -331,9 +331,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
-    // If menu is open, select from menu
+    recordActivity();
+    // If menu is open, select from menu, then return highlight to last widget
     if (id === "menu" && appMenuOpen) {
       openApp();
+      returnToLastWidget();
       return;
     }
     if (id === "menu") return;
@@ -344,7 +346,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else {
       openApp();
     }
-  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp]);
+    // Icons (non-widgets) hand the highlight straight back to the last widget
+    if (!isWidgetIndex(highlightedIndex)) {
+      returnToLastWidget();
+    } else {
+      lastDialUsedIndexRef.current = highlightedIndex;
+    }
+  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity, returnToLastWidget]);
 
   const openAppById = useCallback((appId: string) => {
     setApps((prev) => {
