@@ -293,19 +293,20 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (selectedAppId) {
         setAppMenuOpen(false);
         const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === selectedAppId);
-        if (taskbarIndex >= 0) {
-          setHighlightedIndex(taskbarIndex);
-          setApps((prev) => {
-            const updated = { ...prev };
-            for (const key of Object.keys(updated)) {
-              if (updated[key].state === "opened") {
-                updated[key] = { ...updated[key], state: "minimized" };
-              }
+        if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
+        setApps((prev) => {
+          const updated = { ...prev };
+          for (const key of Object.keys(updated)) {
+            if (updated[key].state === "opened") {
+              updated[key] = { ...updated[key], state: "minimized" };
             }
-            updated[selectedAppId] = { ...updated[selectedAppId], state: "opened" };
-            return updated;
-          });
-        }
+          }
+          // "navigation" is the persistent map background — opening it just clears overlays
+          if (selectedAppId !== "navigation") {
+            updated[selectedAppId] = { ...(updated[selectedAppId] ?? { id: selectedAppId }), state: "opened" };
+          }
+          return updated;
+        });
       }
     } else if (id !== "menu") {
       setApps((prev) => {
