@@ -8,6 +8,11 @@ import ClimateAppView from "@/components/infotainment/ClimateAppView";
 import MediaAppView from "@/components/infotainment/MediaAppView";
 import SettingsAppView from "@/components/infotainment/SettingsAppView";
 import CalendarAppView from "@/components/infotainment/CalendarAppView";
+import PhoneAppView from "@/components/infotainment/PhoneAppView";
+import DashcamAppView from "@/components/infotainment/DashcamAppView";
+import GamesAppView from "@/components/infotainment/GamesAppView";
+import VideosAppView from "@/components/infotainment/VideosAppView";
+import MessagesAppView from "@/components/infotainment/MessagesAppView";
 import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 
