@@ -63,7 +63,7 @@ const PhoneWidget = () => {
             setCallMuted(!callMuted);
           }}
           className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-            callMuted ? "text-climate-warm" : "text-muted-foreground hover:text-foreground"
+            callMuted ? "text-accent" : "text-muted-foreground hover:text-foreground"
           }`}
           title={callMuted ? "Unmute" : "Mute"}
         >
