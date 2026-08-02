@@ -56,7 +56,7 @@ const MediaWidget = () => {
         className="text-muted-foreground hover:text-foreground transition-colors"
         title={`Volume ${muted ? "muted" : `${volume}%`}`}
       >
-        <VolumeDonut value={volume} muted={muted} size={26} />
+        <VolumeDonut value={volume} muted={muted} />
       </button>
     </div>
   );
