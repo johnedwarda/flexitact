@@ -4,6 +4,7 @@ import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 const NavigationButtons = () => {
   const {
     highlightedIndex,
+    appMenuOpen,
     navigateLeft,
     navigateRight,
     toggleApp,
@@ -121,7 +122,9 @@ const NavigationButtons = () => {
         <div className="relative w-32 h-32">
           {/* Outer rotating ring */}
           <div
-            className="absolute inset-0 rounded-full border-[3px] border-border/50 bg-[hsl(var(--surface-glass))] shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_0_20px_rgba(0,0,0,0.3)] transition-transform duration-150"
+            className={`absolute inset-0 rounded-full border-[3px] border-border/50 bg-[hsl(var(--surface-glass))] shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_0_20px_rgba(0,0,0,0.3)] transition-transform duration-150 ${
+              appMenuOpen ? "opacity-30" : ""
+            }`}
             style={{ transform: `rotate(${dialRotation}deg)` }}
           >
             {/* Dial notch indicators */}
@@ -196,11 +199,20 @@ const NavigationButtons = () => {
               <span className="text-[6px] font-mono text-muted-foreground leading-none">{hints.center}</span>
             </button>
           </div>
+
+          {/* Disabled overlay */}
+          {appMenuOpen && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-[hsl(var(--surface-elevated))]/60 backdrop-blur-sm">
+              <span className="text-[10px] font-mono font-semibold tracking-widest text-muted-foreground">
+                DISABLED
+              </span>
+            </div>
+          )}
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-          {hints.label}
+          {appMenuOpen ? "Disabled" : hints.label}
         </span>
-        <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {hints.dial}</span>
+        <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {appMenuOpen ? "—" : hints.dial}</span>
       </div>
     </div>
   );
