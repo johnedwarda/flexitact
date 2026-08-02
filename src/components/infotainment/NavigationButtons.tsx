@@ -64,7 +64,7 @@ const NavigationButtons = () => {
     <div className="flex items-center justify-center gap-20 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
       {/* Task Switcher - 4-way Joystick */}
       <div className="flex flex-col items-center gap-2">
-        <div className="relative w-28 h-28 rounded-3xl bg-[hsl(var(--surface-elevated))] border border-border/50 shadow-lg">
+        <div className="relative w-20 h-20 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-border/50 shadow-lg">
           {/* Outer ring removed */}
 
 
@@ -72,7 +72,7 @@ const NavigationButtons = () => {
           {joystickDirs.map(({ key, label, style }) => (
             <button
               key={key}
-              className={`absolute ${style} w-8 h-8 flex items-center justify-center rounded-md text-xs transition-all duration-100 ${
+              className={`absolute ${style} w-5 h-5 flex items-center justify-center rounded-md text-[8px] transition-all duration-100 ${
                 activeJoystick === key
                   ? "bg-primary/30 text-primary scale-110"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
@@ -90,7 +90,7 @@ const NavigationButtons = () => {
 
           {/* Center button - toggle app */}
           <button
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-border/50 transition-all duration-100 flex items-center justify-center ${
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full border border-border/50 transition-all duration-100 flex items-center justify-center ${
               activeJoystick === "center"
                 ? "bg-primary/30 shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
                 : "bg-[hsl(var(--surface-glass))] hover:bg-secondary"
@@ -102,7 +102,7 @@ const NavigationButtons = () => {
             onPointerUp={() => setActiveJoystick(null)}
             onPointerLeave={() => setActiveJoystick(null)}
           >
-            <span className="text-[7px] font-mono text-muted-foreground">B</span>
+            <span className="text-[6px] font-mono text-muted-foreground">B</span>
           </button>
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
