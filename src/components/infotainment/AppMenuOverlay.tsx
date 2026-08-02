@@ -25,7 +25,7 @@ const AppMenuOverlay = () => {
       <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
         App Menu
       </h2>
-      <div className="grid grid-cols-4 gap-4 max-w-md">
+      <div className="grid grid-cols-3 gap-4 max-w-md">
         {APP_MENU_ITEMS.map((app, i) => (
           <button
             key={app.id}
