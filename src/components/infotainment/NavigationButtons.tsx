@@ -54,7 +54,7 @@ const NavigationButtons = () => {
       case "menu":
         return { label: "App Menu", left: "← Prev", right: "Next →", up: "↑ Row", down: "↓ Row", dial: "Browse", center: "Open" };
       default:
-        return { label: "Control Dial", left: "←", right: "→", up: "↑", down: "↓", dial: "Scroll", center: "OK" };
+        return { label: "Control Cluster", left: "←", right: "→", up: "↑", down: "↓", dial: "Scroll", center: "OK" };
     }
   };
 
@@ -62,7 +62,7 @@ const NavigationButtons = () => {
 
   return (
     <div className="flex items-center justify-center gap-20 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
-      {/* Task Switcher - 4-way Joystick */}
+      {/* Navigation Cluster - 4-way Joystick */}
       <div className="flex flex-col items-center gap-2">
         <div className="relative w-20 h-20 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-border/50 shadow-lg">
           {/* Outer ring removed */}
@@ -106,7 +106,7 @@ const NavigationButtons = () => {
           </button>
         </div>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-          Task Switcher
+          Navigation Cluster
         </span>
         {/* Show highlighted item name */}
         <span className="text-[10px] font-mono text-primary">
@@ -114,7 +114,7 @@ const NavigationButtons = () => {
         </span>
       </div>
 
-      {/* Control Dial */}
+      {/* Control Cluster */}
       <div className="flex flex-col items-center gap-2">
         <div className="relative w-32 h-32">
           {/* Outer rotating ring */}

@@ -22,7 +22,7 @@ const IndexContent = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
-        // Task Switcher: v=left, b=toggle, n=right
+        // Navigation Cluster: v=left, b=toggle, n=right
         case "v":
           e.preventDefault();
           navigateLeft();
@@ -35,7 +35,7 @@ const IndexContent = () => {
           e.preventDefault();
           navigateRight();
           break;
-        // Control Dial directional: arrow keys
+        // Control Cluster directional: arrow keys
         case "ArrowLeft":
           e.preventDefault();
           dialLeft();
@@ -52,7 +52,7 @@ const IndexContent = () => {
           e.preventDefault();
           dialDown();
           break;
-        // Control Dial rotate: PgUp/PgDown
+        // Control Cluster rotate: PgUp/PgDown
         case "PageUp":
           e.preventDefault();
           dialRotate("ccw");
@@ -61,7 +61,7 @@ const IndexContent = () => {
           e.preventDefault();
           dialRotate("cw");
           break;
-        // Control Dial center: Enter
+        // Control Cluster center: Enter
         case "Enter":
           e.preventDefault();
           dialCenter();
