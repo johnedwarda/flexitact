@@ -162,7 +162,7 @@ const NavigationButtons = () => {
               { key: "up", style: "top-0 left-1/2 -translate-x-1/2", hint: hints.up },
               { key: "down", style: "bottom-0 left-1/2 -translate-x-1/2", hint: hints.down },
               { key: "left", style: "left-0 top-1/2 -translate-y-1/2", hint: hints.left },
-              { key: "right", style: "right-0 top-1/2 -translate-y-1/TS", hint: hints.right },
+              { key: "right", style: "right-0 top-1/2 -translate-y-1/2", hint: hints.right },
             ].map(({ key, style, hint }) => (
               <button
                 key={key}
