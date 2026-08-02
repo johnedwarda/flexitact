@@ -492,7 +492,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialUp = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && activeCallIndex !== null) {
       setCallMuted(false);
@@ -503,7 +503,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
+  }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
 
   const dialDown = useCallback(() => {
     if (appMenuOpen) return;
