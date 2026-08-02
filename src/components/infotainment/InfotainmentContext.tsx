@@ -128,6 +128,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     media: { id: "media", state: "closed" },
     phone: { id: "phone", state: "closed" },
     calendar: { id: "calendar", state: "closed" },
+    dashcam: { id: "dashcam", state: "closed" },
+    games: { id: "games", state: "closed" },
+    videos: { id: "videos", state: "closed" },
+    messages: { id: "messages", state: "closed" },
     menu: { id: "menu", state: "closed" },
   });
 
