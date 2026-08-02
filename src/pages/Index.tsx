@@ -15,6 +15,7 @@ import VideosAppView from "@/components/infotainment/VideosAppView";
 import MessagesAppView from "@/components/infotainment/MessagesAppView";
 import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
+import { emitHardwareInput } from "@/components/infotainment/hardwareInputEvents";
 
 const IndexContent = () => {
   const { apps, appMenuOpen, navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter } = useInfotainment();
@@ -25,49 +26,60 @@ const IndexContent = () => {
         // Navigation Cluster: v=left, b=toggle, n=right
         case "v":
           e.preventDefault();
+          emitHardwareInput("joy-left");
           navigateLeft();
           break;
         case "b":
           e.preventDefault();
+          emitHardwareInput("joy-center");
           toggleApp();
           break;
         case "n":
           e.preventDefault();
+          emitHardwareInput("joy-right");
           navigateRight();
           break;
         // Control Cluster directional: arrow keys
         case "ArrowLeft":
           e.preventDefault();
+          emitHardwareInput("dial-left");
           dialLeft();
           break;
         case "ArrowRight":
           e.preventDefault();
+          emitHardwareInput("dial-right");
           dialRight();
           break;
         case "ArrowUp":
           e.preventDefault();
+          emitHardwareInput("dial-up");
           dialUp();
           break;
         case "ArrowDown":
           e.preventDefault();
+          emitHardwareInput("dial-down");
           dialDown();
           break;
         // Control Cluster rotate: PgUp/PgDown
         case "PageUp":
           e.preventDefault();
+          emitHardwareInput("rotate-ccw");
           dialRotate("ccw");
           break;
         case "PageDown":
           e.preventDefault();
+          emitHardwareInput("rotate-cw");
           dialRotate("cw");
           break;
         // Control Cluster center: Enter
         case "Enter":
           e.preventDefault();
+          emitHardwareInput("dial-center");
           dialCenter();
           break;
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter]);
