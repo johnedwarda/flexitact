@@ -7,7 +7,10 @@ const ClimateWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Thermometer size={16} className="text-muted-foreground" aria-label="Climate" />
+      {/* App icon — widget identifier */}
+      <div className="w-7 h-7 rounded-lg bg-background/40 border border-border/40 flex items-center justify-center">
+        <Thermometer size={16} className="text-muted-foreground" aria-label="Climate" />
+      </div>
       {/* Temperature display */}
       <TempDonut temp={temp} />
 
@@ -16,7 +19,7 @@ const ClimateWidget = () => {
       {/* Seat heating */}
       <button
         onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
-        className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+        className={`relative w-8 h-8 rounded-lg flex items-center justify-center bg-background/40 border border-border/40 transition-colors ${
           seatHeat > 0 ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Seat Heating"
@@ -32,7 +35,7 @@ const ClimateWidget = () => {
       {/* Steering heat */}
       <button
         onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
-        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+        className={`w-8 h-8 rounded-lg flex items-center justify-center bg-background/40 border border-border/40 transition-colors ${
           steeringHeat ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Steering Wheel Heating"
@@ -43,7 +46,7 @@ const ClimateWidget = () => {
       {/* Defogger */}
       <button
         onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
-        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+        className={`w-8 h-8 rounded-lg flex items-center justify-center bg-background/40 border border-border/40 transition-colors ${
           defogger ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Windscreen Defogger"
