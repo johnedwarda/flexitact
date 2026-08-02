@@ -17,7 +17,7 @@ export const APP_MENU_ITEMS = [
 ];
 
 const AppMenuPopup = () => {
-  const { appMenuIndex } = useInfotainment();
+  const { appMenuIndex, openAppFromMenu } = useInfotainment();
 
   if (typeof document === "undefined") {
     return null;
@@ -32,8 +32,11 @@ const AppMenuPopup = () => {
             return (
               <div key={app.id} className="relative flex flex-col items-center">
                 <button
+                  onClick={() => openAppFromMenu(app.id)}
+                  aria-label={app.label}
                   className="flex w-16 flex-col items-center gap-1.5 rounded-xl p-2.5 transition-colors hover:bg-muted/30"
                 >
+
                   <app.icon
                     size={22}
                     className={isActive ? "text-primary" : "text-muted-foreground"}

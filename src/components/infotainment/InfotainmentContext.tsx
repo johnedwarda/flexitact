@@ -75,6 +75,7 @@ interface InfotainmentContextType {
   phonePopupOpen: boolean;
   phoneIndex: number;
   activeCallIndex: number | null;
+  startCall: (index: number) => void;
   endCall: () => void;
   callVolume: number;
   callMuted: boolean;
@@ -127,6 +128,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     media: { id: "media", state: "closed" },
     phone: { id: "phone", state: "closed" },
     calendar: { id: "calendar", state: "closed" },
+    dashcam: { id: "dashcam", state: "closed" },
+    games: { id: "games", state: "closed" },
+    videos: { id: "videos", state: "closed" },
+    messages: { id: "messages", state: "closed" },
     menu: { id: "menu", state: "closed" },
   });
 
@@ -288,19 +293,20 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (selectedAppId) {
         setAppMenuOpen(false);
         const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === selectedAppId);
-        if (taskbarIndex >= 0) {
-          setHighlightedIndex(taskbarIndex);
-          setApps((prev) => {
-            const updated = { ...prev };
-            for (const key of Object.keys(updated)) {
-              if (updated[key].state === "opened") {
-                updated[key] = { ...updated[key], state: "minimized" };
-              }
+        if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
+        setApps((prev) => {
+          const updated = { ...prev };
+          for (const key of Object.keys(updated)) {
+            if (updated[key].state === "opened") {
+              updated[key] = { ...updated[key], state: "minimized" };
             }
-            updated[selectedAppId] = { ...updated[selectedAppId], state: "opened" };
-            return updated;
-          });
-        }
+          }
+          // "navigation" is the persistent map background — opening it just clears overlays
+          if (selectedAppId !== "navigation") {
+            updated[selectedAppId] = { ...(updated[selectedAppId] ?? { id: selectedAppId }), state: "opened" };
+          }
+          return updated;
+        });
       }
     } else if (id !== "menu") {
       setApps((prev) => {
@@ -383,15 +389,21 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const openAppFromMenu = useCallback((appId: string) => {
     setAppMenuOpen(false);
-    // Map menu items to taskbar items where possible
     const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === appId);
-    if (taskbarIndex >= 0) {
-      setHighlightedIndex(taskbarIndex);
-      setApps((prev) => ({ ...prev, [appId]: { ...prev[appId], state: "opened" } }));
-    } else {
-      // For apps not in taskbar, open settings as fallback or just close menu
-      // In a real system these would have their own views
-    }
+    if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
+    setApps((prev) => {
+      const updated = { ...prev };
+      for (const key of Object.keys(updated)) {
+        if (updated[key].state === "opened") {
+          updated[key] = { ...updated[key], state: "minimized" };
+        }
+      }
+      // "navigation" is the persistent map background — opening it just clears overlays
+      if (appId !== "navigation") {
+        updated[appId] = { ...(updated[appId] ?? { id: appId }), state: "opened" };
+      }
+      return updated;
+    });
   }, []);
 
   // Contextual dial controls
@@ -523,6 +535,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         phonePopupOpen,
         phoneIndex,
         activeCallIndex,
+        startCall: (index: number) => { setPhoneIndex(index); setActiveCallIndex(index); setCallMuted(false); },
         endCall: () => { setActiveCallIndex(null); setCallMuted(false); },
         callVolume,
         callMuted,
