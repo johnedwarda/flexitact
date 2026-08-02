@@ -353,7 +353,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else {
       lastDialUsedIndexRef.current = highlightedIndex;
     }
-  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity, returnToLastWidget]);
+  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, returnToLastWidget]);
 
   const openAppById = useCallback((appId: string) => {
     setApps((prev) => {
