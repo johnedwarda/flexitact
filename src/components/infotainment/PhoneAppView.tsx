@@ -29,7 +29,7 @@ const TABS = [
 const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"];
 
 const PhoneAppView = () => {
-  const { activeCallIndex, setActiveCallIndex, callMuted, setCallMuted } = useInfotainment() as any;
+  const { activeCallIndex, startCall, endCall, callMuted, setCallMuted } = useInfotainment();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("favorites");
   const [dialed, setDialed] = useState("");
 
@@ -56,7 +56,7 @@ const PhoneAppView = () => {
           </div>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setCallMuted?.((m: boolean) => !m)}
+              onClick={() => setCallMuted(!callMuted)}
               className={`h-14 w-14 rounded-full flex items-center justify-center border transition-colors ${
                 callMuted ? "bg-accent/20 border-accent text-accent" : "border-border text-muted-foreground"
               }`}
@@ -65,7 +65,7 @@ const PhoneAppView = () => {
               {callMuted ? <MicOff size={20} /> : <Mic size={20} />}
             </button>
             <button
-              onClick={() => setActiveCallIndex?.(null)}
+              onClick={() => endCall()}
               className="h-14 w-14 rounded-full flex items-center justify-center bg-destructive/20 border border-destructive/60 text-destructive"
               aria-label="End call"
             >
@@ -98,7 +98,7 @@ const PhoneAppView = () => {
                 {CONTACTS.map((c, i) => (
                   <button
                     key={c.name}
-                    onClick={() => setActiveCallIndex?.(i)}
+                    onClick={() => startCall(i)}
                     className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-border/50 hover:border-accent transition-colors"
                   >
                     <img
@@ -149,7 +149,7 @@ const PhoneAppView = () => {
                     <Delete size={14} /> Delete
                   </button>
                   <button
-                    onClick={() => setActiveCallIndex?.(0)}
+                    onClick={() => startCall(0)}
                     className="h-12 px-5 rounded-2xl bg-accent/15 border border-accent text-accent flex items-center gap-2 text-xs"
                   >
                     <Phone size={14} /> Call
