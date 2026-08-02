@@ -307,7 +307,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [appMenuOpen, appMenuIndex, recordActivity]);
 
   const currentId = TASKBAR_ITEMS[highlightedIndex].id;
-  const controlClusterDisabled = appMenuOpen || apps.settings?.state === "opened" || apps.calendar?.state === "opened";
+  // Control Cluster is enabled only while the highlight pill sits on an interactive widget.
+  // It is disabled for all taskbar icons (settings, calendar, recent, app grid) regardless of
+  // whether an app is currently open.
+  const CONTROL_CLUSTER_ENABLED_IDS = ["climate", "media", "phone"];
+  const controlClusterDisabled = !CONTROL_CLUSTER_ENABLED_IDS.includes(currentId);
+
 
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
