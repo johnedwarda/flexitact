@@ -454,7 +454,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
@@ -470,7 +470,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         return { ...c, activeZone: next };
       });
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
+  }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialRight = useCallback(() => {
     if (appMenuOpen) return;
