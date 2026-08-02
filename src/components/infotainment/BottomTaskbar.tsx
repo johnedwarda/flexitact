@@ -71,6 +71,17 @@ const BottomTaskbar = () => {
               <PhoneWidget />
             </div>
           )}
+          {item.id === "calendar" && (
+            <button
+              onClick={() => {
+                navigateToItem(index);
+                openAppById("calendar");
+              }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
+            >
+              <Calendar size={20} />
+            </button>
+          )}
           {item.id === "menu" && (
             <button
               onClick={() => navigateToItem(index)}
