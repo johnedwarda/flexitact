@@ -84,7 +84,7 @@ const BottomTaskbar = () => {
           <div
             className={`absolute -bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300 ${
               isHighlighted
-                ? "w-0 h-0 border-l-8 border-r-8 border-t-[3px] border-l-transparent border-r-transparent border-t-accent drop-shadow-[0_0_6px_hsl(var(--accent)/0.7)]"
+                ? "w-0 h-0 border-l-[16px] border-r-[16px] border-t-[3px] border-l-transparent border-r-transparent border-t-accent drop-shadow-[0_0_6px_hsl(var(--accent)/0.7)]"
                 : "opacity-0 scale-0"
             }`}
           />
