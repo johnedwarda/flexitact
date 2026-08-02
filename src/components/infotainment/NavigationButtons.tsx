@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
+import { onHardwareInput } from "./hardwareInputEvents";
 
 const NavigationButtons = () => {
   const {
@@ -19,6 +20,8 @@ const NavigationButtons = () => {
   const [dialRotation, setDialRotation] = useState(0);
   const [activeJoystick, setActiveJoystick] = useState<string | null>(null);
   const [activeDialDir, setActiveDialDir] = useState<string | null>(null);
+  const joyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dialTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentItem = TASKBAR_ITEMS[highlightedIndex];
 
@@ -39,6 +42,57 @@ const NavigationButtons = () => {
     setDialRotation((r) => r + (dir === "cw" ? 15 : -15));
     dialRotate(dir);
   };
+
+  // Keyboard input mirrors the touch visuals: flash the pressed button and
+  // spin the dial ring. The context action itself is fired by the key handler.
+  useEffect(() => {
+    const flashJoystick = (key: string) => {
+      setActiveJoystick(key);
+      if (joyTimer.current) clearTimeout(joyTimer.current);
+      joyTimer.current = setTimeout(() => setActiveJoystick(null), 150);
+    };
+    const flashDial = (key: string) => {
+      setActiveDialDir(key);
+      if (dialTimer.current) clearTimeout(dialTimer.current);
+      dialTimer.current = setTimeout(() => setActiveDialDir(null), 150);
+    };
+
+    return onHardwareInput((input) => {
+      switch (input) {
+        case "joy-left":
+          flashJoystick("left");
+          break;
+        case "joy-right":
+          flashJoystick("right");
+          break;
+        case "joy-center":
+          flashJoystick("center");
+          break;
+        case "dial-left":
+          flashDial("left");
+          break;
+        case "dial-right":
+          flashDial("right");
+          break;
+        case "dial-up":
+          flashDial("up");
+          break;
+        case "dial-down":
+          flashDial("down");
+          break;
+        case "dial-center":
+          flashDial("center");
+          break;
+        case "rotate-cw":
+          setDialRotation((r) => r + 15);
+          break;
+        case "rotate-ccw":
+          setDialRotation((r) => r - 15);
+          break;
+      }
+    });
+  }, []);
+
 
   const joystickDirs = [
     { key: "left", label: "◀", style: "left-0 top-1/2 -translate-y-1/2" },
