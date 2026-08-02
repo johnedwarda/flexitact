@@ -194,9 +194,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   // Any control-cluster interaction resets the timeout; interactions on a
   // widget also make it the "last used widget".
   const recordDialUsage = useCallback((index: number) => {
-    if (isWidgetIndex(index)) {
-      lastDialUsedIndexRef.current = index;
-    }
+    // Control-cluster interaction only counts when the highlight is on a widget.
+    // On icons (settings / calendar / app grid) it neither locks nor resets the timer.
+    if (!isWidgetIndex(index)) return;
+    lastDialUsedIndexRef.current = index;
     setLastActivity(Date.now());
   }, []);
 
