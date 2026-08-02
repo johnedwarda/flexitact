@@ -6,7 +6,7 @@ import PhoneWidget from "./PhoneWidget";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, openAppById, navigateToItem } = useInfotainment();
+  const { highlightedIndex, openAppById, openAppMenu } = useInfotainment();
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
