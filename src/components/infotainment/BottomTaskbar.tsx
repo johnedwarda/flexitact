@@ -41,12 +41,9 @@ const BottomTaskbar = () => {
     return (
       <div key={item.id} data-taskbar-id={item.id} className="relative flex flex-col items-center">
         <div className="rounded-2xl">
-          {item.id === "settings" && (
+        {item.id === "settings" && (
             <button
-              onClick={() => {
-                navigateToItem(index);
-                openAppById("settings");
-              }}
+              onClick={() => openAppById("settings")}
               className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
             >
               <SlidersHorizontal size={20} />
@@ -54,29 +51,20 @@ const BottomTaskbar = () => {
           )}
           {item.id === "climate" && (
             <SwipeWrapper itemId="climate">
-              <div onClick={() => navigateToItem(index)} className="cursor-pointer">
-                <ClimateWidget />
-              </div>
+              <ClimateWidget />
             </SwipeWrapper>
           )}
           {item.id === "media" && (
             <SwipeWrapper itemId="media">
-              <div onClick={() => navigateToItem(index)} className="cursor-pointer">
-                <MediaWidget />
-              </div>
+              <MediaWidget />
             </SwipeWrapper>
           )}
           {item.id === "phone" && (
-            <div onClick={() => navigateToItem(index)} className="cursor-pointer">
-              <PhoneWidget />
-            </div>
+            <PhoneWidget />
           )}
           {item.id === "calendar" && (
             <button
-              onClick={() => {
-                navigateToItem(index);
-                openAppById("calendar");
-              }}
+              onClick={() => openAppById("calendar")}
               className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
             >
               <Calendar size={20} />
@@ -84,7 +72,7 @@ const BottomTaskbar = () => {
           )}
           {item.id === "menu" && (
             <button
-              onClick={() => navigateToItem(index)}
+              onClick={() => openAppMenu()}
               className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
             >
               <LayoutGrid size={20} />
