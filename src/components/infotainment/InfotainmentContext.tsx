@@ -367,14 +367,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
-    const isWidget = isWidgetIndex(highlightedIndex);
-    // Widgets keep the highlight until the idle timeout; icons (settings,
-    // calendar, app grid) hand it straight back to the last used widget.
+    // Open/close always restarts the idle timer (for both widgets and icons);
+    // the revert to the last used widget only happens on idle timeout.
     recordActivity();
 
     if (id === "menu" && appMenuOpen) {
       openApp();
-      returnToLastWidget();
       return;
     }
     if (id === "menu") return;
@@ -383,7 +381,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (!targetId) return;
       if (apps[targetId]?.state === "opened") minimizeApp();
       else openApp();
-      returnToLastWidget();
       return;
     }
     // If the focused app is already the open one, close it (reveal map).
@@ -393,8 +390,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else {
       openApp();
     }
-    if (!isWidget) returnToLastWidget();
-  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity, returnToLastWidget]);
+  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity]);
+
 
 
   const openAppById = useCallback((appId: string) => {
