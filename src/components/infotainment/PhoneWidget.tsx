@@ -42,6 +42,10 @@ const PhoneWidget = () => {
     const contact = PHONE_FAVORITES[activeCallIndex];
     return (
       <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
+        {/* App icon — widget identifier */}
+        <div className="w-7 h-7 rounded-lg bg-background/40 border border-border/40 flex items-center justify-center shrink-0">
+          <Phone size={16} className="text-muted-foreground" aria-label="Phone" />
+        </div>
         <img
           src={contact.photo}
           alt={contact.name}
@@ -62,7 +66,7 @@ const PhoneWidget = () => {
             e.stopPropagation();
             setCallMuted(!callMuted);
           }}
-          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+          className={`w-8 h-8 rounded-lg flex items-center justify-center bg-background/40 border border-border/40 transition-colors ${
             callMuted ? "text-accent" : "text-muted-foreground hover:text-foreground"
           }`}
           title={callMuted ? "Unmute" : "Mute"}
@@ -74,7 +78,7 @@ const PhoneWidget = () => {
             e.stopPropagation();
             endCall();
           }}
-          className="w-8 h-8 rounded-lg flex items-center justify-center bg-destructive/20 text-destructive hover:bg-destructive/30 transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center bg-destructive/20 border border-destructive/40 text-destructive hover:bg-destructive/30 transition-colors"
           title="End call"
         >
           <PhoneOff size={16} />
@@ -85,7 +89,10 @@ const PhoneWidget = () => {
 
   return (
     <div className="flex items-center gap-2 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Phone size={16} className="text-muted-foreground" />
+      {/* App icon — widget identifier */}
+      <div className="w-7 h-7 rounded-lg bg-background/40 border border-border/40 flex items-center justify-center shrink-0">
+        <Phone size={16} className="text-muted-foreground" aria-label="Phone" />
+      </div>
       {PHONE_FAVORITES.map((fav, i) => {
         const isActive = phoneActive && phoneIndex === i;
         return (
