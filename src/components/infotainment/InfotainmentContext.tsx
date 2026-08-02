@@ -14,6 +14,7 @@ export const TASKBAR_ITEMS: TaskbarItem[] = [
   { id: "media", label: "Media", type: "widget" },
   { id: "phone", label: "Phone", type: "shortcut" },
   { id: "calendar", label: "Calendar", type: "shortcut" },
+  { id: "recent", label: "Recent App", type: "shortcut" },
   { id: "menu", label: "App Menu", type: "shortcut" },
 ];
 
@@ -94,6 +95,7 @@ interface InfotainmentContextType {
   openAppFromMenu: (appId: string) => void;
   openAppById: (appId: string) => void;
   openAppMenu: () => void;
+  recentGridAppId: string | null;
   navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
   setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
@@ -172,6 +174,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [activeCallIndex, setActiveCallIndex] = useState<number | null>(null);
   const [callVolume, setCallVolume] = useState(60);
   const [callMuted, setCallMuted] = useState(false);
+  // Most recently opened app-grid app, surfaced in the reserved taskbar slot
+  const [recentGridAppId, setRecentGridAppId] = useState<string | null>(null);
+  const recentGridAppIdRef = useRef<string | null>(null);
+  const rememberGridApp = useCallback((appId: string) => {
+    if (!APP_MENU_IDS.includes(appId) || appId === "navigation") return;
+    recentGridAppIdRef.current = appId;
+    setRecentGridAppId(appId);
+  }, []);
   // ---- Highlight timeout logic ----
   const IDLE_TIMEOUT_MS = 5000;
   // Items that can hold the highlight after a timeout (interactive widgets)
@@ -247,7 +257,9 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     }
     setHighlightedIndex((prev) => {
       if (prev <= 0) return prev; // stop at leftmost
-      const next = prev - 1;
+      let next = prev - 1;
+      if (TASKBAR_ITEMS[next].id === "recent" && !recentGridAppIdRef.current) next = next - 1;
+      if (next < 0) return prev;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(APP_MENU_COUNT - 1);
@@ -276,7 +288,9 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     }
     setHighlightedIndex((prev) => {
       if (prev >= TASKBAR_ITEMS.length - 1) return prev; // stop at rightmost
-      const next = prev + 1;
+      let next = prev + 1;
+      if (TASKBAR_ITEMS[next].id === "recent" && !recentGridAppIdRef.current) next = next + 1;
+      if (next > TASKBAR_ITEMS.length - 1) return prev;
       if (TASKBAR_ITEMS[next].id === "menu") {
         setAppMenuOpen(true);
         setAppMenuIndex(0);
@@ -298,6 +312,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (id === "menu" && appMenuOpen) {
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
+        rememberGridApp(selectedAppId);
         setAppMenuOpen(false);
         const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === selectedAppId);
         if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
@@ -316,6 +331,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     } else if (id !== "menu") {
+      const targetId = id === "recent" ? recentGridAppIdRef.current : id;
+      if (!targetId) return;
       setApps((prev) => {
         const updated = { ...prev };
         for (const key of Object.keys(updated)) {
@@ -323,11 +340,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
             updated[key] = { ...updated[key], state: "minimized" };
           }
         }
-        updated[id] = { ...updated[id], state: "opened" };
+        updated[targetId] = { ...(updated[targetId] ?? { id: targetId }), state: "opened" };
         return updated;
       });
     }
-  }, [highlightedIndex, appMenuOpen, appMenuIndex]);
+  }, [highlightedIndex, appMenuOpen, appMenuIndex, rememberGridApp]);
 
   const minimizeApp = useCallback(() => {
     setAppMenuOpen(false);
@@ -355,6 +372,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     if (id === "menu") return;
+    if (id === "recent") {
+      const targetId = recentGridAppIdRef.current;
+      if (!targetId) return;
+      if (apps[targetId]?.state === "opened") minimizeApp();
+      else openApp();
+      returnToLastWidget();
+      return;
+    }
     // If the focused app is already the open one, close it (reveal map).
     // Otherwise open the focused app (replacing any other open app).
     if (apps[id]?.state === "opened") {
@@ -367,6 +392,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
 
   const openAppById = useCallback((appId: string) => {
+    rememberGridApp(appId);
     setApps((prev) => {
       const updated = { ...prev };
       for (const key of Object.keys(updated)) {
@@ -379,7 +405,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       }
       return updated;
     });
-  }, []);
+  }, [rememberGridApp]);
 
   const openAppMenu = useCallback(() => {
     setAppMenuOpen(true);
@@ -405,6 +431,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const openAppFromMenu = useCallback((appId: string) => {
+    rememberGridApp(appId);
     setAppMenuOpen(false);
     const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === appId);
     if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
@@ -571,6 +598,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         openAppFromMenu,
         openAppById,
         openAppMenu,
+        recentGridAppId,
         navigateToItem,
         setClimate,
         setMedia,

@@ -1,12 +1,27 @@
 import { useState, useCallback } from "react";
-import { SlidersHorizontal, LayoutGrid, Calendar } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, Calendar, Video, Gamepad2, Film, MessageSquare, type LucideIcon } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
 import PhoneWidget from "./PhoneWidget";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 
+const GRID_APP_ICONS: Record<string, { icon: LucideIcon; label: string }> = {
+  dashcam: { icon: Video, label: "Dashcam" },
+  games: { icon: Gamepad2, label: "Games" },
+  videos: { icon: Film, label: "Videos" },
+  messages: { icon: MessageSquare, label: "Messages" },
+};
+
 const BottomTaskbar = () => {
-  const { highlightedIndex, openAppById, openAppMenu } = useInfotainment();
+  const { highlightedIndex, openAppById, openAppMenu, apps, recentGridAppId } = useInfotainment();
+
+  const isAppOpen = (appId: string) => apps[appId]?.state === "opened";
+  const iconClass = (appId: string) =>
+    `w-10 h-10 rounded-xl flex items-center justify-center transition-colors outline-none focus:outline-none focus-visible:outline-none ${
+      isAppOpen(appId)
+        ? "text-accent bg-accent/15"
+        : "text-muted-foreground hover:text-foreground"
+    }`;
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
@@ -44,7 +59,7 @@ const BottomTaskbar = () => {
         {item.id === "settings" && (
             <button
               onClick={() => openAppById("settings")}
-              className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
+              className={iconClass("settings")}
             >
               <SlidersHorizontal size={20} />
             </button>
@@ -65,11 +80,26 @@ const BottomTaskbar = () => {
           {item.id === "calendar" && (
             <button
               onClick={() => openAppById("calendar")}
-              className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-muted-foreground transition-colors outline-none focus:outline-none focus-visible:outline-none"
+              className={iconClass("calendar")}
             >
               <Calendar size={20} />
             </button>
           )}
+          {item.id === "recent" && (() => {
+            if (!recentGridAppId) return <div className="w-0 h-10" />;
+            const entry = GRID_APP_ICONS[recentGridAppId];
+            if (!entry) return <div className="w-0 h-10" />;
+            const RecentIcon = entry.icon;
+            return (
+              <button
+                onClick={() => openAppById(recentGridAppId)}
+                aria-label={entry.label}
+                className={iconClass(recentGridAppId)}
+              >
+                <RecentIcon size={20} />
+              </button>
+            );
+          })()}
           {item.id === "menu" && (
             <button
               onClick={() => openAppMenu()}
