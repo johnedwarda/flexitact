@@ -218,16 +218,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // After 5s without any control-cluster interaction, return the highlight to
-  // the last widget the control cluster was used with.
+  // the last widget the control cluster was used with. The app grid stays open
+  // as long as the highlight sits in it; the revert closes it.
   useEffect(() => {
     if (idleTimerRef.current) {
       clearTimeout(idleTimerRef.current);
       idleTimerRef.current = null;
     }
-    // While the highlight sits on an app-grid icon, keep the grid open (no auto-return).
-    if (appMenuOpen) {
-      return;
-    }
+    // A widget that was last interacted with via the control cluster is locked.
     if (highlightedIndex === lastDialUsedIndexRef.current && isWidgetIndex(highlightedIndex)) {
       return;
     }
@@ -237,6 +235,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, [highlightedIndex, appMenuOpen, lastActivity, returnToLastWidget]);
+
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
@@ -368,14 +367,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
-    const isWidget = isWidgetIndex(highlightedIndex);
-    // Widgets keep the highlight until the idle timeout; icons (settings,
-    // calendar, app grid) hand it straight back to the last used widget.
+    // Open/close always restarts the idle timer (for both widgets and icons);
+    // the revert to the last used widget only happens on idle timeout.
     recordActivity();
 
     if (id === "menu" && appMenuOpen) {
       openApp();
-      returnToLastWidget();
       return;
     }
     if (id === "menu") return;
@@ -384,7 +381,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (!targetId) return;
       if (apps[targetId]?.state === "opened") minimizeApp();
       else openApp();
-      returnToLastWidget();
       return;
     }
     // If the focused app is already the open one, close it (reveal map).
@@ -394,8 +390,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else {
       openApp();
     }
-    if (!isWidget) returnToLastWidget();
-  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity, returnToLastWidget]);
+  }, [highlightedIndex, appMenuOpen, apps, openApp, minimizeApp, recordActivity]);
+
 
 
   const openAppById = useCallback((appId: string) => {
