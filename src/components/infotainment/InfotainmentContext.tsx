@@ -166,44 +166,54 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [activeCallIndex, setActiveCallIndex] = useState<number | null>(null);
   const [callVolume, setCallVolume] = useState(60);
   const [callMuted, setCallMuted] = useState(false);
+  // ---- Highlight timeout logic ----
+  const IDLE_TIMEOUT_MS = 5000;
+  // Items that can hold the highlight after a timeout (interactive widgets)
+  const WIDGET_IDS = ["climate", "media", "phone"];
+  const isWidgetIndex = (index: number) => WIDGET_IDS.includes(TASKBAR_ITEMS[index]?.id ?? "");
+
   const lastDialUsedIndexRef = useRef<number>(1); // default to climate
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [lastActivity, setLastActivity] = useState(0);
 
-  // Track dial usage on eligible items (not settings or menu)
+  const returnToLastWidget = useCallback(() => {
+    const targetIndex = lastDialUsedIndexRef.current;
+    setHighlightedIndex(targetIndex);
+    setAppMenuOpen(false);
+    const isPhone = TASKBAR_ITEMS[targetIndex]?.id === "phone";
+    setPhonePopupOpen(isPhone);
+    if (isPhone) setPhoneIndex(0);
+    setLastActivity(Date.now());
+  }, []);
+
+  // Any control-cluster interaction resets the timeout; interactions on a
+  // widget also make it the "last used widget".
   const recordDialUsage = useCallback((index: number) => {
-    const item = TASKBAR_ITEMS[index];
-    if (item && item.id !== "settings" && item.id !== "menu" && item.id !== "calendar") {
+    if (isWidgetIndex(index)) {
       lastDialUsedIndexRef.current = index;
     }
     setLastActivity(Date.now());
   }, []);
 
-  // Reset idle timer on any navigation action
   const recordActivity = useCallback(() => {
     setLastActivity(Date.now());
   }, []);
 
-  // Auto-return from settings/menu after 5 seconds of idle
+  // After 5s without any control-cluster interaction, return the highlight to
+  // the last widget the control cluster was used with.
   useEffect(() => {
     if (idleTimerRef.current) {
       clearTimeout(idleTimerRef.current);
       idleTimerRef.current = null;
     }
-    const currentItem = TASKBAR_ITEMS[highlightedIndex];
-    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu" || currentItem.id === "calendar")) {
-      idleTimerRef.current = setTimeout(() => {
-        const targetIndex = lastDialUsedIndexRef.current;
-        setHighlightedIndex(targetIndex);
-        setAppMenuOpen(false);
-        setPhonePopupOpen(TASKBAR_ITEMS[targetIndex]?.id === "phone");
-        if (TASKBAR_ITEMS[targetIndex]?.id === "phone") setPhoneIndex(0);
-      }, 10000);
+    if (highlightedIndex === lastDialUsedIndexRef.current && isWidgetIndex(highlightedIndex)) {
+      return;
     }
+    idleTimerRef.current = setTimeout(returnToLastWidget, IDLE_TIMEOUT_MS);
     return () => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
-  }, [highlightedIndex, appMenuOpen, lastActivity]);
+  }, [highlightedIndex, appMenuOpen, lastActivity, returnToLastWidget]);
 
   // Auto-open/close menu when navigating to/from menu item
   const navigateLeft = useCallback(() => {
