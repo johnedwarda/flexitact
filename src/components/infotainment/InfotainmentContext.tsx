@@ -353,7 +353,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [highlightedIndex, appMenuOpen, appMenuIndex, rememberGridApp]);
 
   const minimizeApp = useCallback(() => {
-    setAppMenuOpen(false);
+    // The app grid stays open while the highlight is on it; only the idle
+    // timeout / navigating away closes it.
     setApps((prev) => {
       const updated = { ...prev };
       for (const key of Object.keys(updated)) {
