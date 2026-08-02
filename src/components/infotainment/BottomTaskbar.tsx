@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { SlidersHorizontal, LayoutGrid } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, Calendar } from "lucide-react";
 import ClimateWidget from "./ClimateWidget";
 import MediaWidget from "./MediaWidget";
 import PhoneWidget from "./PhoneWidget";
