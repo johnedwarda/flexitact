@@ -570,6 +570,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         dialCenter,
         openAppFromMenu,
         openAppById,
+        openAppMenu,
         navigateToItem,
         setClimate,
         setMedia,
