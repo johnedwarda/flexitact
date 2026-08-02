@@ -1,4 +1,4 @@
-import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Music } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 import VolumeDonut from "./VolumeDonut";
 

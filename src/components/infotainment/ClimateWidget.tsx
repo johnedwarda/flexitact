@@ -1,5 +1,5 @@
 import { useInfotainment } from "./InfotainmentContext";
-import { CircleDot, Heater, Wind } from "lucide-react";
+import { CircleDot, Heater, Thermometer, Wind } from "lucide-react";
 
 const ClimateWidget = () => {
   const { climate, setClimate } = useInfotainment();
