@@ -15,6 +15,7 @@ import VideosAppView from "@/components/infotainment/VideosAppView";
 import MessagesAppView from "@/components/infotainment/MessagesAppView";
 import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
+import { emitHardwareInput } from "@/components/infotainment/hardwareInputEvents";
 
 const IndexContent = () => {
   const { apps, appMenuOpen, navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter } = useInfotainment();
