@@ -76,6 +76,7 @@ interface InfotainmentContextType {
   phonePopupOpen: boolean;
   phoneIndex: number;
   activeCallIndex: number | null;
+  controlClusterDisabled: boolean;
   startCall: (index: number) => void;
   endCall: () => void;
   callVolume: number;
@@ -306,6 +307,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [appMenuOpen, appMenuIndex, recordActivity]);
 
   const currentId = TASKBAR_ITEMS[highlightedIndex].id;
+  const controlClusterDisabled = appMenuOpen || apps.settings?.state === "opened" || apps.calendar?.state === "opened";
 
   const openApp = useCallback(() => {
     const id = TASKBAR_ITEMS[highlightedIndex].id;
@@ -452,7 +454,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => (i - 1 + PHONE_ITEMS_COUNT) % PHONE_ITEMS_COUNT);
@@ -468,10 +470,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         return { ...c, activeZone: next };
       });
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
+  }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialRight = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && phonePopupOpen) {
       setPhoneIndex((i) => (i + 1) % PHONE_ITEMS_COUNT);
@@ -487,10 +489,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         return { ...c, activeZone: next };
       });
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage]);
+  }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
   const dialUp = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && activeCallIndex !== null) {
       setCallMuted(false);
@@ -501,10 +503,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
+  }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
 
   const dialDown = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone" && activeCallIndex !== null) {
       setCallMuted(true);
@@ -515,11 +517,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, defogger: !c.defogger }));
     }
-  }, [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
+  }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]);
 
   const dialRotate = useCallback(
     (dir: "cw" | "ccw") => {
-      if (appMenuOpen) return;
+      if (controlClusterDisabled) return;
       recordDialUsage(highlightedIndex);
       if (currentId === "phone" && activeCallIndex !== null) {
         setCallVolume((v) => Math.max(0, Math.min(100, v + (dir === "cw" ? 5 : -5))));
@@ -542,11 +544,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    [currentId, appMenuOpen, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]
+    [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]
   );
 
   const dialCenter = useCallback(() => {
-    if (appMenuOpen) return;
+    if (controlClusterDisabled) return;
     recordDialUsage(highlightedIndex);
     if (currentId === "phone") {
       setActiveCallIndex((cur) => (cur === phoneIndex ? null : phoneIndex));
@@ -555,7 +557,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     } else if (currentId === "climate") {
       setClimate((c) => ({ ...c, autoMode: !c.autoMode }));
     }
-  }, [currentId, appMenuOpen, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
+  }, [currentId, controlClusterDisabled, appMenuIndex, openAppFromMenu, highlightedIndex, recordDialUsage]);
 
   return (
     <InfotainmentContext.Provider
@@ -570,6 +572,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         phonePopupOpen,
         phoneIndex,
         activeCallIndex,
+        controlClusterDisabled,
         startCall: (index: number) => { setPhoneIndex(index); setActiveCallIndex(index); setCallMuted(false); },
         endCall: () => { setActiveCallIndex(null); setCallMuted(false); },
         callVolume,
