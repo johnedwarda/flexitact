@@ -93,6 +93,7 @@ interface InfotainmentContextType {
   dialCenter: () => void;
   openAppFromMenu: (appId: string) => void;
   openAppById: (appId: string) => void;
+  openAppMenu: () => void;
   navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
   setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
@@ -380,6 +381,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  const openAppMenu = useCallback(() => {
+    setAppMenuOpen(true);
+    setAppMenuIndex(0);
+    setPhonePopupOpen(false);
+  }, []);
+
   const navigateToItem = useCallback((index: number) => {
     const item = TASKBAR_ITEMS[index];
     setHighlightedIndex(index);
@@ -563,6 +570,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         dialCenter,
         openAppFromMenu,
         openAppById,
+        openAppMenu,
         navigateToItem,
         setClimate,
         setMedia,
