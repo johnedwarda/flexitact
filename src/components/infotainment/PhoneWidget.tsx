@@ -54,7 +54,7 @@ const PhoneWidget = () => {
           <span className="text-xs font-semibold">{contact.name}</span>
           <span className="text-[10px] font-mono text-muted-foreground">{formatDuration(duration)}</span>
         </div>
-        <div className="text-muted-foreground" title={`Call volume ${callVolume}`}>
+        <div className="text-foreground/80" title={`Call volume ${callVolume}`}>
           <VolumeDonut value={callVolume} muted={callMuted} />
         </div>
         <button
@@ -63,7 +63,7 @@ const PhoneWidget = () => {
             setCallMuted(!callMuted);
           }}
           className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-            callMuted ? "text-accent" : "text-muted-foreground hover:text-foreground"
+            callMuted ? "text-accent" : "text-foreground/80 hover:text-foreground"
           }`}
           title={callMuted ? "Unmute" : "Mute"}
         >
@@ -85,7 +85,7 @@ const PhoneWidget = () => {
 
   return (
     <div className="flex items-center gap-2 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Phone size={16} className="text-muted-foreground" />
+      <Phone size={16} className="text-foreground/80" />
       {PHONE_FAVORITES.map((fav, i) => {
         const isActive = phoneActive && phoneIndex === i;
         return (
@@ -107,7 +107,7 @@ const PhoneWidget = () => {
             </div>
             <span
               className={`text-[9px] leading-none transition-colors ${
-                isActive ? "text-accent" : "text-muted-foreground"
+                isActive ? "text-accent" : "text-foreground/80"
               }`}
             >
               {fav.name}

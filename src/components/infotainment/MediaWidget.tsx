@@ -9,7 +9,7 @@ const MediaWidget = () => {
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Music size={16} className="text-muted-foreground" aria-label="Media" />
+      <Music size={16} className="text-foreground/80" aria-label="Media" />
       {/* Track info */}
       <div className="flex flex-col min-w-[100px]">
         <span className="text-xs font-semibold truncate">{currentTrack.title}</span>
@@ -25,7 +25,7 @@ const MediaWidget = () => {
               trackIndex: (m.trackIndex - 1 + tracks.length) % tracks.length,
             }))
           }
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground transition-colors"
         >
           <SkipBack size={16} />
         </button>
@@ -42,7 +42,7 @@ const MediaWidget = () => {
               trackIndex: (m.trackIndex + 1) % tracks.length,
             }))
           }
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-foreground/80 hover:text-foreground transition-colors"
         >
           <SkipForward size={16} />
         </button>
@@ -53,7 +53,7 @@ const MediaWidget = () => {
       {/* Volume */}
       <button
         onClick={() => setMedia((m) => ({ ...m, muted: !m.muted }))}
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="text-foreground/80 hover:text-foreground transition-colors"
         title={`Volume ${muted ? "muted" : `${volume}%`}`}
       >
         <VolumeDonut value={volume} muted={muted} />
