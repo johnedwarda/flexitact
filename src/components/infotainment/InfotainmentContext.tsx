@@ -523,6 +523,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         phonePopupOpen,
         phoneIndex,
         activeCallIndex,
+        startCall: (index: number) => { setPhoneIndex(index); setActiveCallIndex(index); setCallMuted(false); },
         endCall: () => { setActiveCallIndex(null); setCallMuted(false); },
         callVolume,
         callMuted,
