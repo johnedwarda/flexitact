@@ -44,8 +44,7 @@ const BottomTaskbar = () => {
     );
   };
 
-  const renderItem = (index: number) => {
-    const item = TASKBAR_ITEMS[index];
+  const renderItem = (index: number, item: (typeof TASKBAR_ITEMS)[number]) => {
     const isHighlighted = highlightedIndex === index && item.id !== "menu";
 
     return (
