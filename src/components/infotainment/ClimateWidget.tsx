@@ -17,7 +17,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
         className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          seatHeat > 0 ? "text-accent" : "text-foreground/80 hover:text-foreground"
+          seatHeat > 0 ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Seat Heating"
       >
@@ -33,7 +33,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          steeringHeat ? "text-accent" : "text-foreground/80 hover:text-foreground"
+          steeringHeat ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Steering Wheel Heating"
       >
@@ -44,7 +44,7 @@ const ClimateWidget = () => {
       <button
         onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-          defogger ? "text-accent" : "text-foreground/80 hover:text-foreground"
+          defogger ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Windscreen Defogger"
       >

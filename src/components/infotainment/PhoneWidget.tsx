@@ -54,7 +54,7 @@ const PhoneWidget = () => {
           <span className="text-xs font-semibold">{contact.name}</span>
           <span className="text-[10px] font-mono text-muted-foreground">{formatDuration(duration)}</span>
         </div>
-        <div className="text-foreground/80" title={`Call volume ${callVolume}`}>
+        <div className="text-muted-foreground" title={`Call volume ${callVolume}`}>
           <VolumeDonut value={callVolume} muted={callMuted} />
         </div>
         <button
@@ -63,7 +63,7 @@ const PhoneWidget = () => {
             setCallMuted(!callMuted);
           }}
           className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-            callMuted ? "text-accent" : "text-foreground/80 hover:text-foreground"
+            callMuted ? "text-accent" : "text-muted-foreground hover:text-foreground"
           }`}
           title={callMuted ? "Unmute" : "Mute"}
         >
@@ -107,7 +107,7 @@ const PhoneWidget = () => {
             </div>
             <span
               className={`text-[9px] leading-none transition-colors ${
-                isActive ? "text-accent" : "text-foreground/80"
+                isActive ? "text-accent" : "text-muted-foreground"
               }`}
             >
               {fav.name}
