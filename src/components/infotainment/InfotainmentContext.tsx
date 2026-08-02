@@ -389,15 +389,21 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
 
   const openAppFromMenu = useCallback((appId: string) => {
     setAppMenuOpen(false);
-    // Map menu items to taskbar items where possible
     const taskbarIndex = TASKBAR_ITEMS.findIndex((t) => t.id === appId);
-    if (taskbarIndex >= 0) {
-      setHighlightedIndex(taskbarIndex);
-      setApps((prev) => ({ ...prev, [appId]: { ...prev[appId], state: "opened" } }));
-    } else {
-      // For apps not in taskbar, open settings as fallback or just close menu
-      // In a real system these would have their own views
-    }
+    if (taskbarIndex >= 0) setHighlightedIndex(taskbarIndex);
+    setApps((prev) => {
+      const updated = { ...prev };
+      for (const key of Object.keys(updated)) {
+        if (updated[key].state === "opened") {
+          updated[key] = { ...updated[key], state: "minimized" };
+        }
+      }
+      // "navigation" is the persistent map background — opening it just clears overlays
+      if (appId !== "navigation") {
+        updated[appId] = { ...(updated[appId] ?? { id: appId }), state: "opened" };
+      }
+      return updated;
+    });
   }, []);
 
   // Contextual dial controls
