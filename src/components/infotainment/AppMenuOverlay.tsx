@@ -1,23 +1,17 @@
 import {
   Map,
-  Music,
-  Thermometer,
-  Settings,
-  Phone,
+  Gamepad2,
+  Video,
   Camera,
-  Calendar,
   MessageSquare,
 } from "lucide-react";
 import { useInfotainment } from "./InfotainmentContext";
 
 const APP_MENU_ITEMS = [
-  { id: "navigation", label: "Navigation", icon: Map },
-  { id: "media", label: "Media", icon: Music },
-  { id: "climate", label: "Climate", icon: Thermometer },
-  { id: "settings", label: "Settings", icon: Settings },
-  { id: "phone", label: "Phone", icon: Phone },
-  { id: "camera", label: "Camera", icon: Camera },
-  { id: "calendar", label: "Calendar", icon: Calendar },
+  { id: "navigation", label: "Maps", icon: Map },
+  { id: "dashcam", label: "Dashcam", icon: Camera },
+  { id: "games", label: "Games", icon: Gamepad2 },
+  { id: "videos", label: "Videos", icon: Video },
   { id: "messages", label: "Messages", icon: MessageSquare },
 ];
 
@@ -31,7 +25,7 @@ const AppMenuOverlay = () => {
       <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
         App Menu
       </h2>
-      <div className="grid grid-cols-4 gap-4 max-w-md">
+      <div className="grid grid-cols-3 gap-4 max-w-md">
         {APP_MENU_ITEMS.map((app, i) => (
           <button
             key={app.id}

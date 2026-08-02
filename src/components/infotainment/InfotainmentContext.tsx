@@ -13,6 +13,7 @@ export const TASKBAR_ITEMS: TaskbarItem[] = [
   { id: "climate", label: "Climate", type: "widget" },
   { id: "media", label: "Media", type: "widget" },
   { id: "phone", label: "Phone", type: "shortcut" },
+  { id: "calendar", label: "Calendar", type: "shortcut" },
   { id: "menu", label: "App Menu", type: "shortcut" },
 ];
 
@@ -114,9 +115,9 @@ export const useInfotainment = () => {
   return ctx;
 };
 
-const APP_MENU_COUNT = 6;
+const APP_MENU_COUNT = 5;
 const APP_MENU_COLS = 3;
-const APP_MENU_IDS = ["dashcam", "games", "videos", "calendar", "messages", "navigation"];
+const APP_MENU_IDS = ["dashcam", "games", "videos", "messages", "navigation"];
 
 export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(1);
@@ -125,6 +126,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     climate: { id: "climate", state: "closed" },
     media: { id: "media", state: "closed" },
     phone: { id: "phone", state: "closed" },
+    calendar: { id: "calendar", state: "closed" },
     menu: { id: "menu", state: "closed" },
   });
 
@@ -171,7 +173,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   // Track dial usage on eligible items (not settings or menu)
   const recordDialUsage = useCallback((index: number) => {
     const item = TASKBAR_ITEMS[index];
-    if (item && item.id !== "settings" && item.id !== "menu") {
+    if (item && item.id !== "settings" && item.id !== "menu" && item.id !== "calendar") {
       lastDialUsedIndexRef.current = index;
     }
     setLastActivity(Date.now());
@@ -189,7 +191,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       idleTimerRef.current = null;
     }
     const currentItem = TASKBAR_ITEMS[highlightedIndex];
-    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu")) {
+    if (currentItem && (currentItem.id === "settings" || currentItem.id === "menu" || currentItem.id === "calendar")) {
       idleTimerRef.current = setTimeout(() => {
         const targetIndex = lastDialUsedIndexRef.current;
         setHighlightedIndex(targetIndex);

@@ -2,7 +2,6 @@ import {
   Video,
   Gamepad2,
   Film,
-  Calendar,
   MessageSquare,
   Map,
 } from "lucide-react";
@@ -13,7 +12,6 @@ export const APP_MENU_ITEMS = [
   { id: "dashcam", label: "Dashcam", icon: Video },
   { id: "games", label: "Games", icon: Gamepad2 },
   { id: "videos", label: "Videos", icon: Film },
-  { id: "calendar", label: "Calendar", icon: Calendar },
   { id: "messages", label: "Messages", icon: MessageSquare },
   { id: "navigation", label: "Maps", icon: Map },
 ];
