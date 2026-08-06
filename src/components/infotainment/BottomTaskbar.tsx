@@ -13,7 +13,7 @@ const GRID_APP_ICONS: Record<string, { icon: LucideIcon; label: string }> = {
 };
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, openAppById, openAppMenu, recentGridAppId } = useInfotainment();
+  const { highlightedIndex, toggleAppById, openAppMenu, recentGridAppId } = useInfotainment();
 
   const iconClass = () =>
     "w-10 h-10 rounded-xl flex items-center justify-center transition-colors outline-none focus:outline-none focus-visible:outline-none text-foreground/80 hover:text-foreground";
