@@ -20,9 +20,9 @@ const BottomTaskbar = () => {
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
-      openAppById(itemId);
+      toggleAppById(itemId);
     },
-    [openAppById]
+    [toggleAppById]
   );
 
   const SwipeWrapper = ({ itemId, children }: { itemId: string; children: React.ReactNode }) => {
