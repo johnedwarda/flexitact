@@ -318,6 +318,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (id === "menu" && appMenuOpen) {
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
+        // Already open → close it (reveal the map)
+        if (apps[selectedAppId]?.state === "opened") {
+          minimizeAppRef.current();
+          return;
+        }
         rememberGridApp(selectedAppId);
         // Grid stays open (highlight remains on it) until the idle timeout.
         setApps((prev) => {
