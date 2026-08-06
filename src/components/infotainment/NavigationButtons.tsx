@@ -140,6 +140,15 @@ const NavigationButtons = () => {
 
   return (
     <div className="flex items-center justify-center gap-12 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
+      {/* Navigation Cluster shortcuts */}
+      <ShortcutList
+        items={[
+          ["V", "Move left"],
+          ["B", "Open / close"],
+          ["N", "Move right"],
+        ]}
+      />
+
       {/* Navigation Cluster - 4-way Joystick */}
       <div className="flex flex-col items-center gap-2">
 
@@ -192,15 +201,6 @@ const NavigationButtons = () => {
           {currentItem.label}
         </span>
       </div>
-
-      {/* Navigation Cluster shortcuts */}
-      <ShortcutList
-        items={[
-          ["V", "Move left"],
-          ["B", "Open / close"],
-          ["N", "Move right"],
-        ]}
-      />
 
       {/* Control Cluster */}
       <div className="flex flex-col items-center gap-2">
