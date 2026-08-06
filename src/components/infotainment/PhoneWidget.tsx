@@ -21,8 +21,9 @@ const formatDuration = (seconds: number) => {
 };
 
 const PhoneWidget = () => {
-  const { phoneIndex, highlightedIndex, activeCallIndex, endCall, callVolume, callMuted, setCallMuted } = useInfotainment();
+  const { phoneIndex, highlightedIndex, activeCallIndex, endCall, callVolume, callMuted, setCallMuted, apps, toggleAppById } = useInfotainment();
   const phoneActive = highlightedIndex === 3;
+  const isOpen = apps.phone?.state === "opened";
 
   const [duration, setDuration] = useState(0);
 
@@ -42,14 +43,22 @@ const PhoneWidget = () => {
     const contact = PHONE_FAVORITES[activeCallIndex];
     return (
       <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-        <img
-          src={contact.photo}
-          alt={contact.name}
-          width={28}
-          height={28}
-          loading="lazy"
-          className="w-7 h-7 rounded-full object-cover ring-2 ring-accent"
-        />
+        <button
+          onClick={() => toggleAppById("phone")}
+          className="flex items-center justify-center"
+          title={isOpen ? "Close phone" : "Open phone"}
+        >
+          <img
+            src={contact.photo}
+            alt={contact.name}
+            width={28}
+            height={28}
+            loading="lazy"
+            className={`w-7 h-7 rounded-full object-cover ring-2 transition-all ${
+              isOpen ? "ring-accent" : "ring-accent/40 hover:ring-accent"
+            }`}
+          />
+        </button>
         <div className="flex flex-col leading-tight">
           <span className="text-xs font-semibold">{contact.name}</span>
           <span className="text-[10px] font-mono text-muted-foreground">{formatDuration(duration)}</span>
@@ -85,7 +94,15 @@ const PhoneWidget = () => {
 
   return (
     <div className="flex items-center gap-2 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Phone size={16} className="text-foreground/80" />
+      <button
+        onClick={() => toggleAppById("phone")}
+        className={`flex items-center justify-center transition-colors ${
+          isOpen ? "text-accent" : "text-foreground/80 hover:text-foreground"
+        }`}
+        title={isOpen ? "Close phone" : "Open phone"}
+      >
+        <Phone size={16} />
+      </button>
       {PHONE_FAVORITES.map((fav, i) => {
         const isActive = phoneActive && phoneIndex === i;
         return (

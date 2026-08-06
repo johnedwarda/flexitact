@@ -3,13 +3,22 @@ import { useInfotainment } from "./InfotainmentContext";
 import VolumeDonut from "./VolumeDonut";
 
 const MediaWidget = () => {
-  const { media, setMedia, tracks } = useInfotainment();
+  const { media, setMedia, tracks, apps, toggleAppById } = useInfotainment();
   const { playing, volume, muted, trackIndex } = media;
   const currentTrack = tracks[trackIndex];
+  const isOpen = apps.media?.state === "opened";
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Music size={16} className="text-foreground/80" aria-label="Media" />
+      <button
+        onClick={() => toggleAppById("media")}
+        className={`flex items-center justify-center transition-colors ${
+          isOpen ? "text-accent" : "text-foreground/80 hover:text-foreground"
+        }`}
+        title={isOpen ? "Close media" : "Open media"}
+      >
+        <Music size={16} aria-label="Media" />
+      </button>
       {/* Track info */}
       <div className="flex flex-col min-w-[100px]">
         <span className="text-xs font-semibold truncate">{currentTrack.title}</span>
