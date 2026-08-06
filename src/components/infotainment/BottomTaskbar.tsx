@@ -86,7 +86,7 @@ const BottomTaskbar = () => {
             const RecentIcon = entry.icon;
             return (
               <button
-                onClick={() => openAppById(recentGridAppId)}
+                onClick={() => toggleAppById(recentGridAppId)}
                 aria-label={entry.label}
                 className={iconClass()}
               >
