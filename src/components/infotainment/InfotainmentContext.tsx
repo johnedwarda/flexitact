@@ -421,6 +421,15 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [rememberGridApp]);
 
+  const toggleAppById = useCallback((appId: string) => {
+    recordActivity();
+    if (apps[appId]?.state === "opened") {
+      minimizeApp();
+    } else {
+      openAppById(appId);
+    }
+  }, [apps, openAppById, minimizeApp, recordActivity]);
+
   const openAppMenu = useCallback(() => {
     setAppMenuOpen(true);
     setAppMenuIndex(0);
@@ -603,6 +612,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         dialCenter,
         openAppFromMenu,
         openAppById,
+        toggleAppById,
         openAppMenu,
         recentGridAppId,
         navigateToItem,
