@@ -193,8 +193,18 @@ const NavigationButtons = () => {
         </span>
       </div>
 
+      {/* Navigation Cluster shortcuts */}
+      <ShortcutList
+        items={[
+          ["V", "Move left"],
+          ["B", "Open / close"],
+          ["N", "Move right"],
+        ]}
+      />
+
       {/* Control Cluster */}
       <div className="flex flex-col items-center gap-2">
+
         <div className="relative w-32 h-32">
           {/* Outer rotating ring */}
           <div
