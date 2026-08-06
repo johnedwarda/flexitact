@@ -73,7 +73,7 @@ const BottomTaskbar = () => {
           )}
           {item.id === "calendar" && (
             <button
-              onClick={() => openAppById("calendar")}
+              onClick={() => toggleAppById("calendar")}
               className={iconClass()}
             >
               <Calendar size={20} />
