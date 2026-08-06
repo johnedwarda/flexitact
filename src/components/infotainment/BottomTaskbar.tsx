@@ -13,16 +13,16 @@ const GRID_APP_ICONS: Record<string, { icon: LucideIcon; label: string }> = {
 };
 
 const BottomTaskbar = () => {
-  const { highlightedIndex, openAppById, openAppMenu, recentGridAppId } = useInfotainment();
+  const { highlightedIndex, toggleAppById, openAppMenu, recentGridAppId } = useInfotainment();
 
   const iconClass = () =>
     "w-10 h-10 rounded-xl flex items-center justify-center transition-colors outline-none focus:outline-none focus-visible:outline-none text-foreground/80 hover:text-foreground";
 
   const handleSwipeUp = useCallback(
     (itemId: string) => {
-      openAppById(itemId);
+      toggleAppById(itemId);
     },
-    [openAppById]
+    [toggleAppById]
   );
 
   const SwipeWrapper = ({ itemId, children }: { itemId: string; children: React.ReactNode }) => {
@@ -52,7 +52,7 @@ const BottomTaskbar = () => {
         <div className="rounded-2xl">
         {item.id === "settings" && (
             <button
-              onClick={() => openAppById("settings")}
+              onClick={() => toggleAppById("settings")}
               className={iconClass()}
             >
               <SlidersHorizontal size={20} />
@@ -73,7 +73,7 @@ const BottomTaskbar = () => {
           )}
           {item.id === "calendar" && (
             <button
-              onClick={() => openAppById("calendar")}
+              onClick={() => toggleAppById("calendar")}
               className={iconClass()}
             >
               <Calendar size={20} />
@@ -86,7 +86,7 @@ const BottomTaskbar = () => {
             const RecentIcon = entry.icon;
             return (
               <button
-                onClick={() => openAppById(recentGridAppId)}
+                onClick={() => toggleAppById(recentGridAppId)}
                 aria-label={entry.label}
                 className={iconClass()}
               >
