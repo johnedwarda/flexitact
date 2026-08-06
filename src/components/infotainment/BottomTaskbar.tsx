@@ -52,7 +52,7 @@ const BottomTaskbar = () => {
         <div className="rounded-2xl">
         {item.id === "settings" && (
             <button
-              onClick={() => openAppById("settings")}
+              onClick={() => toggleAppById("settings")}
               className={iconClass()}
             >
               <SlidersHorizontal size={20} />
