@@ -2,12 +2,21 @@ import { useInfotainment } from "./InfotainmentContext";
 import { CircleDot, Heater, Thermometer, Wind } from "lucide-react";
 
 const ClimateWidget = () => {
-  const { climate, setClimate } = useInfotainment();
+  const { climate, setClimate, apps, toggleAppById } = useInfotainment();
   const { temp, seatHeat, steeringHeat, defogger } = climate;
+  const isOpen = apps.climate?.state === "opened";
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-14 rounded-2xl bg-muted/50 border border-border/50 backdrop-blur-sm">
-      <Thermometer size={16} className="text-foreground/80" aria-label="Climate" />
+      <button
+        onClick={() => toggleAppById("climate")}
+        className={`flex items-center justify-center transition-colors ${
+          isOpen ? "text-accent" : "text-foreground/80 hover:text-foreground"
+        }`}
+        title={isOpen ? "Close climate" : "Open climate"}
+      >
+        <Thermometer size={16} aria-label="Climate" />
+      </button>
       {/* Temperature display */}
       <TempDonut temp={temp} />
 

@@ -95,6 +95,7 @@ interface InfotainmentContextType {
   dialCenter: () => void;
   openAppFromMenu: (appId: string) => void;
   openAppById: (appId: string) => void;
+  toggleAppById: (appId: string) => void;
   openAppMenu: () => void;
   recentGridAppId: string | null;
   navigateToItem: (index: number) => void;

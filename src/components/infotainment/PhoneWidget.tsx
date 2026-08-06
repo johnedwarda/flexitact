@@ -21,8 +21,9 @@ const formatDuration = (seconds: number) => {
 };
 
 const PhoneWidget = () => {
-  const { phoneIndex, highlightedIndex, activeCallIndex, endCall, callVolume, callMuted, setCallMuted } = useInfotainment();
+  const { phoneIndex, highlightedIndex, activeCallIndex, endCall, callVolume, callMuted, setCallMuted, apps, toggleAppById } = useInfotainment();
   const phoneActive = highlightedIndex === 3;
+  const isOpen = apps.phone?.state === "opened";
 
   const [duration, setDuration] = useState(0);
 
