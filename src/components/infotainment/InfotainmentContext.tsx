@@ -320,7 +320,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       if (selectedAppId) {
         // Already open → close it (reveal the map)
         if (apps[selectedAppId]?.state === "opened") {
-          minimizeAppRef.current();
+          setApps((prev) => {
+            const updated = { ...prev };
+            for (const key of Object.keys(updated)) {
+              if (updated[key].state === "opened") updated[key] = { ...updated[key], state: "minimized" };
+            }
+            return updated;
+          });
           return;
         }
         rememberGridApp(selectedAppId);
