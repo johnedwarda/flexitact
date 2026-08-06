@@ -448,18 +448,20 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     // Grid stays open until the idle timeout reverts the highlight.
     setApps((prev) => {
       const updated = { ...prev };
+      const alreadyOpen = prev[appId]?.state === "opened";
       for (const key of Object.keys(updated)) {
         if (updated[key].state === "opened") {
           updated[key] = { ...updated[key], state: "minimized" };
         }
       }
+      // Toggle: tapping the open app closes it (reveals the map).
       // "navigation" is the persistent map background — opening it just clears overlays
-      if (appId !== "navigation") {
+      if (appId !== "navigation" && !alreadyOpen) {
         updated[appId] = { ...(updated[appId] ?? { id: appId }), state: "opened" };
       }
       return updated;
     });
-  }, []);
+  }, [rememberGridApp]);
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
