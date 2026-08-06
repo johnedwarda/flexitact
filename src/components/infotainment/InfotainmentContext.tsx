@@ -359,7 +359,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         return updated;
       });
     }
-  }, [highlightedIndex, appMenuOpen, appMenuIndex, rememberGridApp]);
+  }, [highlightedIndex, appMenuOpen, appMenuIndex, apps, rememberGridApp]);
 
   const minimizeApp = useCallback(() => {
     // The app grid stays open while the highlight is on it; only the idle
