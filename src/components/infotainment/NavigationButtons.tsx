@@ -300,7 +300,18 @@ const NavigationButtons = () => {
         </span>
         <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {controlClusterDisabled ? "—" : hints.dial}</span>
       </div>
+
+      {/* Control Cluster shortcuts */}
+      <ShortcutList
+        items={[
+          ["←/→", "Left / right"],
+          ["↑/↓", "Up / down"],
+          ["PgUp/PgDn", "Rotate"],
+          ["Enter", "Press"],
+        ]}
+      />
     </div>
+
   );
 };
 
