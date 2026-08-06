@@ -318,6 +318,17 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     if (id === "menu" && appMenuOpen) {
       const selectedAppId = APP_MENU_IDS[appMenuIndex];
       if (selectedAppId) {
+        // Already open → close it (reveal the map)
+        if (apps[selectedAppId]?.state === "opened") {
+          setApps((prev) => {
+            const updated = { ...prev };
+            for (const key of Object.keys(updated)) {
+              if (updated[key].state === "opened") updated[key] = { ...updated[key], state: "minimized" };
+            }
+            return updated;
+          });
+          return;
+        }
         rememberGridApp(selectedAppId);
         // Grid stays open (highlight remains on it) until the idle timeout.
         setApps((prev) => {
@@ -348,7 +359,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         return updated;
       });
     }
-  }, [highlightedIndex, appMenuOpen, appMenuIndex, rememberGridApp]);
+  }, [highlightedIndex, appMenuOpen, appMenuIndex, apps, rememberGridApp]);
 
   const minimizeApp = useCallback(() => {
     // The app grid stays open while the highlight is on it; only the idle
@@ -437,18 +448,20 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     // Grid stays open until the idle timeout reverts the highlight.
     setApps((prev) => {
       const updated = { ...prev };
+      const alreadyOpen = prev[appId]?.state === "opened";
       for (const key of Object.keys(updated)) {
         if (updated[key].state === "opened") {
           updated[key] = { ...updated[key], state: "minimized" };
         }
       }
+      // Toggle: tapping the open app closes it (reveals the map).
       // "navigation" is the persistent map background — opening it just clears overlays
-      if (appId !== "navigation") {
+      if (appId !== "navigation" && !alreadyOpen) {
         updated[appId] = { ...(updated[appId] ?? { id: appId }), state: "opened" };
       }
       return updated;
     });
-  }, []);
+  }, [rememberGridApp]);
 
   // Contextual dial controls
   const dialLeft = useCallback(() => {
