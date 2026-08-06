@@ -117,10 +117,32 @@ const NavigationButtons = () => {
 
   const hints = getDialHints();
 
+  const Kbd = ({ children }: { children: React.ReactNode }) => (
+    <span className="inline-flex min-w-[18px] items-center justify-center rounded border border-border/50 bg-[hsl(var(--surface-glass))] px-1 py-[1px] font-mono text-[8px] text-muted-foreground">
+      {children}
+    </span>
+  );
+
+  const ShortcutList = ({ items }: { items: [string, string][] }) => (
+    <ul className="flex flex-col gap-1">
+      {items.map(([keys, action]) => (
+        <li key={action} className="flex items-center gap-1.5">
+          <span className="flex items-center gap-0.5">
+            {keys.split("/").map((k) => (
+              <Kbd key={k}>{k}</Kbd>
+            ))}
+          </span>
+          <span className="text-[8px] uppercase tracking-wider text-muted-foreground/70 font-mono">{action}</span>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
-    <div className="flex items-center justify-center gap-20 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
+    <div className="flex items-center justify-center gap-12 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
       {/* Navigation Cluster - 4-way Joystick */}
       <div className="flex flex-col items-center gap-2">
+
         <div className="relative w-20 h-20 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-border/50 shadow-lg">
           {/* Outer ring removed */}
 
@@ -171,8 +193,18 @@ const NavigationButtons = () => {
         </span>
       </div>
 
+      {/* Navigation Cluster shortcuts */}
+      <ShortcutList
+        items={[
+          ["V", "Move left"],
+          ["B", "Open / close"],
+          ["N", "Move right"],
+        ]}
+      />
+
       {/* Control Cluster */}
       <div className="flex flex-col items-center gap-2">
+
         <div className="relative w-32 h-32">
           {/* Outer rotating ring */}
           <div
@@ -268,7 +300,18 @@ const NavigationButtons = () => {
         </span>
         <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {controlClusterDisabled ? "—" : hints.dial}</span>
       </div>
+
+      {/* Control Cluster shortcuts */}
+      <ShortcutList
+        items={[
+          ["←/→", "Left / right"],
+          ["↑/↓", "Up / down"],
+          ["PgUp/PgDn", "Rotate"],
+          ["Enter", "Press"],
+        ]}
+      />
     </div>
+
   );
 };
 
