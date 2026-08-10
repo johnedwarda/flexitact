@@ -242,8 +242,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateLeft = useCallback(() => {
     recordActivity();
     if (appMenuOpen) {
-      // App grid highlight clamps at the first item instead of exiting/cycling.
-      if (appMenuIndex > 0) {
+      if (appMenuIndex === 0) {
+        // Wrap from the first app-grid item back to the taskbar's last item (app grid icon).
+        setAppMenuOpen(false);
+        setPhonePopupOpen(false);
+      } else {
         setAppMenuIndex((i) => i - 1);
       }
       return;
@@ -277,7 +280,13 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     setHighlightedIndex((prev) => {
-      if (prev >= TASKBAR_ITEMS.length - 1) return prev; // stop at rightmost
+      // At the rightmost taskbar item (app grid icon), wrap into the app grid.
+      if (prev >= TASKBAR_ITEMS.length - 1) {
+        setAppMenuOpen(true);
+        setAppMenuIndex(0);
+        setPhonePopupOpen(false);
+        return prev;
+      }
       let next = prev + 1;
       if (TASKBAR_ITEMS[next].id === "recent" && !recentGridAppIdRef.current) next = next + 1;
       if (next > TASKBAR_ITEMS.length - 1) return prev;
