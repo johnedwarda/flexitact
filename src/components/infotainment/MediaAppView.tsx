@@ -64,7 +64,7 @@ const MediaAppView = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Header: source pills + search */}
-      <div className="flex flex-col gap-3 px-5 pt-5 pb-3 border-b border-border/40 bg-card/40">
+      <div className="flex flex-col gap-3 px-5 pt-3 pb-3 border-b border-border/40 bg-card/40">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-foreground/70 font-mono">
             Media

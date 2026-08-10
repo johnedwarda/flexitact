@@ -54,7 +54,7 @@ const ClimateAppView = () => {
   };
 
   return (
-    <div className="flex flex-col h-full p-5 gap-3 overflow-hidden">
+    <div className="flex flex-col h-full px-5 pt-3 pb-5 gap-3 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <h2 className="text-sm font-semibold tracking-wider uppercase text-foreground/70 font-mono">

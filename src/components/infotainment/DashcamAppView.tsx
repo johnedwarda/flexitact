@@ -13,8 +13,8 @@ const DashcamAppView = () => {
   const [camera, setCamera] = useState("Front");
 
   return (
-    <div className="h-full w-full flex flex-col p-6 gap-5">
-      <header className="flex items-center gap-3">
+    <div className="h-full w-full flex flex-col px-6 pt-3 pb-6 gap-5">
+      <header className="flex h-6 items-center gap-3">
         <Camera size={18} className="text-muted-foreground" />
         <h1 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Dashcam</h1>
       </header>
