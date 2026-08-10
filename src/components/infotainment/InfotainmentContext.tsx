@@ -242,7 +242,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateLeft = useCallback(() => {
     recordActivity();
     if (appMenuOpen) {
-      if (appMenuIndex === 0) {
+      if (appMenuIndex <= 0) {
         // Wrap from the first app-grid item back to the taskbar item before the app grid icon (calendar).
         setAppMenuOpen(false);
         setPhonePopupOpen(false);
