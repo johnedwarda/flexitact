@@ -139,7 +139,7 @@ const NavigationButtons = () => {
   );
 
   return (
-    <div className="flex items-center justify-center gap-12 px-8 py-6 bg-[hsl(220_22%_5%)] border-t border-border/30">
+    <div className="flex items-center justify-center gap-12 px-8 py-6 bg-[hsl(220_22%_5%)]">
       {/* Navigation Cluster shortcuts */}
       <ShortcutList
         items={[
