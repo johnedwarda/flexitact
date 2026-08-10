@@ -230,6 +230,47 @@ const VehicleSettings = () => {
   );
 };
 
+const BatterySettings = () => {
+  const [chargeLimit, setChargeLimit] = useState(80);
+  const [scheduledCharging, setScheduledCharging] = useState(true);
+  const [precondition, setPrecondition] = useState(true);
+  const [chargingMode, setChargingMode] = useState<"Daily" | "Trip">("Daily");
+
+  return (
+    <div className="space-y-1">
+      <SettingRow icon={<Battery size={16} />} label="Battery Level">
+        <span className="text-xs font-mono text-muted-foreground">74%</span>
+      </SettingRow>
+      <SettingRow icon={<Gauge size={16} />} label="Charge Limit">
+        <SliderRow value={chargeLimit} onChange={setChargeLimit} min={50} max={100} />
+      </SettingRow>
+      <SettingRow icon={<Clock size={16} />} label="Scheduled Charging">
+        <Toggle active={scheduledCharging} onToggle={() => setScheduledCharging(!scheduledCharging)} />
+      </SettingRow>
+      <SettingRow icon={<Sun size={16} />} label="Precondition Cabin">
+        <Toggle active={precondition} onToggle={() => setPrecondition(!precondition)} />
+      </SettingRow>
+      <SettingRow icon={<Car size={16} />} label="Charging Mode">
+        <div className="flex items-center gap-2">
+          {(["Daily", "Trip"] as const).map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setChargingMode(mode)}
+              className={`px-2 py-1 rounded-md text-[10px] font-mono border ${
+                chargingMode === mode
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border/60 text-muted-foreground hover:bg-muted/30"
+              }`}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
+      </SettingRow>
+    </div>
+  );
+};
+
 const SafetySettings = () => {
   const [lka, setLka] = useState(true);
   const [bsm, setBsm] = useState(true);
