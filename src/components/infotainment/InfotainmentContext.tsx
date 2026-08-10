@@ -431,10 +431,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [apps, openAppById, minimizeApp, recordActivity]);
 
   const openAppMenu = useCallback(() => {
+    // Touch/mouse opening: no grid item is highlighted, the pill stays where it was.
     setAppMenuOpen(true);
-    setAppMenuIndex(0);
+    setAppMenuIndex(-1);
     setPhonePopupOpen(false);
   }, []);
+
 
   const navigateToItem = useCallback((index: number) => {
     const item = TASKBAR_ITEMS[index];
