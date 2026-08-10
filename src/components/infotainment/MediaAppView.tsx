@@ -68,7 +68,7 @@ const MediaAppView = () => {
         <div className="flex items-center justify-between">
           <div className="flex h-6 items-center gap-3">
             <Music size={18} className="text-muted-foreground" />
-            <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">
+            <h2 className="text-base font-mono uppercase tracking-widest text-muted-foreground">
               Media
             </h2>
           </div>
