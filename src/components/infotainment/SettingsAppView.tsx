@@ -19,9 +19,10 @@ import {
   Clock,
   Palette,
   SlidersHorizontal,
+  Battery,
 } from "lucide-react";
 
-type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "safety" | "system";
+type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "battery" | "safety" | "system";
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; description: string }[] = [
   { id: "display", label: "Display", icon: Monitor, description: "Brightness, theme, layout" },
@@ -29,6 +30,7 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; d
   { id: "connectivity", label: "Connectivity", icon: Wifi, description: "Wi-Fi, Bluetooth, hotspot" },
   { id: "navigation", label: "Navigation", icon: Navigation, description: "Maps, routes, POI" },
   { id: "vehicle", label: "Vehicle", icon: Car, description: "Lights, mirrors, locks" },
+  { id: "battery", label: "Battery & Charging", icon: Battery, description: "Charge limit, schedule, precondition" },
   { id: "safety", label: "Safety & Driver Assist", icon: Shield, description: "ADAS, cameras, alerts" },
   { id: "system", label: "System", icon: Info, description: "Language, time, updates" },
 ];
@@ -73,6 +75,7 @@ const SettingsAppView = () => {
         {activeCategory === "connectivity" && <ConnectivitySettings />}
         {activeCategory === "navigation" && <NavigationSettings />}
         {activeCategory === "vehicle" && <VehicleSettings />}
+        {activeCategory === "battery" && <BatterySettings />}
         {activeCategory === "safety" && <SafetySettings />}
         {activeCategory === "system" && <SystemSettings />}
       </div>
