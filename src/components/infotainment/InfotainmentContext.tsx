@@ -270,11 +270,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateRight = useCallback(() => {
     recordActivity();
     if (appMenuOpen) {
-      if (appMenuIndex === APP_MENU_COUNT - 1) {
-        setAppMenuOpen(false);
-        setHighlightedIndex(0);
-        setPhonePopupOpen(false);
-      } else {
+      // App grid highlight clamps at the last item instead of exiting/cycling.
+      if (appMenuIndex < APP_MENU_COUNT - 1) {
         setAppMenuIndex((i) => i + 1);
       }
       return;
