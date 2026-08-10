@@ -60,7 +60,7 @@ const ClimateAppView = () => {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex h-6 items-center gap-3">
           <Thermometer size={18} className="text-muted-foreground" />
-          <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">
+          <h2 className="text-base font-mono uppercase tracking-widest text-muted-foreground">
             Climate
           </h2>
         </div>

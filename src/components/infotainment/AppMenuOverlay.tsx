@@ -22,7 +22,7 @@ const AppMenuOverlay = () => {
 
   return (
     <div className="absolute inset-0 z-40 bg-background/95 backdrop-blur-lg flex flex-col items-center justify-center p-8">
-      <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+      <h2 className="text-base font-mono uppercase tracking-widest text-muted-foreground mb-6">
         App Menu
       </h2>
       <div className="grid grid-cols-3 gap-4 max-w-md">

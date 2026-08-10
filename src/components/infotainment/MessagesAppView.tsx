@@ -40,7 +40,7 @@ const MessagesAppView = () => {
     <div className="h-full w-full flex flex-col px-6 pt-3 pb-6 gap-5">
       <header className="flex h-6 items-center gap-3">
         <MessageSquare size={18} className="text-muted-foreground" />
-        <h1 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Messages</h1>
+        <h1 className="text-base font-mono uppercase tracking-widest text-muted-foreground">Messages</h1>
       </header>
 
       <div className="flex-1 min-h-0 flex gap-5">
