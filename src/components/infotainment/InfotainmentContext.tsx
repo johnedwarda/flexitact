@@ -243,9 +243,10 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     recordActivity();
     if (appMenuOpen) {
       if (appMenuIndex === 0) {
-        // Wrap from the first app-grid item back to the taskbar's last item (app grid icon).
+        // Wrap from the first app-grid item back to the taskbar item before the app grid icon (calendar).
         setAppMenuOpen(false);
         setPhonePopupOpen(false);
+        setHighlightedIndex(TASKBAR_ITEMS.length - 2);
       } else {
         setAppMenuIndex((i) => i - 1);
       }
