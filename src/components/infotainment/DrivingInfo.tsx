@@ -1,17 +1,9 @@
 import { Gauge, BatteryMedium, CloudRain, CarFront } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
-import { APP_MENU_ITEMS } from "./AppMenuPopup";
-
-const APP_LABELS: Record<string, string> = Object.fromEntries([
-  ...TASKBAR_ITEMS.map((item) => [item.id, item.label]),
-  ...APP_MENU_ITEMS.map((item) => [item.id, item.label]),
-]);
 
 const DrivingInfo = () => {
   const [speed, setSpeed] = useState(72);
   const [time, setTime] = useState(new Date());
-  const { apps } = useInfotainment();
 
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000);
@@ -28,23 +20,14 @@ const DrivingInfo = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const openAppId = Object.keys(apps).find((id) => apps[id].state === "opened");
-  const appTitle = openAppId ? APP_LABELS[openAppId] ?? openAppId : null;
-
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
-      {/* Header row: time, app title, outside temperature */}
-      <div className="w-full flex items-center justify-between">
-        <div className="text-xs font-medium tracking-wide text-foreground">
-          {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-        </div>
-        {appTitle && (
-          <div className="text-xs font-medium tracking-wide text-foreground uppercase">
-            {appTitle}
-          </div>
-        )}
-        <div className="text-xs text-muted-foreground font-mono">22°C</div>
+    <div className="relative flex flex-col items-center justify-center h-full gap-6 px-6 py-4">
+      {/* Time */}
+      <div className="absolute top-3 left-3 text-xs font-medium tracking-wide text-foreground">
+        {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
       </div>
+      {/* Outside temperature */}
+      <div className="absolute top-3 right-3 text-xs text-muted-foreground font-mono">22°C</div>
       {/* Speed + Limit row */}
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-4">
