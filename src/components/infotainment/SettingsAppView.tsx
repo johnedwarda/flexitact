@@ -14,39 +14,29 @@ import {
   Gauge,
   Eye,
   Lock,
-  Unlock,
   RotateCcw,
   Languages,
   Clock,
   Palette,
   SlidersHorizontal,
   Battery,
-  Lightbulb,
-  Zap,
-  Box,
-  Square,
-  Fan,
-  Thermometer,
-  ArrowUp,
-  ArrowDown,
-  Droplets,
 } from "lucide-react";
 
-type SettingsCategory = "vehicle" | "display" | "sound" | "connectivity" | "navigation" | "battery" | "safety" | "system";
+type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "battery" | "safety" | "system";
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; description: string }[] = [
-  { id: "vehicle", label: "Vehicle", icon: Car, description: "Controls, lights, locks, climate" },
   { id: "display", label: "Display", icon: Monitor, description: "Brightness, theme, layout" },
   { id: "sound", label: "Sound", icon: Volume2, description: "Audio, alerts, EQ" },
   { id: "connectivity", label: "Connectivity", icon: Wifi, description: "Wi-Fi, Bluetooth, hotspot" },
   { id: "navigation", label: "Navigation", icon: Navigation, description: "Maps, routes, POI" },
+  { id: "vehicle", label: "Vehicle", icon: Car, description: "Lights, mirrors, locks" },
   { id: "battery", label: "Battery & Charging", icon: Battery, description: "Charge limit, schedule, precondition" },
   { id: "safety", label: "Safety & Driver Assist", icon: Shield, description: "ADAS, cameras, alerts" },
   { id: "system", label: "System", icon: Info, description: "Language, time, updates" },
 ];
 
 const SettingsAppView = () => {
-  const [activeCategory, setActiveCategory] = useState<SettingsCategory>("vehicle");
+  const [activeCategory, setActiveCategory] = useState<SettingsCategory>("display");
   const category = CATEGORIES.find((c) => c.id === activeCategory)!;
 
   return (
@@ -217,155 +207,25 @@ const NavigationSettings = () => {
 };
 
 const VehicleSettings = () => {
-  const [locked, setLocked] = useState(true);
-  const [chargeOpen, setChargeOpen] = useState(false);
-  const [frunkOpen, setFrunkOpen] = useState(false);
-  const [trunkOpen, setTrunkOpen] = useState(false);
-  const [domeOn, setDomeOn] = useState(false);
-  const [windowsOpen, setWindowsOpen] = useState(false);
-  const [mirrorsFolded, setMirrorsFolded] = useState(false);
-  const [ventOn, setVentOn] = useState(false);
-
-  const ControlPill = ({
-    icon: Icon,
-    label,
-    active,
-    onClick,
-  }: {
-    icon: typeof Lock;
-    label: string;
-    active: boolean;
-    onClick: () => void;
-  }) => (
-    <button
-      onClick={onClick}
-      className={`flex flex-col items-center justify-center gap-1.5 w-[72px] h-[72px] rounded-2xl border transition-all ${
-        active
-          ? "bg-primary/15 border-primary/60 text-primary"
-          : "bg-card/40 border-border/40 text-muted-foreground hover:bg-muted/30"
-      }`}
-    >
-      <Icon size={22} />
-      <span className="text-[9px] font-mono uppercase tracking-wide">{label}</span>
-    </button>
-  );
+  const [autoLock, setAutoLock] = useState(true);
+  const [autoFold, setAutoFold] = useState(false);
+  const [ambientLight, setAmbientLight] = useState(true);
+  const [ambientBri, setAmbientBri] = useState(50);
 
   return (
-    <div className="flex flex-col h-full gap-4">
-      {/* Tesla-style quick controls grid */}
-      <div className="grid grid-cols-4 gap-3">
-        <ControlPill
-          icon={locked ? Lock : Unlock}
-          label={locked ? "Lock" : "Unlock"}
-          active={!locked}
-          onClick={() => setLocked(!locked)}
-        />
-        <ControlPill
-          icon={Lightbulb}
-          label="Dome"
-          active={domeOn}
-          onClick={() => setDomeOn(!domeOn)}
-        />
-        <ControlPill
-          icon={Zap}
-          label="Charge"
-          active={chargeOpen}
-          onClick={() => setChargeOpen(!chargeOpen)}
-        />
-        <ControlPill
-          icon={Fan}
-          label="Vent"
-          active={ventOn}
-          onClick={() => setVentOn(!ventOn)}
-        />
-      </div>
-
-      {/* Car silhouette with interactive zones */}
-      <div className="flex-1 min-h-0 flex items-center justify-center">
-        <div className="relative w-64 h-[280px]">
-          {/* Car body */}
-          <div className="absolute inset-4 rounded-[40px] bg-card/40 border border-border/40 flex flex-col items-center justify-between py-6">
-            {/* Front trunk area */}
-            <button
-              onClick={() => setFrunkOpen(!frunkOpen)}
-              className={`w-20 h-10 rounded-xl border-2 transition-all flex items-center justify-center ${
-                frunkOpen
-                  ? "border-primary/60 bg-primary/10 text-primary"
-                  : "border-border/30 text-muted-foreground hover:border-border/60"
-              }`}
-            >
-              <Box size={16} />
-            </button>
-
-            {/* Cabin / doors */}
-            <div className="flex items-center justify-center gap-8">
-              <button
-                onClick={() => setMirrorsFolded(!mirrorsFolded)}
-                className={`w-10 h-24 rounded-lg border transition-all flex items-center justify-center ${
-                  mirrorsFolded
-                    ? "border-primary/60 bg-primary/10 text-primary"
-                    : "border-border/30 text-muted-foreground hover:border-border/60"
-                }`}
-              >
-                <Square size={14} />
-              </button>
-              <div className="w-28 h-36 rounded-2xl bg-muted/20 border border-border/30 flex items-center justify-center">
-                <Car size={40} className="text-muted-foreground/40" />
-              </div>
-              <button
-                onClick={() => setMirrorsFolded(!mirrorsFolded)}
-                className={`w-10 h-24 rounded-lg border transition-all flex items-center justify-center ${
-                  mirrorsFolded
-                    ? "border-primary/60 bg-primary/10 text-primary"
-                    : "border-border/30 text-muted-foreground hover:border-border/60"
-                }`}
-              >
-                <Square size={14} />
-              </button>
-            </div>
-
-            {/* Rear trunk area */}
-            <button
-              onClick={() => setTrunkOpen(!trunkOpen)}
-              className={`w-24 h-12 rounded-xl border-2 transition-all flex items-center justify-center ${
-                trunkOpen
-                  ? "border-primary/60 bg-primary/10 text-primary"
-                  : "border-border/30 text-muted-foreground hover:border-border/60"
-              }`}
-            >
-              <ArrowUp size={16} />
-            </button>
-          </div>
-
-          {/* Zone labels */}
-          <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-mono text-muted-foreground uppercase tracking-wider">Frunk</span>
-          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] font-mono text-muted-foreground uppercase tracking-wider">Trunk</span>
-          <span className="absolute top-1/2 left-1 text-[9px] font-mono text-muted-foreground uppercase tracking-wider -rotate-90 origin-center">Mirror</span>
-          <span className="absolute top-1/2 right-1 text-[9px] font-mono text-muted-foreground uppercase tracking-wider rotate-90 origin-center">Mirror</span>
-        </div>
-      </div>
-
-      {/* Secondary controls */}
-      <div className="grid grid-cols-3 gap-3">
-        <ControlPill
-          icon={windowsOpen ? ArrowDown : ArrowUp}
-          label="Windows"
-          active={windowsOpen}
-          onClick={() => setWindowsOpen(!windowsOpen)}
-        />
-        <ControlPill
-          icon={Droplets}
-          label="Wipers"
-          active={false}
-          onClick={() => {}}
-        />
-        <ControlPill
-          icon={Thermometer}
-          label="Climate"
-          active={false}
-          onClick={() => {}}
-        />
-      </div>
+    <div className="space-y-1">
+      <SettingRow icon={<Lock size={16} />} label="Auto Lock">
+        <Toggle active={autoLock} onToggle={() => setAutoLock(!autoLock)} />
+      </SettingRow>
+      <SettingRow icon={<Car size={16} />} label="Auto Fold Mirrors">
+        <Toggle active={autoFold} onToggle={() => setAutoFold(!autoFold)} />
+      </SettingRow>
+      <SettingRow icon={<Palette size={16} />} label="Ambient Lighting">
+        <Toggle active={ambientLight} onToggle={() => setAmbientLight(!ambientLight)} />
+      </SettingRow>
+      <SettingRow icon={<Sun size={16} />} label="Ambient Brightness">
+        <SliderRow value={ambientBri} onChange={setAmbientBri} />
+      </SettingRow>
     </div>
   );
 };
