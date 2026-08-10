@@ -198,6 +198,9 @@ const IndexContent = () => {
                   {renderOverlay()}
                 </div>
               )}
+
+              {/* App grid popup */}
+              {appMenuOpen && <AppMenuPopup />}
             </div>
           </div>
 

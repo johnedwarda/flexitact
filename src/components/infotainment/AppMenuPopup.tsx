@@ -5,7 +5,6 @@ import {
   MessageSquare,
   Map,
 } from "lucide-react";
-import { createPortal } from "react-dom";
 import { useInfotainment } from "./InfotainmentContext";
 
 export const APP_MENU_ITEMS = [
@@ -19,12 +18,8 @@ export const APP_MENU_ITEMS = [
 const AppMenuPopup = () => {
   const { appMenuIndex, openAppFromMenu } = useInfotainment();
 
-  if (typeof document === "undefined") {
-    return null;
-  }
-
-  return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 bottom-[20rem] z-[9999] flex justify-end px-4">
+  return (
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3000] flex justify-end px-4 pb-3">
       <div className="pointer-events-auto rounded-2xl border border-border/50 bg-card/95 p-3 shadow-2xl backdrop-blur-xl">
         <div className="grid grid-cols-3 gap-2">
           {APP_MENU_ITEMS.map((app, i) => {
@@ -62,8 +57,7 @@ const AppMenuPopup = () => {
           })}
         </div>
       </div>
-    </div>,
-    document.body,
+    </div>
   );
 };
 
