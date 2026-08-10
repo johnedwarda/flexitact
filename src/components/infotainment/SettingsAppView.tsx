@@ -22,14 +22,14 @@ import {
   Battery,
 } from "lucide-react";
 
-type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "battery" | "safety" | "system";
+type SettingsCategory = "vehicle" | "display" | "sound" | "connectivity" | "navigation" | "battery" | "safety" | "system";
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; description: string }[] = [
+  { id: "vehicle", label: "Vehicle", icon: Car, description: "Lights, mirrors, locks" },
   { id: "display", label: "Display", icon: Monitor, description: "Brightness, theme, layout" },
   { id: "sound", label: "Sound", icon: Volume2, description: "Audio, alerts, EQ" },
   { id: "connectivity", label: "Connectivity", icon: Wifi, description: "Wi-Fi, Bluetooth, hotspot" },
   { id: "navigation", label: "Navigation", icon: Navigation, description: "Maps, routes, POI" },
-  { id: "vehicle", label: "Vehicle", icon: Car, description: "Lights, mirrors, locks" },
   { id: "battery", label: "Battery & Charging", icon: Battery, description: "Charge limit, schedule, precondition" },
   { id: "safety", label: "Safety & Driver Assist", icon: Shield, description: "ADAS, cameras, alerts" },
   { id: "system", label: "System", icon: Info, description: "Language, time, updates" },
