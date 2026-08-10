@@ -47,7 +47,7 @@ const SettingsAppView = () => {
       </header>
       <div className="flex flex-1 min-h-0">
       {/* Sidebar */}
-      <div className="w-48 border-r border-border/30 bg-card/30 overflow-y-auto py-2">
+      <div className="w-52 border-r border-border/30 bg-card/30 overflow-y-auto py-2">
         {CATEGORIES.map((cat) => (
           <button
             key={cat.id}
@@ -59,7 +59,7 @@ const SettingsAppView = () => {
             }`}
           >
             <cat.icon size={16} />
-            <span className="text-xs font-mono">{cat.label}</span>
+            <span className="text-xs font-mono whitespace-nowrap">{cat.label}</span>
           </button>
         ))}
       </div>
