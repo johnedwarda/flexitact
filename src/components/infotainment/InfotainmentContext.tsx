@@ -242,16 +242,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateLeft = useCallback(() => {
     recordActivity();
     if (appMenuOpen) {
-      if (appMenuIndex === 0) {
-        setAppMenuOpen(false);
-        const menuIdx = TASKBAR_ITEMS.findIndex((t) => t.id === "menu");
-        const prev = (menuIdx - 1 + TASKBAR_ITEMS.length) % TASKBAR_ITEMS.length;
-        setHighlightedIndex(prev);
-        if (TASKBAR_ITEMS[prev].id === "phone") {
-          setPhonePopupOpen(true);
-          setPhoneIndex(0);
-        }
-      } else {
+      // App grid highlight clamps at the first item instead of exiting/cycling.
+      if (appMenuIndex > 0) {
         setAppMenuIndex((i) => i - 1);
       }
       return;
