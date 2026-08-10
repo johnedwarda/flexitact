@@ -18,6 +18,7 @@ import {
   Languages,
   Clock,
   Palette,
+  SlidersHorizontal,
 } from "lucide-react";
 
 type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "safety" | "system";
@@ -37,7 +38,12 @@ const SettingsAppView = () => {
   const category = CATEGORIES.find((c) => c.id === activeCategory)!;
 
   return (
-    <div className="flex h-full">
+    <div className="flex flex-col h-full">
+      <header className="flex h-6 items-center gap-3 px-5 pt-3">
+        <SlidersHorizontal size={18} className="text-muted-foreground" />
+        <h1 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Settings</h1>
+      </header>
+      <div className="flex flex-1 min-h-0">
       {/* Sidebar */}
       <div className="w-48 border-r border-border/30 bg-card/30 overflow-y-auto py-2">
         {CATEGORIES.map((cat) => (
@@ -69,6 +75,7 @@ const SettingsAppView = () => {
         {activeCategory === "vehicle" && <VehicleSettings />}
         {activeCategory === "safety" && <SafetySettings />}
         {activeCategory === "system" && <SystemSettings />}
+      </div>
       </div>
     </div>
   );
