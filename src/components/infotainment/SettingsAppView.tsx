@@ -38,8 +38,8 @@ const SettingsAppView = () => {
   const category = CATEGORIES.find((c) => c.id === activeCategory)!;
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex h-6 items-center gap-3 px-5 pt-3">
+    <div className="flex flex-col h-full px-6 pt-3 pb-6">
+      <header className="flex h-6 items-center gap-3">
         <SlidersHorizontal size={18} className="text-muted-foreground" />
         <h1 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">Settings</h1>
       </header>
