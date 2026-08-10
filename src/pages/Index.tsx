@@ -211,8 +211,6 @@ const IndexContent = () => {
       <div className="w-full flex-shrink-0">
         <NavigationButtons />
       </div>
-
-      {appMenuOpen && <AppMenuPopup />}
     </div>
   );
 
