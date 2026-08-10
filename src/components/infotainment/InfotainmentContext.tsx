@@ -242,7 +242,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   const navigateLeft = useCallback(() => {
     recordActivity();
     if (appMenuOpen) {
-      if (appMenuIndex === 0) {
+      if (appMenuIndex <= 0) {
         // Wrap from the first app-grid item back to the taskbar item before the app grid icon (calendar).
         setAppMenuOpen(false);
         setPhonePopupOpen(false);
@@ -431,10 +431,12 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
   }, [apps, openAppById, minimizeApp, recordActivity]);
 
   const openAppMenu = useCallback(() => {
+    // Touch/mouse opening: no grid item is highlighted, the pill stays where it was.
     setAppMenuOpen(true);
-    setAppMenuIndex(0);
+    setAppMenuIndex(-1);
     setPhonePopupOpen(false);
   }, []);
+
 
   const navigateToItem = useCallback((index: number) => {
     const item = TASKBAR_ITEMS[index];
