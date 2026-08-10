@@ -168,7 +168,7 @@ const IndexContent = () => {
       {/* Display area (screen + taskbar) locked to 16:9 */}
       <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden bg-[hsl(220_22%_5%)]">
         <div
-          className="flex flex-col overflow-hidden bg-[hsl(220_22%_5%)]"
+          className="flex flex-col overflow-hidden bg-[hsl(220_22%_5%)] border border-border/30 rounded-sm"
           style={{ aspectRatio: "16 / 9", height: "100%", maxWidth: "100%", maxHeight: "100%" }}
         >
           <div className="flex flex-1 min-h-0">
