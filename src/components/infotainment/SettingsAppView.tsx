@@ -76,6 +76,7 @@ const SettingsAppView = () => {
         {activeCategory === "safety" && <SafetySettings />}
         {activeCategory === "system" && <SystemSettings />}
       </div>
+      </div>
     </div>
   );
 };
