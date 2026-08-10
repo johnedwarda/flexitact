@@ -156,7 +156,7 @@ const SoundSettings = () => {
       <SettingRow icon={<Navigation size={16} />} label="Nav Volume">
         <SliderRow value={navVol} onChange={setNavVol} />
       </SettingRow>
-      <SettingRow icon={<Shield size={16} />} label="Alert Volume">
+      <SettingRow icon={<ShieldCheck size={16} />} label="Alert Volume">
         <SliderRow value={alertVol} onChange={setAlertVol} />
       </SettingRow>
       <SettingRow icon={<Gauge size={16} />} label="Speed Compensation">
@@ -279,13 +279,13 @@ const SafetySettings = () => {
 
   return (
     <div className="space-y-1">
-      <SettingRow icon={<Shield size={16} />} label="Lane Keep Assist">
+      <SettingRow icon={<ShieldCheck size={16} />} label="Lane Keep Assist">
         <Toggle active={lka} onToggle={() => setLka(!lka)} />
       </SettingRow>
       <SettingRow icon={<Eye size={16} />} label="Blind Spot Monitor">
         <Toggle active={bsm} onToggle={() => setBsm(!bsm)} />
       </SettingRow>
-      <SettingRow icon={<Shield size={16} />} label="Forward Collision Warning">
+      <SettingRow icon={<ShieldCheck size={16} />} label="Forward Collision Warning">
         <Toggle active={fcw} onToggle={() => setFcw(!fcw)} />
       </SettingRow>
       <SettingRow icon={<Car size={16} />} label="Park Assist">
