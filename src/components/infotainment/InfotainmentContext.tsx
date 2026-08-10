@@ -246,7 +246,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         // Wrap from the first app-grid item back to the taskbar item before the app grid icon (calendar).
         setAppMenuOpen(false);
         setPhonePopupOpen(false);
-        setHighlightedIndex(TASKBAR_ITEMS.length - 2);
+        const calendarIndex = TASKBAR_ITEMS.findIndex((item) => item.id === "calendar");
+        setHighlightedIndex(calendarIndex >= 0 ? calendarIndex : TASKBAR_ITEMS.length - 2);
       } else {
         setAppMenuIndex((i) => i - 1);
       }
