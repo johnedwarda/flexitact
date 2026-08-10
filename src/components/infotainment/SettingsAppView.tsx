@@ -36,7 +36,7 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; d
 ];
 
 const SettingsAppView = () => {
-  const [activeCategory, setActiveCategory] = useState<SettingsCategory>("display");
+  const [activeCategory, setActiveCategory] = useState<SettingsCategory>("vehicle");
   const category = CATEGORIES.find((c) => c.id === activeCategory)!;
 
   return (
