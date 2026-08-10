@@ -66,9 +66,12 @@ const MediaAppView = () => {
       {/* Header: source pills + search */}
       <div className="flex flex-col gap-3 px-5 pt-3 pb-3 border-b border-border/40 bg-card/40">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold tracking-wider uppercase text-foreground/70 font-mono">
-            Media
-          </h2>
+          <div className="flex h-6 items-center gap-3">
+            <Music size={18} className="text-muted-foreground" />
+            <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">
+              Media
+            </h2>
+          </div>
           <div className="flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
             <ListMusic size={12} /> {filtered.length} {media.source === "radio" ? "stations" : "items"}
           </div>

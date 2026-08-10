@@ -8,6 +8,7 @@ import {
   Plus,
   ChevronUp,
   ChevronDown,
+  Thermometer,
 } from "lucide-react";
 import { useInfotainment, type ClimateZone } from "./InfotainmentContext";
 
@@ -57,9 +58,12 @@ const ClimateAppView = () => {
     <div className="flex flex-col h-full px-5 pt-3 pb-5 gap-3 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <h2 className="text-sm font-semibold tracking-wider uppercase text-foreground/70 font-mono">
-          Climate
-        </h2>
+        <div className="flex h-6 items-center gap-3">
+          <Thermometer size={18} className="text-muted-foreground" />
+          <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">
+            Climate
+          </h2>
+        </div>
         <div className="flex items-center gap-2 flex-wrap">
           <ChipToggle
             label="Auto"

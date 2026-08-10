@@ -55,9 +55,9 @@ const CalendarAppView = () => {
   return (
     <div className="flex flex-col h-full bg-background px-6 pt-3 pb-6">
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2 text-primary">
-          <CalendarDays size={20} />
-          <h2 className="text-sm font-semibold uppercase tracking-wider font-mono">Calendar</h2>
+        <div className="flex h-6 items-center gap-3 text-muted-foreground">
+          <CalendarDays size={18} />
+          <h2 className="text-sm font-mono uppercase tracking-widest">Calendar</h2>
         </div>
         <div className="flex items-center gap-2">
           <button
