@@ -31,7 +31,7 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; d
   { id: "connectivity", label: "Connectivity", icon: Wifi, description: "Wi-Fi, Bluetooth, hotspot" },
   { id: "navigation", label: "Navigation", icon: Navigation, description: "Maps, routes, POI" },
   { id: "battery", label: "Battery & Charging", icon: Battery, description: "Charge limit, schedule, precondition" },
-  { id: "safety", label: "Safety & Driver Assist", icon: Shield, description: "ADAS, cameras, alerts" },
+  { id: "safety", label: "Safety & Driver Assist", icon: ShieldCheck, description: "ADAS, cameras, alerts" },
   { id: "system", label: "System", icon: Info, description: "Language, time, updates" },
 ];
 
