@@ -164,45 +164,55 @@ const IndexContent = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background relative">
-      
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background relative items-center">
+      {/* Display area (screen + taskbar) locked to 16:10 */}
+      <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden">
+        <div
+          className="flex flex-col overflow-hidden bg-background"
+          style={{ aspectRatio: "16 / 10", height: "100%", maxWidth: "100%", maxHeight: "100%" }}
+        >
+          <div className="flex flex-1 min-h-0">
+            <div className="w-[340px] flex-shrink-0 bg-card/40">
+              <DrivingInfo />
+            </div>
 
-      <div className="flex flex-1 min-h-0">
-        <div className="w-[340px] flex-shrink-0 bg-card/40">
-          <DrivingInfo />
-        </div>
+            <div ref={paneRef} className="flex-1 min-w-0 relative overflow-hidden">
+              {/* Persistent map background */}
+              <div className="absolute inset-0 z-0">
+                <MapView />
+              </div>
 
-        <div ref={paneRef} className="flex-1 min-w-0 relative overflow-hidden">
-          {/* Persistent map background */}
-          <div className="absolute inset-0 z-0">
-            <MapView />
+              {/* Overlay app */}
+              {overlayAppId && (
+                <div
+                  key={overlayAppId}
+                  className={`absolute inset-0 z-[2000] bg-background ${
+                    phase === "in" ? "animate-genie-in" : phase === "out" ? "animate-genie-out" : ""
+                  }`}
+                  style={
+                    origin
+                      ? { transformOrigin: `${origin.x}px ${origin.y}px` }
+                      : { transformOrigin: "50% 100%" }
+                  }
+                >
+                  {renderOverlay()}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Overlay app */}
-          {overlayAppId && (
-            <div
-              key={overlayAppId}
-              className={`absolute inset-0 z-[2000] bg-background ${
-                phase === "in" ? "animate-genie-in" : phase === "out" ? "animate-genie-out" : ""
-              }`}
-              style={
-                origin
-                  ? { transformOrigin: `${origin.x}px ${origin.y}px` }
-                  : { transformOrigin: "50% 100%" }
-              }
-            >
-              {renderOverlay()}
-            </div>
-          )}
+          <BottomTaskbar />
         </div>
       </div>
 
-      <BottomTaskbar />
-      <NavigationButtons />
+      <div className="w-full flex-shrink-0">
+        <NavigationButtons />
+      </div>
 
       {appMenuOpen && <AppMenuPopup />}
     </div>
   );
+
 };
 
 const Index = () => {
