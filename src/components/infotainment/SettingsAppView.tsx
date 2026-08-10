@@ -19,9 +19,10 @@ import {
   Clock,
   Palette,
   SlidersHorizontal,
+  Battery,
 } from "lucide-react";
 
-type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "safety" | "system";
+type SettingsCategory = "display" | "sound" | "connectivity" | "navigation" | "vehicle" | "battery" | "safety" | "system";
 
 const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; description: string }[] = [
   { id: "display", label: "Display", icon: Monitor, description: "Brightness, theme, layout" },
@@ -29,6 +30,7 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; d
   { id: "connectivity", label: "Connectivity", icon: Wifi, description: "Wi-Fi, Bluetooth, hotspot" },
   { id: "navigation", label: "Navigation", icon: Navigation, description: "Maps, routes, POI" },
   { id: "vehicle", label: "Vehicle", icon: Car, description: "Lights, mirrors, locks" },
+  { id: "battery", label: "Battery & Charging", icon: Battery, description: "Charge limit, schedule, precondition" },
   { id: "safety", label: "Safety & Driver Assist", icon: Shield, description: "ADAS, cameras, alerts" },
   { id: "system", label: "System", icon: Info, description: "Language, time, updates" },
 ];
@@ -73,6 +75,7 @@ const SettingsAppView = () => {
         {activeCategory === "connectivity" && <ConnectivitySettings />}
         {activeCategory === "navigation" && <NavigationSettings />}
         {activeCategory === "vehicle" && <VehicleSettings />}
+        {activeCategory === "battery" && <BatterySettings />}
         {activeCategory === "safety" && <SafetySettings />}
         {activeCategory === "system" && <SystemSettings />}
       </div>
@@ -222,6 +225,47 @@ const VehicleSettings = () => {
       </SettingRow>
       <SettingRow icon={<Sun size={16} />} label="Ambient Brightness">
         <SliderRow value={ambientBri} onChange={setAmbientBri} />
+      </SettingRow>
+    </div>
+  );
+};
+
+const BatterySettings = () => {
+  const [chargeLimit, setChargeLimit] = useState(80);
+  const [scheduledCharging, setScheduledCharging] = useState(true);
+  const [precondition, setPrecondition] = useState(true);
+  const [chargingMode, setChargingMode] = useState<"Daily" | "Trip">("Daily");
+
+  return (
+    <div className="space-y-1">
+      <SettingRow icon={<Battery size={16} />} label="Battery Level">
+        <span className="text-xs font-mono text-muted-foreground">74%</span>
+      </SettingRow>
+      <SettingRow icon={<Gauge size={16} />} label="Charge Limit">
+        <SliderRow value={chargeLimit} onChange={setChargeLimit} min={50} max={100} />
+      </SettingRow>
+      <SettingRow icon={<Clock size={16} />} label="Scheduled Charging">
+        <Toggle active={scheduledCharging} onToggle={() => setScheduledCharging(!scheduledCharging)} />
+      </SettingRow>
+      <SettingRow icon={<Sun size={16} />} label="Precondition Cabin">
+        <Toggle active={precondition} onToggle={() => setPrecondition(!precondition)} />
+      </SettingRow>
+      <SettingRow icon={<Car size={16} />} label="Charging Mode">
+        <div className="flex items-center gap-2">
+          {(["Daily", "Trip"] as const).map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setChargingMode(mode)}
+              className={`px-2 py-1 rounded-md text-[10px] font-mono border ${
+                chargingMode === mode
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border/60 text-muted-foreground hover:bg-muted/30"
+              }`}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
       </SettingRow>
     </div>
   );
