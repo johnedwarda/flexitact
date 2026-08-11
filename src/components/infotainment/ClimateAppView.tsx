@@ -117,185 +117,42 @@ const ClimateAppView = () => {
         </div>
       </div>
 
-      {/* Cabin (top-down car) + side temperature control */}
+      {/* Cabin illustration + overlaid controls, with side temperature control */}
       <div className="flex-1 min-h-0 relative flex items-center justify-center gap-6">
-        <div className="relative h-full aspect-[5/8] max-h-full">
+        <div className="relative h-full max-h-full aspect-[1409/768] flex-shrink">
+          {/* Interior line-art illustration (inverted for the dark theme) */}
+          <img
+            src={cabinInterior.url}
+            alt="Car cabin interior"
+            className="absolute inset-0 w-full h-full object-contain opacity-40 invert pointer-events-none select-none"
+            draggable={false}
+          />
 
-          {/* Car silhouette via SVG */}
-          <svg
-            viewBox="0 0 500 800"
-            preserveAspectRatio="none"
-            className="absolute inset-0 w-full h-full"
-            aria-hidden
-          >
-            <defs>
-              <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(220 18% 14%)" />
-                <stop offset="50%" stopColor="hsl(220 16% 11%)" />
-                <stop offset="100%" stopColor="hsl(220 18% 14%)" />
-              </linearGradient>
-              <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(205 60% 30% / 0.35)" />
-                <stop offset="100%" stopColor="hsl(205 60% 20% / 0.15)" />
-              </linearGradient>
-            </defs>
-
-            {/* Car body outline (rounded teardrop-ish shape, top-down) */}
-            <path
-              d="M 250 10
-                 C 360 10, 460 90, 470 250
-                 L 470 600
-                 C 460 740, 360 790, 250 790
-                 C 140 790, 40 740, 30 600
-                 L 30 250
-                 C 40 90, 140 10, 250 10 Z"
-              fill="url(#bodyGrad)"
-              stroke="hsl(var(--border))"
-              strokeWidth="2"
-            />
-
-            {/* Hood line */}
-            <path
-              d="M 80 180 C 150 150, 350 150, 420 180"
-              stroke="hsl(var(--border))"
-              strokeWidth="1.5"
-              fill="none"
-              opacity="0.6"
-            />
-
-            {/* Windshield (glass) */}
-            <path
-              d="M 95 200 C 160 175, 340 175, 405 200 L 390 280 C 340 265, 160 265, 110 280 Z"
-              fill="url(#glassGrad)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.9"
-            />
-
-            {/* Rear window (glass) */}
-            <path
-              d="M 110 600 C 160 585, 340 585, 390 600 L 405 680 C 340 660, 160 660, 95 680 Z"
-              fill="url(#glassGrad)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.9"
-            />
-
-            {/* Center console / dashboard line under windshield */}
-            <rect
-              x="190"
-              y="290"
-              width="120"
-              height="20"
-              rx="6"
-              fill="hsl(220 16% 9%)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.8"
-            />
-
-            {/* Center tunnel between front seats */}
-            <rect
-              x="225"
-              y="320"
-              width="50"
-              height="170"
-              rx="10"
-              fill="hsl(220 16% 9%)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.85"
-            />
-
-            {/* B-pillar / door divider lines */}
-            <line
-              x1="30"
-              y1="500"
-              x2="65"
-              y2="500"
-              stroke="hsl(var(--border))"
-              strokeWidth="1.5"
-              opacity="0.7"
-            />
-            <line
-              x1="435"
-              y1="500"
-              x2="470"
-              y2="500"
-              stroke="hsl(var(--border))"
-              strokeWidth="1.5"
-              opacity="0.7"
-            />
-
-            {/* Door panels - front */}
-            <path
-              d="M 30 280 L 65 285 L 65 495 L 30 495"
-              fill="hsl(220 14% 12%)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.8"
-            />
-            <path
-              d="M 470 280 L 435 285 L 435 495 L 470 495"
-              fill="hsl(220 14% 12%)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.8"
-            />
-            {/* Door panels - rear */}
-            <path
-              d="M 30 505 L 65 505 L 65 690 L 30 685"
-              fill="hsl(220 14% 12%)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.8"
-            />
-            <path
-              d="M 470 505 L 435 505 L 435 690 L 470 685"
-              fill="hsl(220 14% 12%)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
-              opacity="0.8"
-            />
-          </svg>
-
-          {/* Windshield defrost overlay button */}
-          <button
+          {/* Windscreen defrost — across the windscreen */}
+          <HotspotToggle
+            style={{ left: "31%", top: "13%", transform: "translate(-50%,-50%)" }}
+            active={climate.defogger}
             onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
-            className={`absolute left-[20%] right-[20%] top-[24%] h-[8%] flex items-center justify-center gap-1.5 rounded-md transition-colors ${
-              climate.defogger
-                ? "bg-climate-cool/20 text-climate-cool ring-1 ring-climate-cool/50"
-                : "text-muted-foreground/70 hover:text-foreground hover:bg-muted/20"
-            }`}
+            icon={<Wind size={13} />}
+            label="Defrost"
             title="Front defogger"
-          >
-            <Wind size={12} />
-            <span className="text-[9px] font-mono uppercase tracking-wider">
-              Defrost
-            </span>
-          </button>
+          />
 
-          {/* Rear window defog overlay button */}
-          <button
+          {/* Rear window defog — rear-view mirror area */}
+          <HotspotToggle
+            style={{ left: "50%", top: "4%", transform: "translate(-50%,-50%)" }}
+            active={climate.rearDefogger}
             onClick={() =>
               setClimate((c) => ({ ...c, rearDefogger: !c.rearDefogger }))
             }
-            className={`absolute left-[20%] right-[20%] bottom-[16%] h-[7%] flex items-center justify-center gap-1.5 rounded-md transition-colors ${
-              climate.rearDefogger
-                ? "bg-climate-cool/20 text-climate-cool ring-1 ring-climate-cool/50"
-                : "text-muted-foreground/70 hover:text-foreground hover:bg-muted/20"
-            }`}
+            icon={<Wind size={13} className="rotate-180" />}
+            label="Rear"
             title="Rear defogger"
-          >
-            <Wind size={12} className="rotate-180" />
-            <span className="text-[9px] font-mono uppercase tracking-wider">
-              Rear Defog
-            </span>
-          </button>
+          />
 
-          {/* Side mirrors (just outside body, near A-pillar) */}
-          <MirrorTab
-            side="left"
+          {/* Mirror heating — on the side mirrors */}
+          <HotspotToggle
+            style={{ left: "10%", top: "29%", transform: "translate(-50%,-50%)" }}
             active={climate.mirrorHeat.left}
             onClick={() =>
               setClimate((c) => ({
@@ -303,9 +160,12 @@ const ClimateAppView = () => {
                 mirrorHeat: { ...c.mirrorHeat, left: !c.mirrorHeat.left },
               }))
             }
+            icon={<Heater size={13} />}
+            label="Mirror"
+            title="Left mirror heating"
           />
-          <MirrorTab
-            side="right"
+          <HotspotToggle
+            style={{ left: "89%", top: "29%", transform: "translate(-50%,-50%)" }}
             active={climate.mirrorHeat.right}
             onClick={() =>
               setClimate((c) => ({
@@ -313,73 +173,70 @@ const ClimateAppView = () => {
                 mirrorHeat: { ...c.mirrorHeat, right: !c.mirrorHeat.right },
               }))
             }
+            icon={<Heater size={13} />}
+            label="Mirror"
+            title="Right mirror heating"
           />
 
-          {/* Steering wheel — driver side, behind the dashboard */}
+          {/* Steering wheel heating — on the wheel */}
           <button
             onClick={() =>
               setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))
             }
-            className={`absolute left-[22%] top-[34%] -translate-x-1/2 -translate-y-1/2 w-[14%] aspect-square rounded-full border-[3px] flex items-center justify-center transition-all ${
+            className={`absolute w-[7%] aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
               climate.steeringHeat
-                ? "border-climate-warm/70 bg-climate-warm/15 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
-                : "border-border bg-background/60 text-muted-foreground hover:text-foreground"
+                ? "border-climate-warm/70 bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
+                : "border-border bg-background/70 text-muted-foreground hover:text-foreground"
             }`}
+            style={{ left: "32%", top: "40%", transform: "translate(-50%,-50%)" }}
             title="Steering wheel heating"
           >
-            <CircleDot size={18} />
-            <span className="absolute inset-0 rounded-full border border-border/40" />
+            <CircleDot size={16} />
           </button>
 
-          {/* Driver seat */}
-          <CarSeat
+          {/* Front seat heating — on the front seats */}
+          <SeatHotspot
             label="Driver"
             heat={climate.frontSeatHeat.driver}
             active={climate.activeZone === "driver"}
-            position={{ left: "9%", top: "42%", width: "30%", height: "22%" }}
+            style={{ left: "30%", top: "86%", transform: "translate(-50%,-50%)" }}
             onHeat={() => cycleSeatHeat("driver")}
             onSelect={() => setActiveZone("driver")}
           />
-
-          {/* Passenger seat */}
-          <CarSeat
+          <SeatHotspot
             label="Passenger"
             heat={climate.frontSeatHeat.passenger}
             active={climate.activeZone === "passenger"}
-            position={{ right: "9%", top: "42%", width: "30%", height: "22%" }}
+            style={{ left: "64%", top: "86%", transform: "translate(-50%,-50%)" }}
             onHeat={() => cycleSeatHeat("passenger")}
             onSelect={() => setActiveZone("passenger")}
           />
 
-          {/* Rear seats (bench: L / C / R) */}
-          <CarSeat
+          {/* Rear seat heating — on the rear headrests / bench */}
+          <SeatHotspot
             label="Rear L"
             heat={climate.rearSeatHeat[0]}
             active={climate.activeZone === "rearL"}
-            compact
-            position={{ left: "9%", top: "70%", width: "23%", height: "16%" }}
+            style={{ left: "6%", top: "82%", transform: "translate(-50%,-50%)" }}
             onHeat={() => cycleSeatHeat(0)}
             onSelect={() => setActiveZone("rearL")}
           />
-          <CarSeat
+          <SeatHotspot
             label="Rear C"
             heat={climate.rearSeatHeat[1]}
             active={climate.activeZone === "rearC"}
-            compact
-            position={{ left: "38.5%", top: "70%", width: "23%", height: "16%" }}
+            style={{ left: "50%", top: "70%", transform: "translate(-50%,-50%)" }}
             onHeat={() => cycleSeatHeat(1)}
             onSelect={() => setActiveZone("rearC")}
           />
-          <CarSeat
+          <SeatHotspot
             label="Rear R"
             heat={climate.rearSeatHeat[2]}
             active={climate.activeZone === "rearR"}
-            compact
-            position={{ right: "9%", top: "70%", width: "23%", height: "16%" }}
+            style={{ left: "94%", top: "82%", transform: "translate(-50%,-50%)" }}
             onHeat={() => cycleSeatHeat(2)}
             onSelect={() => setActiveZone("rearR")}
           />
-
         </div>
 
         {/* Side temperature control */}
@@ -406,6 +263,7 @@ const ClimateAppView = () => {
           </button>
         </div>
       </div>
+
 
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
