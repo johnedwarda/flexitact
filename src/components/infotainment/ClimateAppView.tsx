@@ -11,7 +11,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import { useInfotainment, type ClimateZone } from "./InfotainmentContext";
-import cabinInterior from "@/assets/cabin-interior.png.asset.json";
+import cabinInterior from "@/assets/cabin-interior.webp";
 
 type AirDirection = "face" | "feet" | "both" | "windshield";
 
