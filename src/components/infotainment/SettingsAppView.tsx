@@ -7,6 +7,8 @@ import {
   Navigation,
   Car,
   Shield,
+  AlertTriangle,
+  Bell,
   Info,
   ChevronRight,
   Sun,
