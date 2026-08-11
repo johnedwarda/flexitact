@@ -119,8 +119,9 @@ const ClimateAppView = () => {
       </div>
 
       {/* Cabin illustration + overlaid controls, with side temperature control */}
-      <div className="flex-1 min-h-0 relative flex items-center justify-center gap-6">
-        <div className="relative h-full max-h-full aspect-[1409/768] flex-shrink">
+      <div className="flex-1 min-h-0 relative flex items-center justify-center gap-4">
+        <div className="relative flex-1 min-w-0 w-full max-w-full max-h-full aspect-[1409/768]">
+
           {/* Interior line-art illustration (inverted for the dark theme) */}
           <img
             src={cabinInterior.url}
