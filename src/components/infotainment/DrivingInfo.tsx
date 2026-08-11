@@ -67,8 +67,26 @@ const InfoCard = ({
   <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-muted/40">
     <div className="text-muted-foreground">{icon}</div>
     <span className="text-[8px] text-muted-foreground uppercase tracking-wider text-center">{label}</span>
-    <span className="text-[10px] font-semibold font-mono text-center">{value}</span>
+    <span className={`text-[10px] font-semibold font-mono text-center ${color}`}>{value}</span>
   </div>
+);
+
+const WiperIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M4 7c0-3 4-5 8-5s8 2 8 5v11H4V7z" />
+    <path d="M12 18V11" />
+    <path d="M8 15h8" />
+  </svg>
 );
 
 export default DrivingInfo;
