@@ -1,4 +1,4 @@
-import { Gauge, BatteryMedium, CloudRain, CarFront } from "lucide-react";
+import { Gauge, BatteryMedium, CarFront } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const DrivingInfo = () => {
@@ -46,7 +46,7 @@ const DrivingInfo = () => {
       <div className="grid grid-cols-2 gap-4 w-full max-w-[260px]">
         <InfoCard icon={<BatteryMedium size={24} />} label="Battery / Range" value="78% · 342 km" color="text-success" />
         <InfoCard icon={<Gauge size={24} />} label="Drive Mode" value="Comfort" color="text-primary" />
-        <InfoCard icon={<CloudRain size={24} />} label="Wipers" value="Auto" color="text-accent" />
+        <InfoCard icon={<WiperIcon />} label="Wipers" value="Auto" color="text-accent" />
         <InfoCard icon={<CarFront size={24} />} label="Lights" value="Auto" color="text-accent" />
       </div>
     </div>
@@ -67,8 +67,26 @@ const InfoCard = ({
   <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-muted/40">
     <div className="text-muted-foreground">{icon}</div>
     <span className="text-[8px] text-muted-foreground uppercase tracking-wider text-center">{label}</span>
-    <span className="text-[10px] font-semibold font-mono text-center">{value}</span>
+    <span className={`text-[10px] font-semibold font-mono text-center ${color}`}>{value}</span>
   </div>
+);
+
+const WiperIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M4 7c0-3 4-5 8-5s8 2 8 5v11H4V7z" />
+    <path d="M12 18V11" />
+    <path d="M8 15h8" />
+  </svg>
 );
 
 export default DrivingInfo;
