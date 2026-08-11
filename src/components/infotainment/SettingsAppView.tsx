@@ -6,7 +6,7 @@ import {
   Bluetooth,
   Navigation,
   Car,
-  Shield,
+  ShieldAlert,
   Info,
   ChevronRight,
   Sun,
