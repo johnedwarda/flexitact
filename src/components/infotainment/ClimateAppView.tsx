@@ -349,126 +349,79 @@ const FanStepper = ({
   </div>
 );
 
-const MirrorTab = ({
-  side,
+const HotspotToggle = ({
+  style,
   active,
   onClick,
+  icon,
+  label,
+  title,
 }: {
-  side: "left" | "right";
+  style: React.CSSProperties;
   active: boolean;
   onClick: () => void;
-}) => {
-  const pos =
-    side === "left" ? "left-[-2%] top-[28%]" : "right-[-2%] top-[28%]";
-  return (
-    <button
-      onClick={onClick}
-      className={`absolute ${pos} w-[6%] aspect-[2/3] rounded-md border flex flex-col items-center justify-center gap-0.5 transition-all ${
-        active
-          ? "bg-climate-warm/20 border-climate-warm/60 text-climate-warm shadow-[0_0_12px_hsl(var(--climate-warm)/0.35)]"
-          : "bg-muted/40 border-border text-muted-foreground hover:text-foreground"
-      }`}
-      title={`${side === "left" ? "Left" : "Right"} mirror heating`}
-    >
-      <Heater size={10} />
-      <span className="text-[7px] font-mono uppercase">
-        {side === "left" ? "L" : "R"}
-      </span>
-    </button>
-  );
-};
+  icon: React.ReactNode;
+  label: string;
+  title: string;
+}) => (
+  <button
+    onClick={onClick}
+    style={style}
+    title={title}
+    className={`absolute flex items-center gap-1.5 px-2 py-1 rounded-lg border backdrop-blur-sm transition-all ${
+      active
+        ? "bg-climate-cool/20 border-climate-cool/50 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
+        : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
+    }`}
+  >
+    {icon}
+    <span className="text-[9px] font-mono uppercase tracking-wider">{label}</span>
+  </button>
+);
 
-const CarSeat = ({
+const SeatHotspot = ({
   label,
   heat,
   active,
-  compact,
-  position,
+  style,
   onHeat,
   onSelect,
 }: {
   label: string;
   heat: number;
   active: boolean;
-  compact?: boolean;
-  position: {
-    left?: string;
-    right?: string;
-    top?: string;
-    bottom?: string;
-    width: string;
-    height: string;
-  };
+  style: React.CSSProperties;
   onHeat: () => void;
   onSelect: () => void;
-}) => {
-  return (
-    <div
-      onClick={onSelect}
-      style={position}
-      className="absolute cursor-pointer"
-    >
-      {/* Seat shape: backrest (top) + cushion (bottom), top-down view */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onHeat();
-        }}
-        className={`relative w-full h-full rounded-[1.5rem] border-2 flex flex-col items-center justify-end overflow-hidden transition-all ${
-          heat > 0
-            ? "border-climate-warm/60 bg-gradient-to-b from-climate-warm/15 to-climate-warm/5 text-climate-warm"
-            : "border-border bg-gradient-to-b from-muted/40 to-muted/10 text-muted-foreground hover:text-foreground"
-        } ${active ? "ring-2 ring-primary/70 ring-offset-2 ring-offset-background" : ""}`}
-        title={`${label} seat heating: ${heat}`}
-      >
-        {/* Headrest (top of seat in top-down view) */}
+}) => (
+  <button
+    onClick={() => {
+      onSelect();
+      onHeat();
+    }}
+    style={style}
+    title={`${label} seat heating: ${heat}`}
+    className={`absolute flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl border backdrop-blur-sm transition-all ${
+      heat > 0
+        ? "bg-climate-warm/20 border-climate-warm/50 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
+        : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
+    } ${active ? "ring-1 ring-primary/70" : ""}`}
+  >
+    <Heater size={14} />
+    <span className="text-[8px] font-mono uppercase tracking-wider">{label}</span>
+    <div className="flex gap-0.5">
+      {[1, 2, 3].map((lvl) => (
         <div
-          className={`absolute top-1 left-1/2 -translate-x-1/2 w-[55%] h-[18%] rounded-full ${
-            heat > 0 ? "bg-climate-warm/40" : "bg-muted-foreground/30"
+          key={lvl}
+          className={`w-1 h-1 rounded-full ${
+            lvl <= heat ? "bg-climate-warm" : "bg-muted-foreground/30"
           }`}
         />
-        {/* Backrest divider line */}
-        <div
-          className={`absolute top-[28%] left-[10%] right-[10%] h-px ${
-            heat > 0 ? "bg-climate-warm/30" : "bg-border"
-          }`}
-        />
-        {/* Cushion side bolsters */}
-        <div
-          className={`absolute bottom-[10%] left-[6%] w-[14%] h-[40%] rounded-full ${
-            heat > 0 ? "bg-climate-warm/15" : "bg-muted/40"
-          }`}
-        />
-        <div
-          className={`absolute bottom-[10%] right-[6%] w-[14%] h-[40%] rounded-full ${
-            heat > 0 ? "bg-climate-warm/15" : "bg-muted/40"
-          }`}
-        />
-      </button>
-
-      {/* Label + heat dots (centered on cushion) */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-1 mt-[18%]">
-        <span
-          className={`${
-            compact ? "text-[8px]" : "text-[9px]"
-          } font-mono text-foreground/70 uppercase tracking-wider`}
-        >
-          {label}
-        </span>
-        <div className="flex gap-0.5">
-          {[1, 2, 3].map((lvl) => (
-            <div
-              key={lvl}
-              className={`${compact ? "w-1 h-1" : "w-1.5 h-1.5"} rounded-full ${
-                lvl <= heat ? "bg-climate-warm" : "bg-muted-foreground/30"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
-  );
-};
+  </button>
+);
+
 
 const VentIcon = ({ dir }: { dir: AirDirection }) => {
   const base = "text-primary";
