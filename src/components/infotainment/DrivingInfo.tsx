@@ -1,4 +1,4 @@
-import { Gauge, BatteryMedium, CloudRain, CarFront } from "lucide-react";
+import { Gauge, BatteryMedium, CarFront } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const DrivingInfo = () => {
