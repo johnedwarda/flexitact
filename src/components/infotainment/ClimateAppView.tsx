@@ -124,7 +124,7 @@ const ClimateAppView = () => {
 
           {/* Interior line-art illustration (inverted for the dark theme) */}
           <img
-            src={cabinInterior.url}
+            src={cabinInterior}
             alt="Car cabin interior"
             className="absolute inset-0 w-full h-full object-contain opacity-40 invert pointer-events-none select-none"
             draggable={false}
