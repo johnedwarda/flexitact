@@ -62,8 +62,59 @@ const ClimateAppView = () => {
         </h2>
       </div>
 
-      {/* Drawn cabin (top view, rotated 90° clockwise) with controls in context */}
-      <div className="flex-1 min-h-0 flex items-center justify-center">
+      {/* Cabin illustration + external temperature/modes panel */}
+      <div className="flex-1 min-h-0 flex items-center justify-center gap-5">
+        {/* ---- Left panel: temperature + mode toggles ---- */}
+        <div className="flex flex-col items-center gap-3 shrink-0">
+          <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.25em]">
+            Cabin
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => adjustTemp(-1)}
+              className="w-8 h-8 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
+              aria-label="Decrease temperature"
+            >
+              <Minus size={16} />
+            </button>
+            <span className="text-3xl font-bold font-mono text-climate-warm leading-none tabular-nums w-12 text-center">
+              {climate.temp.toFixed(0)}°
+            </span>
+            <button
+              onClick={() => adjustTemp(1)}
+              className="w-8 h-8 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
+              aria-label="Increase temperature"
+            >
+              <Plus size={16} />
+            </button>
+          </div>
+          <div className="flex flex-col items-center gap-1.5">
+            <ChipToggle
+              label="Auto"
+              active={climate.autoMode}
+              onClick={() =>
+                setClimate((c) => ({ ...c, autoMode: !c.autoMode }))
+              }
+            />
+            <ChipToggle
+              label="A/C"
+              icon={<Snowflake size={11} />}
+              active={climate.acOn}
+              onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
+              accent="cool"
+            />
+            <ChipToggle
+              label="Recirc"
+              icon={<RotateCcw size={11} />}
+              active={climate.recirculation}
+              onClick={() =>
+                setClimate((c) => ({ ...c, recirculation: !c.recirculation }))
+              }
+            />
+          </div>
+        </div>
+
+        {/* ---- Drawn cabin (top view, car facing up) ---- */}
         <div className="relative h-full aspect-[540/1000] max-w-full mx-auto">
           <CabinDrawing />
 
@@ -165,59 +216,6 @@ const ClimateAppView = () => {
             onHeat={() => cycleSeatHeat("passenger")}
             onSelect={() => setActiveZone("passenger")}
           />
-
-          {/* ---- Temperature + modes (right side of interior view) ---- */}
-          <div
-            className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
-            style={{ left: "50%", top: "55%" }}
-          >
-            <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.25em]">
-              Cabin
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => adjustTemp(-1)}
-                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
-                aria-label="Decrease temperature"
-              >
-                <Minus size={14} />
-              </button>
-              <span className="text-2xl font-bold font-mono text-climate-warm leading-none tabular-nums">
-                {climate.temp.toFixed(0)}°
-              </span>
-              <button
-                onClick={() => adjustTemp(1)}
-                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
-                aria-label="Increase temperature"
-              >
-                <Plus size={14} />
-              </button>
-            </div>
-            <div className="flex items-center gap-1">
-              <ChipToggle
-                label="Auto"
-                active={climate.autoMode}
-                onClick={() =>
-                  setClimate((c) => ({ ...c, autoMode: !c.autoMode }))
-                }
-              />
-              <ChipToggle
-                label="A/C"
-                icon={<Snowflake size={11} />}
-                active={climate.acOn}
-                onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
-                accent="cool"
-              />
-              <ChipToggle
-                label="Recirc"
-                icon={<RotateCcw size={11} />}
-                active={climate.recirculation}
-                onClick={() =>
-                  setClimate((c) => ({ ...c, recirculation: !c.recirculation }))
-                }
-              />
-            </div>
-          </div>
 
           {/* ---- Rear seats ---- */}
           <SeatHotspot
