@@ -153,7 +153,7 @@ const ClimateAppView = () => {
             label="Driver"
             heat={climate.frontSeatHeat.driver}
             active={climate.activeZone === "driver"}
-            style={{ left: "27%", top: "58%" }}
+            style={{ left: "73%", top: "43%" }}
             onHeat={() => cycleSeatHeat("driver")}
             onSelect={() => setActiveZone("driver")}
           />
