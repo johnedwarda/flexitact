@@ -44,14 +44,6 @@ const ClimateAppView = () => {
     });
   };
 
-  const cycleAir = () => {
-    const order: AirDirection[] = ["face", "both", "feet", "windshield"];
-    setClimate((c) => ({
-      ...c,
-      airDirection: order[(order.indexOf(c.airDirection) + 1) % order.length],
-    }));
-  };
-
   return (
     <div className="flex flex-col h-full px-5 pt-3 pb-4 gap-2 overflow-hidden">
       {/* Header */}
