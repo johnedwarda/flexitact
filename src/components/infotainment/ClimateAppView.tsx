@@ -279,7 +279,7 @@ const CabinDrawing = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <g className="text-muted-foreground/25" strokeWidth={2}>
+    <g className="text-muted-foreground/45" strokeWidth={2}>
       {/* Body outline */}
       <path d="M60 270c0-92 14-152 34-176 18-22 62-32 130-36 78-5 420-5 560 0 74 3 130 10 150 30 18 18 26 78 26 182s-8 164-26 182c-20 20-76 27-150 30-140 5-482 5-560 0-68-4-112-14-130-36-20-24-34-84-34-176z" />
       {/* Windscreen */}
@@ -300,7 +300,7 @@ const CabinDrawing = () => (
     </g>
 
     {/* Seats */}
-    <g className="text-muted-foreground/30" strokeWidth={2}>
+    <g className="text-muted-foreground/50" strokeWidth={2}>
       {/* front seats */}
       <rect x="376" y="96" width="112" height="96" rx="22" />
       <rect x="376" y="348" width="112" height="96" rx="22" />
@@ -311,12 +311,12 @@ const CabinDrawing = () => (
     </g>
 
     {/* Steering wheel ring */}
-    <g className="text-muted-foreground/30" strokeWidth={2}>
+    <g className="text-muted-foreground/50" strokeWidth={2}>
       <circle cx="310" cy="146" r="46" />
     </g>
 
     {/* Mirrors */}
-    <g className="text-muted-foreground/30" strokeWidth={2}>
+    <g className="text-muted-foreground/50" strokeWidth={2}>
       <path d="M182 30h44a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-44z" />
       <path d="M182 510h44a8 8 0 0 0 8-8v-16a8 8 0 0 0-8-8h-44z" />
     </g>
