@@ -69,7 +69,7 @@ const ClimateAppView = () => {
 
           {/* ---- Front glass zone: defrost ---- */}
           <Hotspot
-            style={{ left: "50%", top: "91%" }}
+            style={{ left: "50%", top: "18%" }}
             active={climate.defogger}
             onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
             icon={<Wind size={13} />}
