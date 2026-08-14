@@ -157,7 +157,7 @@ const ClimateAppView = () => {
       </div>
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
-        Dial: Rotate = Temp • L/R = Cycle Seats • Up = Steering • Down = Defrost • Center = Auto
+        Dial: Rotate = Temp • Up = Steering • Down = Defrost • Center = Auto
       </p>
     </div>
   );
@@ -195,16 +195,6 @@ const CabinDrawing = () => (
         <path d="M392 208h96a10 10 0 0 1 10 10v104a10 10 0 0 1-10 10h-96" />
       </g>
 
-      {/* Seats */}
-      <g className="text-muted-foreground/80" strokeWidth={3}>
-        {/* front seats */}
-        <rect x="376" y="96" width="112" height="96" rx="22" />
-        <rect x="376" y="348" width="112" height="96" rx="22" />
-        {/* rear bench */}
-        <rect x="646" y="76" width="112" height="112" rx="20" />
-        <rect x="646" y="214" width="112" height="112" rx="20" />
-        <rect x="646" y="352" width="112" height="112" rx="20" />
-      </g>
 
       {/* Steering wheel ring */}
       <g className="text-muted-foreground/80" strokeWidth={3}>
