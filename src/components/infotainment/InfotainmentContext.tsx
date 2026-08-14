@@ -626,6 +626,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         openAppById,
         toggleAppById,
         openAppMenu,
+        settingsSection,
+        openSettingsSection,
         recentGridAppId,
         navigateToItem,
         setClimate,
