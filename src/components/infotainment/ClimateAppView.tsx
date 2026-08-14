@@ -247,7 +247,7 @@ const ClimateAppView = () => {
 
           {/* ---- Rear glass ---- */}
           <Hotspot
-            style={{ left: "50%", top: "10%" }}
+            style={{ left: "50%", top: "88%" }}
             active={climate.rearDefogger}
             onClick={() =>
               setClimate((c) => ({ ...c, rearDefogger: !c.rearDefogger }))
