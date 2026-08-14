@@ -97,6 +97,8 @@ interface InfotainmentContextType {
   openAppById: (appId: string) => void;
   toggleAppById: (appId: string) => void;
   openAppMenu: () => void;
+  settingsSection: string | null;
+  openSettingsSection: (section: string) => void;
   recentGridAppId: string | null;
   navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
