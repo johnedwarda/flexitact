@@ -1,15 +1,13 @@
-import { useRef } from "react";
 import {
   Wind,
   CircleDot,
-  Heater,
   Snowflake,
   RotateCcw,
   Minus,
   Plus,
   Thermometer,
 } from "lucide-react";
-import { useInfotainment, type ClimateZone } from "./InfotainmentContext";
+import { useInfotainment } from "./InfotainmentContext";
 
 type AirDirection = "face" | "feet" | "both" | "windshield";
 
