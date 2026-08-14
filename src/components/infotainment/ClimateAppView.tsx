@@ -143,7 +143,7 @@ const ClimateAppView = () => {
                 ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
                 : "bg-background/70 text-muted-foreground hover:text-foreground"
             }`}
-            style={{ left: "27%", top: "69%" }}
+            style={{ left: "73%", top: "31%" }}
           >
             <CircleDot size={16} />
           </button>
