@@ -479,74 +479,115 @@ const AirflowArcSlider = ({
   value: AirDirection;
   onChange: (dir: AirDirection) => void;
 }) => {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const draggingRef = useRef(false);
   const active = AIR_STOPS.find((s) => s.dir === value) ?? AIR_STOPS[1];
   const knob = polar(active.angle);
   const start = polar(-90);
   const end = polar(90);
 
+  const VB_W = 132;
+  const VB_H = 124;
+  const VB_X = -6;
+  const VB_Y = -10;
+
+  const pick = (clientX: number, clientY: number) => {
+    const rect = svgRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = VB_X + ((clientX - rect.left) / rect.width) * VB_W;
+    const y = VB_Y + ((clientY - rect.top) / rect.height) * VB_H;
+    let deg = (Math.atan2(y - AIR_CY, x - AIR_CX) * 180) / Math.PI;
+    deg = Math.max(-90, Math.min(90, deg));
+    const nearest = AIR_STOPS.reduce((a, b) =>
+      Math.abs(b.angle - deg) < Math.abs(a.angle - deg) ? b : a
+    );
+    if (nearest.dir !== value) onChange(nearest.dir);
+  };
+
   return (
-    <div className="flex items-center gap-2">
-      <svg width={72} height={104} viewBox="0 0 72 104" className="overflow-visible">
-        {/* track */}
-        <path
-          d={`M ${start.x} ${start.y} A ${AIR_R} ${AIR_R} 0 0 1 ${end.x} ${end.y}`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={6}
-          strokeLinecap="round"
-          className="text-muted-foreground/20"
-        />
-        {/* airflow direction ray */}
-        <line
-          x1={AIR_CX}
-          y1={AIR_CY}
-          x2={knob.x}
-          y2={knob.y}
-          stroke="currentColor"
-          strokeWidth={1.5}
-          strokeDasharray="3 3"
-          className="text-climate-cool/60"
-        />
-        <circle cx={AIR_CX} cy={AIR_CY} r={2.5} className="fill-climate-cool/70" />
-        {/* stops */}
-        {AIR_STOPS.map((s) => {
-          const p = polar(s.angle);
-          const isActive = s.dir === value;
-          return (
-            <g key={s.dir} onClick={() => onChange(s.dir)} className="cursor-pointer">
-              <circle cx={p.x} cy={p.y} r={11} fill="transparent" />
-              <circle
-                cx={p.x}
-                cy={p.y}
-                r={isActive ? 7 : 3}
-                className={
-                  isActive
-                    ? "fill-climate-cool drop-shadow-[0_0_8px_hsl(var(--climate-cool)/0.7)]"
-                    : "fill-muted-foreground/50"
-                }
-              />
-            </g>
-          );
-        })}
-      </svg>
-      <div className="flex flex-col justify-between h-[104px] py-[6px]">
-        {AIR_STOPS.map((s) => (
-          <button
-            key={s.dir}
-            onClick={() => onChange(s.dir)}
-            className={`text-left text-[8px] font-mono font-semibold uppercase tracking-wider transition-colors ${
-              s.dir === value
-                ? "text-climate-cool"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-    </div>
+    <svg
+      ref={svgRef}
+      width={VB_W}
+      height={VB_H}
+      viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
+      className="overflow-visible touch-none select-none cursor-pointer"
+      onPointerDown={(e) => {
+        draggingRef.current = true;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        pick(e.clientX, e.clientY);
+      }}
+      onPointerMove={(e) => {
+        if (draggingRef.current) pick(e.clientX, e.clientY);
+      }}
+      onPointerUp={() => {
+        draggingRef.current = false;
+      }}
+      onPointerCancel={() => {
+        draggingRef.current = false;
+      }}
+    >
+      {/* track */}
+      <path
+        d={`M ${start.x} ${start.y} A ${AIR_R} ${AIR_R} 0 0 1 ${end.x} ${end.y}`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={6}
+        strokeLinecap="round"
+        className="text-muted-foreground/20"
+      />
+      {/* airflow direction ray */}
+      <line
+        x1={AIR_CX}
+        y1={AIR_CY}
+        x2={knob.x}
+        y2={knob.y}
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeDasharray="3 3"
+        className="text-climate-cool/60"
+      />
+      <circle cx={AIR_CX} cy={AIR_CY} r={2.5} className="fill-climate-cool/70" />
+      {/* stops + hugging labels */}
+      {AIR_STOPS.map((s) => {
+        const p = polar(s.angle);
+        const l = polar(s.angle, AIR_R + 11);
+        const isActive = s.dir === value;
+        const cos = Math.cos((s.angle * Math.PI) / 180);
+        const anchor = Math.abs(cos) < 0.2 ? "middle" : cos > 0 ? "start" : "end";
+        return (
+          <g key={s.dir} className="cursor-pointer">
+            <circle cx={p.x} cy={p.y} r={11} fill="transparent" />
+            <circle
+              cx={p.x}
+              cy={p.y}
+              r={isActive ? 6.5 : 3}
+              className={
+                isActive
+                  ? "fill-climate-cool drop-shadow-[0_0_8px_hsl(var(--climate-cool)/0.7)]"
+                  : "fill-muted-foreground/50"
+              }
+            />
+            <text
+              x={l.x}
+              y={l.y}
+              textAnchor={anchor}
+              dominantBaseline={
+                s.angle === -90 ? "auto" : s.angle === 90 ? "hanging" : "middle"
+              }
+              className={`text-[7px] font-mono font-semibold uppercase tracking-wider ${
+                isActive ? "fill-climate-cool" : "fill-muted-foreground"
+              }`}
+              style={{ fontSize: 7 }}
+            >
+              {s.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
   );
 };
+
 
 
 export default ClimateAppView;
