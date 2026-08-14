@@ -313,11 +313,6 @@ const CabinDrawing = () => (
       <circle cx="310" cy="146" r="46" />
     </g>
 
-    {/* Mirrors */}
-    <g className="text-muted-foreground/50" strokeWidth={2}>
-      <path d="M182 30h44a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-44z" />
-      <path d="M182 510h44a8 8 0 0 0 8-8v-16a8 8 0 0 0-8-8h-44z" />
-    </g>
   </svg>
 );
 
