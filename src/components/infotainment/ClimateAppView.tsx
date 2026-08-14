@@ -86,7 +86,7 @@ const ClimateAppView = () => {
             <button
               onClick={cycleAir}
               title="Air direction"
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg border bg-background/70 border-border/60 text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-background/70 text-muted-foreground hover:text-foreground transition-colors"
             >
               <VentIcon dir={climate.airDirection} />
               <span className="text-[9px] font-mono uppercase tracking-wider">
@@ -138,10 +138,10 @@ const ClimateAppView = () => {
               setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))
             }
             title="Steering wheel heating"
-            className={`absolute -translate-x-1/2 -translate-y-1/2 w-[7.5%] aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
+            className={`absolute -translate-x-1/2 -translate-y-1/2 w-[7.5%] aspect-square rounded-full flex items-center justify-center transition-all ${
               climate.steeringHeat
-                ? "border-climate-warm/70 bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
-                : "border-border bg-background/70 text-muted-foreground hover:text-foreground"
+                ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
+                : "bg-background/70 text-muted-foreground hover:text-foreground"
             }`}
             style={{ left: "31%", top: "27%" }}
           >
@@ -177,7 +177,7 @@ const ClimateAppView = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => adjustTemp(-0.5)}
-                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
                 aria-label="Decrease temperature"
               >
                 <Minus size={14} />
@@ -187,7 +187,7 @@ const ClimateAppView = () => {
               </span>
               <button
                 onClick={() => adjustTemp(0.5)}
-                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
                 aria-label="Increase temperature"
               >
                 <Plus size={14} />
@@ -333,17 +333,17 @@ const ChipToggle = ({
 }) => {
   const activeColor =
     accent === "cool"
-      ? "bg-climate-cool/15 text-climate-cool border-climate-cool/40"
+      ? "bg-climate-cool/15 text-climate-cool"
       : accent === "warm"
-        ? "bg-climate-warm/15 text-climate-warm border-climate-warm/40"
-        : "bg-primary/15 text-primary border-primary/40";
+        ? "bg-climate-warm/15 text-climate-warm"
+        : "bg-primary/15 text-primary";
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold uppercase tracking-wider border transition-colors ${
+      className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold uppercase tracking-wider transition-colors ${
         active
           ? activeColor
-          : "bg-background/70 text-muted-foreground border-border/50 hover:text-foreground"
+          : "bg-background/70 text-muted-foreground hover:text-foreground"
       }`}
     >
       {icon}
@@ -359,7 +359,7 @@ const FanStepper = ({
   value: number;
   onChange: (v: number) => void;
 }) => (
-  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg border border-border/50 bg-background/70">
+  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg bg-background/70">
     <button
       onClick={() => onChange(Math.max(0, value - 1))}
       className="text-muted-foreground hover:text-foreground"
@@ -405,18 +405,18 @@ const Hotspot = ({
   title: string;
   tone?: "cool" | "warm";
 }) => (
-  <button
-    onClick={onClick}
-    style={style}
-    title={title}
-    className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-lg border transition-all ${
-      active
-        ? tone === "warm"
-          ? "bg-climate-warm/20 border-climate-warm/50 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
-          : "bg-climate-cool/20 border-climate-cool/50 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
-        : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
-    }`}
-  >
+    <button
+      onClick={onClick}
+      style={style}
+      title={title}
+      className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-lg transition-all ${
+        active
+          ? tone === "warm"
+            ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
+            : "bg-climate-cool/20 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
+          : "bg-background/70 text-muted-foreground hover:text-foreground"
+      }`}
+    >
     {icon}
     <span className="text-[9px] font-mono uppercase tracking-wider">{label}</span>
   </button>
@@ -437,19 +437,19 @@ const SeatHotspot = ({
   onHeat: () => void;
   onSelect: () => void;
 }) => (
-  <button
-    onClick={() => {
-      onSelect();
-      onHeat();
-    }}
-    style={style}
-    title={`${label} seat heating: ${heat}`}
-    className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl border transition-all ${
-      heat > 0
-        ? "bg-climate-warm/20 border-climate-warm/50 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
-        : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
-    } ${active ? "ring-1 ring-primary/70" : ""}`}
-  >
+    <button
+      onClick={() => {
+        onSelect();
+        onHeat();
+      }}
+      style={style}
+      title={`${label} seat heating: ${heat}`}
+      className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl transition-all ${
+        heat > 0
+          ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
+          : "bg-background/70 text-muted-foreground hover:text-foreground"
+      } ${active ? "ring-1 ring-primary/70" : ""}`}
+    >
     <Heater size={14} />
     <span className="text-[8px] font-mono uppercase tracking-wider">{label}</span>
     <div className="flex gap-0.5">
