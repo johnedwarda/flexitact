@@ -496,12 +496,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         ...m,
         trackIndex: (m.trackIndex - 1 + TRACKS.length) % TRACKS.length,
       }));
-    } else if (currentId === "climate") {
-      setClimate((c) => {
-        const idx = ZONE_ORDER.indexOf(c.activeZone);
-        const next = ZONE_ORDER[(idx - 1 + ZONE_ORDER.length) % ZONE_ORDER.length];
-        return { ...c, activeZone: next };
-      });
     }
   }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
@@ -515,12 +509,6 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         ...m,
         trackIndex: (m.trackIndex + 1) % TRACKS.length,
       }));
-    } else if (currentId === "climate") {
-      setClimate((c) => {
-        const idx = ZONE_ORDER.indexOf(c.activeZone);
-        const next = ZONE_ORDER[(idx + 1) % ZONE_ORDER.length];
-        return { ...c, activeZone: next };
-      });
     }
   }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
