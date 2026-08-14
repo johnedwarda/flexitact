@@ -177,7 +177,7 @@ const ClimateAppView = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => adjustTemp(-0.5)}
-                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
                 aria-label="Decrease temperature"
               >
                 <Minus size={14} />
@@ -187,7 +187,7 @@ const ClimateAppView = () => {
               </span>
               <button
                 onClick={() => adjustTemp(0.5)}
-                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
                 aria-label="Increase temperature"
               >
                 <Plus size={14} />
