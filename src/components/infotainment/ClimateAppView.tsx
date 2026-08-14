@@ -24,26 +24,6 @@ const ClimateAppView = () => {
     });
   };
 
-  const setActiveZone = (zone: ClimateZone) =>
-    setClimate((c) => ({ ...c, activeZone: zone }));
-
-  const cycleSeatHeat = (target: "driver" | "passenger" | 0 | 1 | 2) => {
-    setClimate((c) => {
-      if (target === "driver" || target === "passenger") {
-        return {
-          ...c,
-          frontSeatHeat: {
-            ...c.frontSeatHeat,
-            [target]: (c.frontSeatHeat[target] + 1) % 4,
-          },
-        };
-      }
-      const next: [number, number, number] = [...c.rearSeatHeat];
-      next[target] = (next[target] + 1) % 4;
-      return { ...c, rearSeatHeat: next };
-    });
-  };
-
   return (
     <div className="flex flex-col h-full px-5 pt-3 pb-4 gap-2 overflow-hidden">
       {/* Header */}
