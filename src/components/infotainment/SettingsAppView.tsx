@@ -36,7 +36,15 @@ const CATEGORIES: { id: SettingsCategory; label: string; icon: typeof Monitor; d
 ];
 
 const SettingsAppView = () => {
+  const { settingsSection } = useInfotainment();
   const [activeCategory, setActiveCategory] = useState<SettingsCategory>("vehicle");
+
+  useEffect(() => {
+    if (settingsSection && CATEGORIES.some((c) => c.id === settingsSection)) {
+      setActiveCategory(settingsSection as SettingsCategory);
+    }
+  }, [settingsSection]);
+
   const category = CATEGORIES.find((c) => c.id === activeCategory)!;
 
   return (
