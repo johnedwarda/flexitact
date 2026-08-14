@@ -81,7 +81,7 @@ const ClimateAppView = () => {
           {/* Dash vents: air direction + fan */}
           <div
             className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
-            style={{ left: "50%", top: "78%" }}
+            style={{ left: "50%", top: "26%" }}
           >
             <button
               onClick={cycleAir}
