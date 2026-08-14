@@ -162,24 +162,11 @@ const ClimateAppView = () => {
             tone="cool"
           />
 
-          {/* Dash vents: air direction + fan */}
+          {/* Dash vents: fan speed only */}
           <div
             className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
             style={{ left: "50%", top: "26%" }}
           >
-            <button
-              onClick={cycleAir}
-              title="Air direction"
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-background/70 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <VentIcon dir={climate.airDirection} />
-              <span className="text-[9px] font-mono uppercase tracking-wider">
-                {climate.airDirection === "face" && "Face"}
-                {climate.airDirection === "feet" && "Feet"}
-                {climate.airDirection === "both" && "Face+Feet"}
-                {climate.airDirection === "windshield" && "Screen"}
-              </span>
-            </button>
             <FanStepper
               value={climate.fanSpeed}
               onChange={(v) => setClimate((c) => ({ ...c, fanSpeed: v }))}
