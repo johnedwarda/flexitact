@@ -290,8 +290,6 @@ const CabinDrawing = () => (
       {/* Rear glass */}
       <path d="M872 108c14 24 20 94 20 162s-6 138-20 162" />
       <path d="M826 130c12 22 17 86 17 140s-5 118-17 140" />
-      {/* B pillars */}
-      <path d="M560 60v40M560 480v40" />
       {/* Wheel arches */}
       <path d="M250 46c40 0 60 14 60 32M250 494c40 0 60-14 60-32" />
       <path d="M760 46c-40 0-60 14-60 32M760 494c-40 0-60-14-60-32" />
@@ -315,11 +313,6 @@ const CabinDrawing = () => (
       <circle cx="310" cy="146" r="46" />
     </g>
 
-    {/* Mirrors */}
-    <g className="text-muted-foreground/50" strokeWidth={2}>
-      <path d="M182 30h44a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-44z" />
-      <path d="M182 510h44a8 8 0 0 0 8-8v-16a8 8 0 0 0-8-8h-44z" />
-    </g>
   </svg>
 );
 
