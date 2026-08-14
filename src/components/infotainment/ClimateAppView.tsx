@@ -118,7 +118,7 @@ const ClimateAppView = () => {
             tone="warm"
           />
           <Hotspot
-            style={{ left: "93%", top: "80%" }}
+            style={{ left: "93%", top: "21%" }}
             active={climate.mirrorHeat.right}
             onClick={() =>
               setClimate((c) => ({
