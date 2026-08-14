@@ -182,14 +182,6 @@ const ClimateAppView = () => {
 
           {/* ---- Rear seats ---- */}
           <SeatHotspot
-            label="Rear L"
-            heat={climate.rearSeatHeat[0]}
-            active={climate.activeZone === "rearL"}
-            style={{ left: "24%", top: "70%" }}
-            onHeat={() => cycleSeatHeat(0)}
-            onSelect={() => setActiveZone("rearL")}
-          />
-          <SeatHotspot
             label="Rear C"
             heat={climate.rearSeatHeat[1]}
             active={climate.activeZone === "rearC"}
@@ -197,14 +189,7 @@ const ClimateAppView = () => {
             onHeat={() => cycleSeatHeat(1)}
             onSelect={() => setActiveZone("rearC")}
           />
-          <SeatHotspot
-            label="Rear R"
-            heat={climate.rearSeatHeat[2]}
-            active={climate.activeZone === "rearR"}
-            style={{ left: "76%", top: "70%" }}
-            onHeat={() => cycleSeatHeat(2)}
-            onSelect={() => setActiveZone("rearR")}
-          />
+
 
           {/* ---- Rear glass ---- */}
           <Hotspot
