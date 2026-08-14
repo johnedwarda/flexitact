@@ -240,7 +240,7 @@ const ClimateAppView = () => {
             label="Rear R"
             heat={climate.rearSeatHeat[2]}
             active={climate.activeZone === "rearR"}
-            style={{ left: "78%", top: "30%" }}
+            style={{ left: "76%", top: "70%" }}
             onHeat={() => cycleSeatHeat(2)}
             onSelect={() => setActiveZone("rearR")}
           />
