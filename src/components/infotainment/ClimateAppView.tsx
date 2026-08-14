@@ -64,7 +64,7 @@ const ClimateAppView = () => {
 
       {/* Drawn cabin (top view) with all controls positioned in context */}
       <div className="flex-1 min-h-0 flex items-center justify-center">
-        <div className="relative h-full aspect-[1000/540] max-w-full">
+        <div className="relative w-full h-full">
           <CabinDrawing />
 
           {/* ---- Front glass zone: defrost + vents ---- */}
@@ -272,6 +272,7 @@ const ClimateAppView = () => {
 const CabinDrawing = () => (
   <svg
     viewBox="0 0 1000 540"
+    preserveAspectRatio="none"
     className="absolute inset-0 w-full h-full pointer-events-none select-none"
     fill="none"
     stroke="currentColor"
