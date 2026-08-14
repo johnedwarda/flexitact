@@ -359,7 +359,7 @@ const FanStepper = ({
   value: number;
   onChange: (v: number) => void;
 }) => (
-  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg border border-border/50 bg-background/70">
+  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg bg-background/70">
     <button
       onClick={() => onChange(Math.max(0, value - 1))}
       className="text-muted-foreground hover:text-foreground"
