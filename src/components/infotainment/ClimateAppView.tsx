@@ -86,7 +86,7 @@ const ClimateAppView = () => {
             <button
               onClick={cycleAir}
               title="Air direction"
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg border bg-background/70 border-border/60 text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-background/70 text-muted-foreground hover:text-foreground transition-colors"
             >
               <VentIcon dir={climate.airDirection} />
               <span className="text-[9px] font-mono uppercase tracking-wider">
