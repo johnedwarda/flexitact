@@ -112,6 +112,39 @@ const ClimateAppView = () => {
               }
             />
           </div>
+
+          {/* ---- Air direction selector ---- */}
+          <div className="flex flex-col items-center gap-1.5 w-full max-w-[140px]">
+            <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
+              Airflow
+            </span>
+            <div className="grid grid-cols-2 gap-1.5 w-full">
+              <AirDirectionButton
+                dir="face"
+                label="Face"
+                active={climate.airDirection === "face"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "face" }))}
+              />
+              <AirDirectionButton
+                dir="feet"
+                label="Feet"
+                active={climate.airDirection === "feet"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "feet" }))}
+              />
+              <AirDirectionButton
+                dir="both"
+                label="Face + Feet"
+                active={climate.airDirection === "both"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "both" }))}
+              />
+              <AirDirectionButton
+                dir="windshield"
+                label="Screen"
+                active={climate.airDirection === "windshield"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "windshield" }))}
+              />
+            </div>
+          </div>
         </div>
 
         {/* ---- Drawn cabin (top view, car facing up) ---- */}
