@@ -44,14 +44,6 @@ const ClimateAppView = () => {
     });
   };
 
-  const cycleAir = () => {
-    const order: AirDirection[] = ["face", "both", "feet", "windshield"];
-    setClimate((c) => ({
-      ...c,
-      airDirection: order[(order.indexOf(c.airDirection) + 1) % order.length],
-    }));
-  };
-
   return (
     <div className="flex flex-col h-full px-5 pt-3 pb-4 gap-2 overflow-hidden">
       {/* Header */}
@@ -112,6 +104,39 @@ const ClimateAppView = () => {
               }
             />
           </div>
+
+          {/* ---- Air direction selector ---- */}
+          <div className="flex flex-col items-center gap-1.5 w-full max-w-[140px]">
+            <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
+              Airflow
+            </span>
+            <div className="grid grid-cols-2 gap-1.5 w-full">
+              <AirDirectionButton
+                dir="face"
+                label="Face"
+                active={climate.airDirection === "face"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "face" }))}
+              />
+              <AirDirectionButton
+                dir="feet"
+                label="Feet"
+                active={climate.airDirection === "feet"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "feet" }))}
+              />
+              <AirDirectionButton
+                dir="both"
+                label="Face + Feet"
+                active={climate.airDirection === "both"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "both" }))}
+              />
+              <AirDirectionButton
+                dir="windshield"
+                label="Screen"
+                active={climate.airDirection === "windshield"}
+                onClick={() => setClimate((c) => ({ ...c, airDirection: "windshield" }))}
+              />
+            </div>
+          </div>
         </div>
 
         {/* ---- Drawn cabin (top view, car facing up) ---- */}
@@ -129,24 +154,11 @@ const ClimateAppView = () => {
             tone="cool"
           />
 
-          {/* Dash vents: air direction + fan */}
+          {/* Dash vents: fan speed only */}
           <div
             className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
             style={{ left: "50%", top: "26%" }}
           >
-            <button
-              onClick={cycleAir}
-              title="Air direction"
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-background/70 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <VentIcon dir={climate.airDirection} />
-              <span className="text-[9px] font-mono uppercase tracking-wider">
-                {climate.airDirection === "face" && "Face"}
-                {climate.airDirection === "feet" && "Feet"}
-                {climate.airDirection === "both" && "Face+Feet"}
-                {climate.airDirection === "windshield" && "Screen"}
-              </span>
-            </button>
             <FanStepper
               value={climate.fanSpeed}
               onChange={(v) => setClimate((c) => ({ ...c, fanSpeed: v }))}
@@ -462,6 +474,30 @@ const SeatHotspot = ({
         />
       ))}
     </div>
+  </button>
+);
+
+const AirDirectionButton = ({
+  dir,
+  label,
+  active,
+  onClick,
+}: {
+  dir: AirDirection;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-xl text-[9px] font-mono font-semibold uppercase tracking-wider transition-all ${
+      active
+        ? "bg-climate-cool/15 text-climate-cool shadow-[0_0_12px_hsl(var(--climate-cool)/0.3)]"
+        : "bg-background/70 text-muted-foreground hover:text-foreground"
+    }`}
+  >
+    <VentIcon dir={dir} />
+    {label}
   </button>
 );
 
