@@ -320,48 +320,6 @@ const Hotspot = ({
   </button>
 );
 
-const SeatHotspot = ({
-  label,
-  heat,
-  active,
-  style,
-  onHeat,
-  onSelect,
-}: {
-  label: string;
-  heat: number;
-  active: boolean;
-  style: React.CSSProperties;
-  onHeat: () => void;
-  onSelect: () => void;
-}) => (
-  <button
-    onClick={() => {
-      onSelect();
-      onHeat();
-    }}
-    style={style}
-    title={`${label} seat heating: ${heat}`}
-    className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl transition-all ${
-      heat > 0
-        ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
-        : "bg-background/70 text-muted-foreground hover:text-foreground"
-    }`}
-  >
-    <Heater size={14} />
-    <span className="text-[8px] font-mono uppercase tracking-wider">{label}</span>
-    <div className="flex gap-0.5">
-      {[1, 2, 3].map((lvl) => (
-        <div
-          key={lvl}
-          className={`w-1 h-1 rounded-full ${
-            lvl <= heat ? "bg-climate-warm" : "bg-muted-foreground/30"
-          }`}
-        />
-      ))}
-    </div>
-  </button>
-);
 
 const AIR_STOPS: { dir: AirDirection; label: string; angle: number }[] = [
   { dir: "windshield", label: "Screen", angle: -90 },
