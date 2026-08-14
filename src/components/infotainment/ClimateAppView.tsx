@@ -405,18 +405,18 @@ const Hotspot = ({
   title: string;
   tone?: "cool" | "warm";
 }) => (
-  <button
-    onClick={onClick}
-    style={style}
-    title={title}
-    className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-lg border transition-all ${
-      active
-        ? tone === "warm"
-          ? "bg-climate-warm/20 border-climate-warm/50 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
-          : "bg-climate-cool/20 border-climate-cool/50 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
-        : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
-    }`}
-  >
+    <button
+      onClick={onClick}
+      style={style}
+      title={title}
+      className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-lg transition-all ${
+        active
+          ? tone === "warm"
+            ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
+            : "bg-climate-cool/20 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
+          : "bg-background/70 text-muted-foreground hover:text-foreground"
+      }`}
+    >
     {icon}
     <span className="text-[9px] font-mono uppercase tracking-wider">{label}</span>
   </button>
