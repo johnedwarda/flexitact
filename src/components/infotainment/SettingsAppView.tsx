@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useInfotainment } from "./InfotainmentContext";
 import {
   Monitor,
   Volume2,
