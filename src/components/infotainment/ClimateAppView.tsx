@@ -6,12 +6,9 @@ import {
   RotateCcw,
   Minus,
   Plus,
-  ChevronUp,
-  ChevronDown,
   Thermometer,
 } from "lucide-react";
 import { useInfotainment, type ClimateZone } from "./InfotainmentContext";
-import cabinInterior from "@/assets/cabin-interior.webp";
 
 type AirDirection = "face" | "feet" | "both" | "windshield";
 
@@ -56,105 +53,58 @@ const ClimateAppView = () => {
   };
 
   return (
-    <div className="flex flex-col h-full px-5 pt-3 pb-5 gap-3 overflow-hidden">
+    <div className="flex flex-col h-full px-5 pt-3 pb-4 gap-2 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex h-6 items-center gap-3">
-          <Thermometer size={18} className="text-muted-foreground" />
-          <h2 className="text-base font-mono uppercase tracking-widest text-muted-foreground">
-            Climate
-          </h2>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <ChipToggle
-            label="Auto"
-            active={climate.autoMode}
-            onClick={() => setClimate((c) => ({ ...c, autoMode: !c.autoMode }))}
-          />
-          <ChipToggle
-            label="A/C"
-            icon={<Snowflake size={12} />}
-            active={climate.acOn}
-            onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
-            accent="cool"
-          />
-          <ChipToggle
-            label="Auto"
-            active={climate.autoMode}
-            onClick={() => setClimate((c) => ({ ...c, autoMode: !c.autoMode }))}
-          />
-          <ChipToggle
-            label="A/C"
-            icon={<Snowflake size={12} />}
-            active={climate.acOn}
-            onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
-            accent="cool"
-          />
-          <ChipToggle
-            label="Recirc"
-            icon={<RotateCcw size={12} />}
-            active={climate.recirculation}
-            onClick={() =>
-              setClimate((c) => ({ ...c, recirculation: !c.recirculation }))
-            }
-          />
-          <FanStepper
-            value={climate.fanSpeed}
-            onChange={(v) => setClimate((c) => ({ ...c, fanSpeed: v }))}
-          />
-          <button
-            onClick={cycleAir}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold uppercase tracking-wider border bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
-            title="Air direction"
-          >
-            <VentIcon dir={climate.airDirection} />
-            <span>
-              {climate.airDirection === "face" && "Face"}
-              {climate.airDirection === "feet" && "Feet"}
-              {climate.airDirection === "both" && "Face+Feet"}
-              {climate.airDirection === "windshield" && "Defrost"}
-            </span>
-          </button>
-        </div>
+      <div className="flex h-6 items-center gap-3">
+        <Thermometer size={18} className="text-muted-foreground" />
+        <h2 className="text-base font-mono uppercase tracking-widest text-muted-foreground">
+          Climate
+        </h2>
       </div>
 
-      {/* Cabin illustration + overlaid controls, with side temperature control */}
-      <div className="flex-1 min-h-0 relative flex items-center justify-center gap-4">
-        <div className="relative flex-1 min-w-0 w-full max-w-full max-h-full aspect-[1409/768]">
+      {/* Drawn cabin (top view) with all controls positioned in context */}
+      <div className="flex-1 min-h-0 flex items-center justify-center">
+        <div className="relative h-full aspect-[1000/540] max-w-full">
+          <CabinDrawing />
 
-          {/* Interior line-art illustration (inverted for the dark theme) */}
-          <img
-            src={cabinInterior}
-            alt="Car cabin interior"
-            className="absolute inset-0 w-full h-full object-contain opacity-40 invert pointer-events-none select-none"
-            draggable={false}
-          />
-
-          {/* Windscreen defrost — across the windscreen */}
-          <HotspotToggle
-            style={{ left: "31%", top: "13%", transform: "translate(-50%,-50%)" }}
+          {/* ---- Front glass zone: defrost + vents ---- */}
+          <Hotspot
+            style={{ left: "9%", top: "50%" }}
             active={climate.defogger}
             onClick={() => setClimate((c) => ({ ...c, defogger: !c.defogger }))}
             icon={<Wind size={13} />}
             label="Defrost"
-            title="Front defogger"
+            title="Windscreen defrost"
+            tone="cool"
           />
 
-          {/* Rear window defog — rear-view mirror area */}
-          <HotspotToggle
-            style={{ left: "50%", top: "4%", transform: "translate(-50%,-50%)" }}
-            active={climate.rearDefogger}
-            onClick={() =>
-              setClimate((c) => ({ ...c, rearDefogger: !c.rearDefogger }))
-            }
-            icon={<Wind size={13} className="rotate-180" />}
-            label="Rear"
-            title="Rear defogger"
-          />
+          {/* Dash vents: air direction + fan */}
+          <div
+            className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
+            style={{ left: "22%", top: "50%" }}
+          >
+            <button
+              onClick={cycleAir}
+              title="Air direction"
+              className="flex items-center gap-1.5 px-2 py-1 rounded-lg border bg-background/70 border-border/60 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <VentIcon dir={climate.airDirection} />
+              <span className="text-[9px] font-mono uppercase tracking-wider">
+                {climate.airDirection === "face" && "Face"}
+                {climate.airDirection === "feet" && "Feet"}
+                {climate.airDirection === "both" && "Face+Feet"}
+                {climate.airDirection === "windshield" && "Screen"}
+              </span>
+            </button>
+            <FanStepper
+              value={climate.fanSpeed}
+              onChange={(v) => setClimate((c) => ({ ...c, fanSpeed: v }))}
+            />
+          </div>
 
-          {/* Mirror heating — on the side mirrors */}
-          <HotspotToggle
-            style={{ left: "10%", top: "29%", transform: "translate(-50%,-50%)" }}
+          {/* ---- Mirrors ---- */}
+          <Hotspot
+            style={{ left: "20%", top: "7%" }}
             active={climate.mirrorHeat.left}
             onClick={() =>
               setClimate((c) => ({
@@ -162,12 +112,13 @@ const ClimateAppView = () => {
                 mirrorHeat: { ...c.mirrorHeat, left: !c.mirrorHeat.left },
               }))
             }
-            icon={<Heater size={13} />}
+            icon={<Heater size={12} />}
             label="Mirror"
             title="Left mirror heating"
+            tone="warm"
           />
-          <HotspotToggle
-            style={{ left: "89%", top: "29%", transform: "translate(-50%,-50%)" }}
+          <Hotspot
+            style={{ left: "20%", top: "93%" }}
             active={climate.mirrorHeat.right}
             onClick={() =>
               setClimate((c) => ({
@@ -175,51 +126,105 @@ const ClimateAppView = () => {
                 mirrorHeat: { ...c.mirrorHeat, right: !c.mirrorHeat.right },
               }))
             }
-            icon={<Heater size={13} />}
+            icon={<Heater size={12} />}
             label="Mirror"
             title="Right mirror heating"
+            tone="warm"
           />
 
-          {/* Steering wheel heating — on the wheel */}
+          {/* ---- Steering wheel ---- */}
           <button
             onClick={() =>
               setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))
             }
-            className={`absolute w-[7%] aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
+            title="Steering wheel heating"
+            className={`absolute -translate-x-1/2 -translate-y-1/2 w-[7.5%] aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
               climate.steeringHeat
                 ? "border-climate-warm/70 bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
                 : "border-border bg-background/70 text-muted-foreground hover:text-foreground"
             }`}
-            style={{ left: "32%", top: "40%", transform: "translate(-50%,-50%)" }}
-            title="Steering wheel heating"
+            style={{ left: "31%", top: "27%" }}
           >
             <CircleDot size={16} />
           </button>
 
-          {/* Front seat heating — on the front seats */}
+          {/* ---- Front seats ---- */}
           <SeatHotspot
             label="Driver"
             heat={climate.frontSeatHeat.driver}
             active={climate.activeZone === "driver"}
-            style={{ left: "30%", top: "86%", transform: "translate(-50%,-50%)" }}
+            style={{ left: "42%", top: "27%" }}
             onHeat={() => cycleSeatHeat("driver")}
             onSelect={() => setActiveZone("driver")}
           />
           <SeatHotspot
-            label="Passenger"
+            label="Front R"
             heat={climate.frontSeatHeat.passenger}
             active={climate.activeZone === "passenger"}
-            style={{ left: "64%", top: "86%", transform: "translate(-50%,-50%)" }}
+            style={{ left: "42%", top: "73%" }}
             onHeat={() => cycleSeatHeat("passenger")}
             onSelect={() => setActiveZone("passenger")}
           />
 
-          {/* Rear seat heating — on the rear headrests / bench */}
+          {/* ---- Centre console: cabin temperature + modes ---- */}
+          <div
+            className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
+            style={{ left: "43.5%", top: "50%" }}
+          >
+            <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.25em]">
+              Cabin
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => adjustTemp(-0.5)}
+                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
+                aria-label="Decrease temperature"
+              >
+                <Minus size={14} />
+              </button>
+              <span className="text-2xl font-bold font-mono text-climate-warm leading-none tabular-nums">
+                {climate.temp.toFixed(1)}°
+              </span>
+              <button
+                onClick={() => adjustTemp(0.5)}
+                className="w-7 h-7 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
+                aria-label="Increase temperature"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+            <div className="flex items-center gap-1">
+              <ChipToggle
+                label="Auto"
+                active={climate.autoMode}
+                onClick={() =>
+                  setClimate((c) => ({ ...c, autoMode: !c.autoMode }))
+                }
+              />
+              <ChipToggle
+                label="A/C"
+                icon={<Snowflake size={11} />}
+                active={climate.acOn}
+                onClick={() => setClimate((c) => ({ ...c, acOn: !c.acOn }))}
+                accent="cool"
+              />
+              <ChipToggle
+                label="Recirc"
+                icon={<RotateCcw size={11} />}
+                active={climate.recirculation}
+                onClick={() =>
+                  setClimate((c) => ({ ...c, recirculation: !c.recirculation }))
+                }
+              />
+            </div>
+          </div>
+
+          {/* ---- Rear seats ---- */}
           <SeatHotspot
             label="Rear L"
             heat={climate.rearSeatHeat[0]}
             active={climate.activeZone === "rearL"}
-            style={{ left: "6%", top: "82%", transform: "translate(-50%,-50%)" }}
+            style={{ left: "70%", top: "22%" }}
             onHeat={() => cycleSeatHeat(0)}
             onSelect={() => setActiveZone("rearL")}
           />
@@ -227,7 +232,7 @@ const ClimateAppView = () => {
             label="Rear C"
             heat={climate.rearSeatHeat[1]}
             active={climate.activeZone === "rearC"}
-            style={{ left: "50%", top: "70%", transform: "translate(-50%,-50%)" }}
+            style={{ left: "70%", top: "50%" }}
             onHeat={() => cycleSeatHeat(1)}
             onSelect={() => setActiveZone("rearC")}
           />
@@ -235,38 +240,25 @@ const ClimateAppView = () => {
             label="Rear R"
             heat={climate.rearSeatHeat[2]}
             active={climate.activeZone === "rearR"}
-            style={{ left: "94%", top: "82%", transform: "translate(-50%,-50%)" }}
+            style={{ left: "70%", top: "78%" }}
             onHeat={() => cycleSeatHeat(2)}
             onSelect={() => setActiveZone("rearR")}
           />
-        </div>
 
-        {/* Side temperature control */}
-        <div className="flex flex-col items-center justify-center gap-3 py-2 px-4 rounded-2xl bg-muted/20 border border-border/40 min-w-[120px]">
-          <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.25em]">
-            Cabin Temp
-          </span>
-          <button
-            onClick={() => adjustTemp(0.5)}
-            className="w-11 h-11 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-warm flex items-center justify-center transition-colors"
-            aria-label="Increase temperature"
-          >
-            <Plus size={20} />
-          </button>
-          <span className="text-5xl font-bold font-mono text-climate-warm leading-none">
-            {climate.temp.toFixed(1)}°
-          </span>
-          <button
-            onClick={() => adjustTemp(-0.5)}
-            className="w-11 h-11 rounded-full bg-muted/40 hover:bg-muted/70 border border-border text-muted-foreground hover:text-climate-cool flex items-center justify-center transition-colors"
-            aria-label="Decrease temperature"
-          >
-            <Minus size={20} />
-          </button>
+          {/* ---- Rear glass ---- */}
+          <Hotspot
+            style={{ left: "90%", top: "50%" }}
+            active={climate.rearDefogger}
+            onClick={() =>
+              setClimate((c) => ({ ...c, rearDefogger: !c.rearDefogger }))
+            }
+            icon={<Wind size={13} className="rotate-180" />}
+            label="Rear"
+            title="Rear window defog"
+            tone="cool"
+          />
         </div>
       </div>
-
-
 
       <p className="text-[10px] text-muted-foreground/60 font-mono text-center">
         Dial: Rotate = Temp • L/R = Cycle Seats • Up = Steering • Down = Defrost • Center = Auto
@@ -274,6 +266,61 @@ const ClimateAppView = () => {
     </div>
   );
 };
+
+/* ---------- Drawn cabin (top view) ---------- */
+
+const CabinDrawing = () => (
+  <svg
+    viewBox="0 0 1000 540"
+    className="absolute inset-0 w-full h-full pointer-events-none select-none"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <g className="text-muted-foreground/25" strokeWidth={2}>
+      {/* Body outline */}
+      <path d="M60 270c0-92 14-152 34-176 18-22 62-32 130-36 78-5 420-5 560 0 74 3 130 10 150 30 18 18 26 78 26 182s-8 164-26 182c-20 20-76 27-150 30-140 5-482 5-560 0-68-4-112-14-130-36-20-24-34-84-34-176z" />
+      {/* Windscreen */}
+      <path d="M150 96c-16 22-24 96-24 174s8 152 24 174" />
+      <path d="M196 118c-13 20-20 88-20 152s7 132 20 152" />
+      {/* Dash line */}
+      <path d="M232 150c-9 26-13 76-13 120s4 94 13 120" />
+      {/* Rear glass */}
+      <path d="M872 108c14 24 20 94 20 162s-6 138-20 162" />
+      <path d="M826 130c12 22 17 86 17 140s-5 118-17 140" />
+      {/* B pillars */}
+      <path d="M560 60v40M560 480v40" />
+      {/* Wheel arches */}
+      <path d="M250 46c40 0 60 14 60 32M250 494c40 0 60-14 60-32" />
+      <path d="M760 46c-40 0-60 14-60 32M760 494c-40 0-60-14-60-32" />
+      {/* Centre console */}
+      <path d="M392 208h96a10 10 0 0 1 10 10v104a10 10 0 0 1-10 10h-96" />
+    </g>
+
+    {/* Seats */}
+    <g className="text-muted-foreground/30" strokeWidth={2}>
+      {/* front seats */}
+      <rect x="376" y="96" width="112" height="96" rx="22" />
+      <rect x="376" y="348" width="112" height="96" rx="22" />
+      {/* rear bench */}
+      <rect x="646" y="76" width="112" height="112" rx="20" />
+      <rect x="646" y="214" width="112" height="112" rx="20" />
+      <rect x="646" y="352" width="112" height="112" rx="20" />
+    </g>
+
+    {/* Steering wheel ring */}
+    <g className="text-muted-foreground/30" strokeWidth={2}>
+      <circle cx="310" cy="146" r="46" />
+    </g>
+
+    {/* Mirrors */}
+    <g className="text-muted-foreground/30" strokeWidth={2}>
+      <path d="M182 30h44a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-44z" />
+      <path d="M182 510h44a8 8 0 0 0 8-8v-16a8 8 0 0 0-8-8h-44z" />
+    </g>
+  </svg>
+);
 
 /* ---------- Sub-components ---------- */
 
@@ -299,10 +346,10 @@ const ChipToggle = ({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold uppercase tracking-wider border transition-colors ${
+      className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold uppercase tracking-wider border transition-colors ${
         active
           ? activeColor
-          : "bg-muted/30 text-muted-foreground border-border/40 hover:text-foreground"
+          : "bg-background/70 text-muted-foreground border-border/50 hover:text-foreground"
       }`}
     >
       {icon}
@@ -318,7 +365,7 @@ const FanStepper = ({
   value: number;
   onChange: (v: number) => void;
 }) => (
-  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg border border-border/40 bg-muted/30">
+  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg border border-border/50 bg-background/70">
     <button
       onClick={() => onChange(Math.max(0, value - 1))}
       className="text-muted-foreground hover:text-foreground"
@@ -326,7 +373,7 @@ const FanStepper = ({
     >
       <Minus size={12} />
     </button>
-    <div className="flex items-end gap-0.5 px-1">
+    <div className="flex items-end gap-0.5 px-0.5">
       {[1, 2, 3, 4, 5, 6, 7].map((lvl) => (
         <div
           key={lvl}
@@ -337,9 +384,6 @@ const FanStepper = ({
         />
       ))}
     </div>
-    <span className="text-[10px] font-mono text-muted-foreground w-3 text-center">
-      {value}
-    </span>
     <button
       onClick={() => onChange(Math.min(7, value + 1))}
       className="text-muted-foreground hover:text-foreground"
@@ -350,13 +394,14 @@ const FanStepper = ({
   </div>
 );
 
-const HotspotToggle = ({
+const Hotspot = ({
   style,
   active,
   onClick,
   icon,
   label,
   title,
+  tone = "cool",
 }: {
   style: React.CSSProperties;
   active: boolean;
@@ -364,14 +409,17 @@ const HotspotToggle = ({
   icon: React.ReactNode;
   label: string;
   title: string;
+  tone?: "cool" | "warm";
 }) => (
   <button
     onClick={onClick}
     style={style}
     title={title}
-    className={`absolute flex items-center gap-1.5 px-2 py-1 rounded-lg border backdrop-blur-sm transition-all ${
+    className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-lg border transition-all ${
       active
-        ? "bg-climate-cool/20 border-climate-cool/50 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
+        ? tone === "warm"
+          ? "bg-climate-warm/20 border-climate-warm/50 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
+          : "bg-climate-cool/20 border-climate-cool/50 text-climate-cool shadow-[0_0_14px_hsl(var(--climate-cool)/0.35)]"
         : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
     }`}
   >
@@ -402,7 +450,7 @@ const SeatHotspot = ({
     }}
     style={style}
     title={`${label} seat heating: ${heat}`}
-    className={`absolute flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl border backdrop-blur-sm transition-all ${
+    className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 px-2 py-1.5 rounded-xl border transition-all ${
       heat > 0
         ? "bg-climate-warm/20 border-climate-warm/50 text-climate-warm shadow-[0_0_14px_hsl(var(--climate-warm)/0.35)]"
         : "bg-background/70 border-border/60 text-muted-foreground hover:text-foreground"
@@ -423,31 +471,11 @@ const SeatHotspot = ({
   </button>
 );
 
-
 const VentIcon = ({ dir }: { dir: AirDirection }) => {
-  const base = "text-primary";
-  if (dir === "face")
-    return (
-      <div className="flex flex-col items-center">
-        <ChevronUp size={12} className={base} />
-        <div className="w-3 h-0.5 bg-primary/70 rounded" />
-      </div>
-    );
-  if (dir === "feet")
-    return (
-      <div className="flex flex-col items-center">
-        <div className="w-3 h-0.5 bg-primary/70 rounded" />
-        <ChevronDown size={12} className={base} />
-      </div>
-    );
-  if (dir === "both")
-    return (
-      <div className="flex flex-col items-center">
-        <ChevronUp size={10} className={base} />
-        <div className="w-3 h-0.5 bg-primary/70 rounded" />
-        <ChevronDown size={10} className={base} />
-      </div>
-    );
+  const base = "text-current";
+  if (dir === "windshield") return <Wind size={12} className={base} />;
+  if (dir === "feet") return <Wind size={12} className={`${base} rotate-90`} />;
+  if (dir === "both") return <Wind size={12} className={`${base} -rotate-45`} />;
   return <Wind size={12} className={base} />;
 };
 
