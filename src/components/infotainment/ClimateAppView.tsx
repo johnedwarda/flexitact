@@ -145,35 +145,6 @@ const ClimateAppView = () => {
             />
           </div>
 
-          {/* ---- Mirrors ---- */}
-          <Hotspot
-            style={{ left: "7%", top: "21%" }}
-            active={climate.mirrorHeat.left}
-            onClick={() =>
-              setClimate((c) => ({
-                ...c,
-                mirrorHeat: { ...c.mirrorHeat, left: !c.mirrorHeat.left },
-              }))
-            }
-            icon={<Heater size={12} />}
-            label="Mirror"
-            title="Left mirror heating"
-            tone="warm"
-          />
-          <Hotspot
-            style={{ left: "93%", top: "21%" }}
-            active={climate.mirrorHeat.right}
-            onClick={() =>
-              setClimate((c) => ({
-                ...c,
-                mirrorHeat: { ...c.mirrorHeat, right: !c.mirrorHeat.right },
-              }))
-            }
-            icon={<Heater size={12} />}
-            label="Mirror"
-            title="Right mirror heating"
-            tone="warm"
-          />
 
           {/* ---- Steering wheel ---- */}
           <button
