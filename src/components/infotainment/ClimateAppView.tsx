@@ -267,7 +267,7 @@ const ClimateAppView = () => {
   );
 };
 
-/* ---------- Drawn cabin (top view, rotated 90° clockwise) ---------- */
+/* ---------- Drawn cabin (top view, car facing up) ---------- */
 
 const CabinDrawing = () => (
   <svg
@@ -279,8 +279,9 @@ const CabinDrawing = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <g transform="translate(0, 1000) rotate(90)">
-      <g className="text-muted-foreground/45" strokeWidth={2}>
+    <g transform="translate(540, 0) rotate(90)">
+      <g className="text-muted-foreground/80" strokeWidth={3}>
+
         {/* Body outline */}
         <path d="M60 270c0-92 14-152 34-176 18-22 62-32 130-36 78-5 420-5 560 0 74 3 130 10 150 30 18 18 26 78 26 182s-8 164-26 182c-20 20-76 27-150 30-140 5-482 5-560 0-68-4-112-14-130-36-20-24-34-84-34-176z" />
         {/* Windscreen */}
