@@ -333,10 +333,10 @@ const ChipToggle = ({
 }) => {
   const activeColor =
     accent === "cool"
-      ? "bg-climate-cool/15 text-climate-cool border-climate-cool/40"
+      ? "bg-climate-cool/15 text-climate-cool"
       : accent === "warm"
-        ? "bg-climate-warm/15 text-climate-warm border-climate-warm/40"
-        : "bg-primary/15 text-primary border-primary/40";
+        ? "bg-climate-warm/15 text-climate-warm"
+        : "bg-primary/15 text-primary";
   return (
     <button
       onClick={onClick}
