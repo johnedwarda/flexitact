@@ -158,10 +158,10 @@ const ClimateAppView = () => {
             onSelect={() => setActiveZone("driver")}
           />
           <SeatHotspot
-            label="Front R"
+            label="Front L"
             heat={climate.frontSeatHeat.passenger}
             active={climate.activeZone === "passenger"}
-            style={{ left: "73%", top: "58%" }}
+            style={{ left: "27%", top: "43%" }}
             onHeat={() => cycleSeatHeat("passenger")}
             onSelect={() => setActiveZone("passenger")}
           />
