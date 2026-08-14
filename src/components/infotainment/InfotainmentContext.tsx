@@ -423,6 +423,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [rememberGridApp]);
 
+  const [settingsSection, setSettingsSection] = useState<string | null>(null);
+
+  const openSettingsSection = useCallback((section: string) => {
+    recordActivity();
+    setSettingsSection(section);
+    openAppById("settings");
+  }, [openAppById, recordActivity]);
+
   const toggleAppById = useCallback((appId: string) => {
     recordActivity();
     if (apps[appId]?.state === "opened") {
