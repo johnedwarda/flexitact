@@ -477,6 +477,30 @@ const SeatHotspot = ({
   </button>
 );
 
+const AirDirectionButton = ({
+  dir,
+  label,
+  active,
+  onClick,
+}: {
+  dir: AirDirection;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-xl text-[9px] font-mono font-semibold uppercase tracking-wider transition-all ${
+      active
+        ? "bg-climate-cool/15 text-climate-cool shadow-[0_0_12px_hsl(var(--climate-cool)/0.3)]"
+        : "bg-background/70 text-muted-foreground hover:text-foreground"
+    }`}
+  >
+    <VentIcon dir={dir} />
+    {label}
+  </button>
+);
+
 const VentIcon = ({ dir }: { dir: AirDirection }) => {
   const base = "text-current";
   if (dir === "windshield") return <Wind size={12} className={base} />;
