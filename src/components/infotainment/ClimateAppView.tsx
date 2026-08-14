@@ -169,7 +169,7 @@ const ClimateAppView = () => {
           {/* ---- Temperature + modes (right side of interior view) ---- */}
           <div
             className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
-            style={{ left: "84%", top: "50%" }}
+            style={{ left: "50%", top: "55%" }}
           >
             <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.25em]">
               Cabin
