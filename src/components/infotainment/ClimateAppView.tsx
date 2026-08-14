@@ -141,35 +141,6 @@ const ClimateAppView = () => {
             <CircleDot size={16} />
           </button>
 
-          {/* ---- Front seats ---- */}
-          <SeatHotspot
-            label="Driver"
-            heat={climate.frontSeatHeat.driver}
-            active={climate.activeZone === "driver"}
-            style={{ left: "73%", top: "43%" }}
-            onHeat={() => cycleSeatHeat("driver")}
-            onSelect={() => setActiveZone("driver")}
-          />
-          <SeatHotspot
-            label="Front L"
-            heat={climate.frontSeatHeat.passenger}
-            active={climate.activeZone === "passenger"}
-            style={{ left: "27%", top: "43%" }}
-            onHeat={() => cycleSeatHeat("passenger")}
-            onSelect={() => setActiveZone("passenger")}
-          />
-
-          {/* ---- Rear seats ---- */}
-          <SeatHotspot
-            label="Rear C"
-            heat={climate.rearSeatHeat[1]}
-            active={climate.activeZone === "rearC"}
-            style={{ left: "50%", top: "70%" }}
-            onHeat={() => cycleSeatHeat(1)}
-            onSelect={() => setActiveZone("rearC")}
-          />
-
-
           {/* ---- Rear glass ---- */}
           <Hotspot
             style={{ left: "50%", top: "88%" }}
