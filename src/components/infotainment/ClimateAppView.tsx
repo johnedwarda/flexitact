@@ -300,7 +300,7 @@ const CabinDrawing = () => (
       </g>
 
       {/* Seats */}
-      <g className="text-muted-foreground/50" strokeWidth={2}>
+      <g className="text-muted-foreground/80" strokeWidth={3}>
         {/* front seats */}
         <rect x="376" y="96" width="112" height="96" rx="22" />
         <rect x="376" y="348" width="112" height="96" rx="22" />
@@ -311,7 +311,7 @@ const CabinDrawing = () => (
       </g>
 
       {/* Steering wheel ring */}
-      <g className="text-muted-foreground/50" strokeWidth={2}>
+      <g className="text-muted-foreground/80" strokeWidth={3}>
         <circle cx="310" cy="146" r="46" />
       </g>
     </g>
