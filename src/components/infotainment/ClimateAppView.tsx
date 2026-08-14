@@ -340,10 +340,10 @@ const ChipToggle = ({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold uppercase tracking-wider border transition-colors ${
+      className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold uppercase tracking-wider transition-colors ${
         active
           ? activeColor
-          : "bg-background/70 text-muted-foreground border-border/50 hover:text-foreground"
+          : "bg-background/70 text-muted-foreground hover:text-foreground"
       }`}
     >
       {icon}
