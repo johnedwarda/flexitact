@@ -110,32 +110,11 @@ const ClimateAppView = () => {
             <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
               Airflow
             </span>
-            <div className="grid grid-cols-2 gap-1.5 w-full">
-              <AirDirectionButton
-                dir="face"
-                label="Face"
-                active={climate.airDirection === "face"}
-                onClick={() => setClimate((c) => ({ ...c, airDirection: "face" }))}
-              />
-              <AirDirectionButton
-                dir="feet"
-                label="Feet"
-                active={climate.airDirection === "feet"}
-                onClick={() => setClimate((c) => ({ ...c, airDirection: "feet" }))}
-              />
-              <AirDirectionButton
-                dir="both"
-                label="Face + Feet"
-                active={climate.airDirection === "both"}
-                onClick={() => setClimate((c) => ({ ...c, airDirection: "both" }))}
-              />
-              <AirDirectionButton
-                dir="windshield"
-                label="Screen"
-                active={climate.airDirection === "windshield"}
-                onClick={() => setClimate((c) => ({ ...c, airDirection: "windshield" }))}
-              />
-            </div>
+            <AirflowArcSlider
+              value={climate.airDirection}
+              onChange={(dir) => setClimate((c) => ({ ...c, airDirection: dir }))}
+            />
+
           </div>
         </div>
 
@@ -477,36 +456,97 @@ const SeatHotspot = ({
   </button>
 );
 
-const AirDirectionButton = ({
-  dir,
-  label,
-  active,
-  onClick,
-}: {
-  dir: AirDirection;
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) => (
-  <button
-    onClick={onClick}
-    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-xl text-[9px] font-mono font-semibold uppercase tracking-wider transition-all ${
-      active
-        ? "bg-climate-cool/15 text-climate-cool shadow-[0_0_12px_hsl(var(--climate-cool)/0.3)]"
-        : "bg-background/70 text-muted-foreground hover:text-foreground"
-    }`}
-  >
-    <VentIcon dir={dir} />
-    {label}
-  </button>
-);
+const AIR_STOPS: { dir: AirDirection; label: string; angle: number }[] = [
+  { dir: "windshield", label: "Screen", angle: -90 },
+  { dir: "face", label: "Face", angle: -30 },
+  { dir: "both", label: "Face + Feet", angle: 30 },
+  { dir: "feet", label: "Feet", angle: 90 },
+];
 
-const VentIcon = ({ dir }: { dir: AirDirection }) => {
-  const base = "text-current";
-  if (dir === "windshield") return <Wind size={12} className={base} />;
-  if (dir === "feet") return <Wind size={12} className={`${base} rotate-90`} />;
-  if (dir === "both") return <Wind size={12} className={`${base} -rotate-45`} />;
-  return <Wind size={12} className={base} />;
+const AIR_CX = 18;
+const AIR_CY = 52;
+const AIR_R = 40;
+
+const polar = (angle: number, r = AIR_R) => {
+  const rad = (angle * Math.PI) / 180;
+  return { x: AIR_CX + r * Math.cos(rad), y: AIR_CY + r * Math.sin(rad) };
 };
+
+const AirflowArcSlider = ({
+  value,
+  onChange,
+}: {
+  value: AirDirection;
+  onChange: (dir: AirDirection) => void;
+}) => {
+  const active = AIR_STOPS.find((s) => s.dir === value) ?? AIR_STOPS[1];
+  const knob = polar(active.angle);
+  const start = polar(-90);
+  const end = polar(90);
+
+  return (
+    <div className="flex items-center gap-2">
+      <svg width={72} height={104} viewBox="0 0 72 104" className="overflow-visible">
+        {/* track */}
+        <path
+          d={`M ${start.x} ${start.y} A ${AIR_R} ${AIR_R} 0 0 1 ${end.x} ${end.y}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={6}
+          strokeLinecap="round"
+          className="text-muted-foreground/20"
+        />
+        {/* airflow direction ray */}
+        <line
+          x1={AIR_CX}
+          y1={AIR_CY}
+          x2={knob.x}
+          y2={knob.y}
+          stroke="currentColor"
+          strokeWidth={1.5}
+          strokeDasharray="3 3"
+          className="text-climate-cool/60"
+        />
+        <circle cx={AIR_CX} cy={AIR_CY} r={2.5} className="fill-climate-cool/70" />
+        {/* stops */}
+        {AIR_STOPS.map((s) => {
+          const p = polar(s.angle);
+          const isActive = s.dir === value;
+          return (
+            <g key={s.dir} onClick={() => onChange(s.dir)} className="cursor-pointer">
+              <circle cx={p.x} cy={p.y} r={11} fill="transparent" />
+              <circle
+                cx={p.x}
+                cy={p.y}
+                r={isActive ? 7 : 3}
+                className={
+                  isActive
+                    ? "fill-climate-cool drop-shadow-[0_0_8px_hsl(var(--climate-cool)/0.7)]"
+                    : "fill-muted-foreground/50"
+                }
+              />
+            </g>
+          );
+        })}
+      </svg>
+      <div className="flex flex-col justify-between h-[104px] py-[6px]">
+        {AIR_STOPS.map((s) => (
+          <button
+            key={s.dir}
+            onClick={() => onChange(s.dir)}
+            className={`text-left text-[8px] font-mono font-semibold uppercase tracking-wider transition-colors ${
+              s.dir === value
+                ? "text-climate-cool"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 
 export default ClimateAppView;
