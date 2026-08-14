@@ -97,6 +97,8 @@ interface InfotainmentContextType {
   openAppById: (appId: string) => void;
   toggleAppById: (appId: string) => void;
   openAppMenu: () => void;
+  settingsSection: string | null;
+  openSettingsSection: (section: string) => void;
   recentGridAppId: string | null;
   navigateToItem: (index: number) => void;
   setClimate: React.Dispatch<React.SetStateAction<ClimateState>>;
@@ -421,6 +423,14 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [rememberGridApp]);
 
+  const [settingsSection, setSettingsSection] = useState<string | null>(null);
+
+  const openSettingsSection = useCallback((section: string) => {
+    recordActivity();
+    setSettingsSection(section);
+    openAppById("settings");
+  }, [openAppById, recordActivity]);
+
   const toggleAppById = useCallback((appId: string) => {
     recordActivity();
     if (apps[appId]?.state === "opened") {
@@ -616,6 +626,8 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         openAppById,
         toggleAppById,
         openAppMenu,
+        settingsSection,
+        openSettingsSection,
         recentGridAppId,
         navigateToItem,
         setClimate,
