@@ -138,10 +138,10 @@ const ClimateAppView = () => {
               setClimate((c) => ({ ...c, steeringHeat: !c.steeringHeat }))
             }
             title="Steering wheel heating"
-            className={`absolute -translate-x-1/2 -translate-y-1/2 w-[7.5%] aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
+            className={`absolute -translate-x-1/2 -translate-y-1/2 w-[7.5%] aspect-square rounded-full flex items-center justify-center transition-all ${
               climate.steeringHeat
-                ? "border-climate-warm/70 bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
-                : "border-border bg-background/70 text-muted-foreground hover:text-foreground"
+                ? "bg-climate-warm/20 text-climate-warm shadow-[0_0_18px_hsl(var(--climate-warm)/0.4)]"
+                : "bg-background/70 text-muted-foreground hover:text-foreground"
             }`}
             style={{ left: "31%", top: "27%" }}
           >
