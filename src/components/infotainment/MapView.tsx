@@ -1,50 +1,124 @@
-import { useEffect, useRef, useState } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { Home, Briefcase, Search, Square } from "lucide-react";
+import { useState } from "react";
+import { Home, Briefcase, Search, Square, Navigation2, MapPin } from "lucide-react";
 
-const mapCenter: L.LatLngExpression = [48.8566, 2.3522];
+// Static, hand-drawn navigation scene (no map provider, no API key).
+const ARTERIAL_A =
+  "M 300 720 C 325 600 335 520 330 455 C 325 400 320 360 350 325 C 385 285 450 292 505 268 C 565 242 600 225 622 178 C 638 142 668 118 690 110 C 720 98 760 90 830 60";
+// Route follows the arterial from the car's position onward.
+const ROUTE =
+  "M 330 455 C 325 400 320 360 350 325 C 385 285 450 292 505 268 C 565 242 600 225 622 178 C 638 142 668 118 690 110";
+const CAR = { x: 330, y: 455 };
+const DEST = { x: 690, y: 110 };
+
+const ARTERIALS = [
+  ARTERIAL_A,
+  "M -200 540 C -60 520 100 480 200 435 C 290 395 380 425 470 452 C 560 480 650 470 760 410 C 820 378 870 360 920 340",
+];
+const SECONDARY = [
+  "M -200 300 C -80 290 40 335 120 300 C 200 265 285 335 350 325",
+  "M 150 -60 C 175 100 140 200 160 300 C 178 385 140 440 120 525 C 105 585 112 660 90 740",
+  "M 505 268 C 525 340 495 405 545 458",
+  "M 622 178 C 560 150 540 90 470 60 C 430 40 385 55 335 15",
+  "M 545 458 C 585 525 640 565 665 740",
+  "M 200 435 C 235 500 230 580 270 740",
+];
+const LOCAL = [
+  "M 160 300 C 210 250 240 190 300 170",
+  "M 120 525 C 60 560 20 590 -40 600",
+  "M 350 325 C 400 360 410 400 395 440",
+  "M 470 452 C 450 520 470 580 450 650",
+  "M 540 330 C 600 330 650 310 700 330 C 740 345 770 330 800 340",
+  "M 622 178 C 680 200 720 190 780 220",
+  "M 270 200 C 300 230 300 270 330 300",
+  "M 40 400 C 80 380 100 340 120 300",
+  "M 690 110 C 650 60 640 20 600 -20",
+  "M 760 410 C 740 480 760 540 730 620",
+  "M 330 560 C 380 570 430 560 470 580",
+];
+
+const StaticMap = () => (
+  <svg
+    viewBox="-70 0 800 640"
+    preserveAspectRatio="xMidYMid slice"
+    className="absolute inset-0 h-full w-full"
+    role="img"
+    aria-label="Navigation map"
+  >
+    <defs>
+      <radialGradient id="map-fade" cx="50%" cy="70%" r="75%">
+        <stop offset="55%" stopColor="hsl(220 20% 7%)" stopOpacity="0" />
+        <stop offset="100%" stopColor="hsl(220 20% 7%)" stopOpacity="0.85" />
+      </radialGradient>
+      <filter id="route-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" />
+      </filter>
+      <path id="road-a" d={ARTERIAL_A} />
+      <path id="road-b" d={ARTERIALS[1]} />
+    </defs>
+
+    <rect x="-200" y="-100" width="1200" height="900" fill="hsl(220 20% 8%)" />
+
+    {/* river */}
+    <path
+      d="M -200 80 C 0 130 110 30 280 70 C 440 105 520 15 660 40 C 760 58 830 0 920 -30"
+      fill="none"
+      stroke="hsl(215 30% 11.5%)"
+      strokeWidth="56"
+      strokeLinecap="round"
+    />
+
+    {/* parks */}
+    <path d="M 385 365 C 405 335 455 340 478 368 C 498 395 478 430 435 432 C 392 428 368 396 385 365 Z" fill="hsl(150 16% 10.5%)" />
+    <path d="M 20 330 C 40 300 100 305 105 345 C 108 385 60 400 30 380 C 10 365 8 345 20 330 Z" fill="hsl(150 16% 10.5%)" />
+    <path d="M 570 520 C 600 495 680 500 700 540 C 715 580 650 610 600 595 C 560 580 550 540 570 520 Z" fill="hsl(150 16% 10.5%)" />
+
+    {/* road casings */}
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round" stroke="hsl(220 20% 6%)">
+      {LOCAL.map((d) => <path key={d} d={d} strokeWidth="6" />)}
+      {SECONDARY.map((d) => <path key={d} d={d} strokeWidth="11" />)}
+      {ARTERIALS.map((d) => <path key={d} d={d} strokeWidth="17" />)}
+    </g>
+    {/* road fills */}
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+      {LOCAL.map((d) => <path key={d} d={d} stroke="hsl(220 10% 15%)" strokeWidth="3" />)}
+      {SECONDARY.map((d) => <path key={d} d={d} stroke="hsl(220 11% 19%)" strokeWidth="6" />)}
+      {ARTERIALS.map((d) => <path key={d} d={d} stroke="hsl(220 12% 24%)" strokeWidth="11" />)}
+    </g>
+
+    {/* route */}
+    <path d={ROUTE} fill="none" stroke="hsl(205 100% 55%)" strokeOpacity="0.55" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" filter="url(#route-glow)" />
+    <path d={ROUTE} fill="none" stroke="hsl(205 100% 58%)" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+
+    {/* street labels */}
+    <g fill="hsl(215 12% 42%)" fontSize="10" letterSpacing="2" fontFamily="Inter, sans-serif">
+      <text dy="-9">
+        <textPath href="#road-b" startOffset="30%">RUE DE RIVOLI</textPath>
+      </text>
+    </g>
+
+    <rect x="-70" width="800" height="640" fill="url(#map-fade)" pointerEvents="none" />
+
+    {/* destination */}
+    <g transform={`translate(${DEST.x - 12} ${DEST.y - 30})`}>
+      <circle cx="12" cy="30" r="10" fill="hsl(205 100% 55%)" fillOpacity="0.25" />
+      <MapPin x="0" y="0" width="24" height="24" color="hsl(30 95% 55%)" fill="hsl(30 95% 55% / 0.25)" />
+    </g>
+
+    {/* vehicle */}
+    <g transform={`translate(${CAR.x} ${CAR.y})`}>
+      <circle r="26" fill="hsl(205 100% 55%)" fillOpacity="0.15" />
+      <circle r="16" fill="hsl(220 20% 7%)" stroke="hsl(205 100% 60%)" strokeWidth="2" />
+      <Navigation2 x="-9" y="-10" width="18" height="18" color="hsl(205 100% 60%)" fill="hsl(205 100% 60%)" />
+    </g>
+  </svg>
+);
 
 const MapView = () => {
-  const mapElementRef = useRef<HTMLDivElement | null>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
   const [tripActive, setTripActive] = useState(false);
 
-  useEffect(() => {
-    if (!mapElementRef.current || mapInstanceRef.current) return;
-
-    const map = L.map(mapElementRef.current, {
-      center: mapCenter,
-      zoom: 14,
-      zoomControl: false,
-      attributionControl: false,
-    });
-
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      subdomains: "abcd",
-      maxZoom: 20,
-    }).addTo(map);
-
-    const marker = L.circleMarker(mapCenter, {
-      radius: 8,
-      color: "hsl(205 100% 55%)",
-      weight: 2,
-      fillColor: "hsl(205 100% 55%)",
-      fillOpacity: 0.95,
-    }).addTo(map);
-
-    marker.bindPopup("Current Location");
-    mapInstanceRef.current = map;
-
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-    };
-  }, []);
-
   return (
-    <div className="relative h-full w-full">
-      <div ref={mapElementRef} className="h-full w-full" aria-label="Navigation map" />
+    <div className="relative h-full w-full overflow-hidden">
+      <StaticMap />
 
       {tripActive ? (
         <>
