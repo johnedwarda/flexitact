@@ -55,7 +55,7 @@ const BottomTaskbar = () => {
               onClick={() => toggleAppById("settings")}
               className={iconClass()}
             >
-              <SlidersHorizontal size={20} />
+              <SlidersHorizontal size={24} />
             </button>
           )}
           {item.id === "climate" && (
@@ -76,7 +76,7 @@ const BottomTaskbar = () => {
               onClick={() => toggleAppById("calendar")}
               className={iconClass()}
             >
-              <Calendar size={20} />
+              <Calendar size={24} />
             </button>
           )}
           {item.id === "recent" && (() => {
@@ -90,7 +90,7 @@ const BottomTaskbar = () => {
                 aria-label={entry.label}
                 className={iconClass()}
               >
-                <RecentIcon size={20} />
+                <RecentIcon size={24} />
               </button>
             );
           })()}
@@ -99,7 +99,7 @@ const BottomTaskbar = () => {
               onClick={() => openAppMenu()}
               className="w-10 h-10 rounded-xl flex items-center justify-center hover:text-foreground text-foreground/80 transition-colors outline-none focus:outline-none focus-visible:outline-none"
             >
-              <LayoutGrid size={20} />
+              <LayoutGrid size={24} />
             </button>
           )}
         </div>

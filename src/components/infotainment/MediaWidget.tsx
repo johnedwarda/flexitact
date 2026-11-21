@@ -17,7 +17,7 @@ const MediaWidget = () => {
         }`}
         title={isOpen ? "Close media" : "Open media"}
       >
-        <Music size={16} aria-label="Media" />
+        <Music size={24} aria-label="Media" />
       </button>
       {/* Track info */}
       <div className="flex flex-col min-w-[100px]">

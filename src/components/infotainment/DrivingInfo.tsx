@@ -1,4 +1,5 @@
-import { Gauge, BatteryMedium, CloudRain, CarFront } from "lucide-react";
+import { BatteryCharging } from "lucide-react";
+import { DriveMode, Wipers, Headlight } from "./icons";
 import { useState, useEffect } from "react";
 import { useInfotainment } from "./InfotainmentContext";
 
@@ -46,10 +47,10 @@ const DrivingInfo = () => {
 
       {/* Info Grid */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-[260px]">
-        <InfoCard icon={<BatteryMedium size={24} />} label="Battery / Range" value="78% · 342 km" color="text-success" onClick={() => openSettingsSection("battery")} />
-        <InfoCard icon={<Gauge size={24} />} label="Drive Mode" value="Comfort" color="text-primary" onClick={() => openSettingsSection("vehicle")} />
-        <InfoCard icon={<CloudRain size={24} />} label="Wipers" value="Auto" color="text-accent" onClick={() => openSettingsSection("safety")} />
-        <InfoCard icon={<CarFront size={24} />} label="Lights" value="Auto" color="text-accent" onClick={() => openSettingsSection("vehicle")} />
+        <InfoCard icon={<BatteryCharging size={24} />} label="Battery / Range" value="78% · 342 km" color="text-success" onClick={() => openSettingsSection("battery")} />
+        <InfoCard icon={<DriveMode size={24} />} label="Drive Mode" value="Comfort" color="text-primary" onClick={() => openSettingsSection("vehicle")} />
+        <InfoCard icon={<Wipers size={24} />} label="Wipers" value="Auto" color="text-accent" onClick={() => openSettingsSection("safety")} />
+        <InfoCard icon={<Headlight size={24} />} label="Lights" value="Auto" color="text-accent" onClick={() => openSettingsSection("vehicle")} />
       </div>
     </div>
   );

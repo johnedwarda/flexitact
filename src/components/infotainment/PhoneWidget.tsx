@@ -101,7 +101,7 @@ const PhoneWidget = () => {
         }`}
         title={isOpen ? "Close phone" : "Open phone"}
       >
-        <Phone size={16} />
+        <Phone size={24} />
       </button>
       {PHONE_FAVORITES.map((fav, i) => {
         const isActive = phoneActive && phoneIndex === i;

@@ -1,5 +1,5 @@
 import { useInfotainment } from "./InfotainmentContext";
-import { CircleDot, Heater, Thermometer, Wind } from "lucide-react";
+import { CloudFog, SeatHeat, SteeringWheel, Thermometer } from "./icons";
 
 const ClimateWidget = () => {
   const { climate, setClimate, apps, toggleAppById } = useInfotainment();
@@ -15,7 +15,7 @@ const ClimateWidget = () => {
         }`}
         title={isOpen ? "Close climate" : "Open climate"}
       >
-        <Thermometer size={16} aria-label="Climate" />
+        <Thermometer size={24} aria-label="Climate" />
       </button>
       {/* Temperature display */}
       <TempDonut temp={temp} />
@@ -24,13 +24,18 @@ const ClimateWidget = () => {
 
       {/* Seat heating */}
       <button
-        onClick={() => setClimate((c) => ({ ...c, seatHeat: (c.seatHeat + 1) % 4 }))}
+        onClick={() =>
+          setClimate((c) => {
+            const level = (c.seatHeat + 1) % 4;
+            return { ...c, seatHeat: level, frontSeatHeat: { ...c.frontSeatHeat, driver: level } };
+          })
+        }
         className={`relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
           seatHeat > 0 ? "text-accent" : "text-muted-foreground hover:text-foreground"
         }`}
         title="Seat Heating"
       >
-        <Heater size={16} />
+        <SeatHeat size={16} />
         {seatHeat > 0 && (
           <span className="absolute -top-1 -right-1 text-[9px] font-bold font-mono text-accent">
             {seatHeat}
@@ -46,7 +51,7 @@ const ClimateWidget = () => {
         }`}
         title="Steering Wheel Heating"
       >
-        <CircleDot size={16} />
+        <SteeringWheel size={16} />
       </button>
 
       {/* Defogger */}
@@ -57,7 +62,7 @@ const ClimateWidget = () => {
         }`}
         title="Windscreen Defogger"
       >
-        <Wind size={16} />
+        <CloudFog size={16} />
       </button>
     </div>
   );

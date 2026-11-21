@@ -33,7 +33,7 @@ const AppMenuPopup = () => {
                 >
 
                   <app.icon
-                    size={22}
+                    size={26}
                     className={isActive ? "text-primary" : "text-foreground/80"}
                   />
                   <span
