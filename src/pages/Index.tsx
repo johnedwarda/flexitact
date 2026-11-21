@@ -17,7 +17,34 @@ import AppMenuPopup from "@/components/infotainment/AppMenuPopup";
 import { InfotainmentProvider, useInfotainment } from "@/components/infotainment/InfotainmentContext";
 import { emitHardwareInput } from "@/components/infotainment/hardwareInputEvents";
 
+// Space the physical-control panel needs, in px, when docked to the right / below.
+const CONTROLS_SIDE_WIDTH = 260;
+const CONTROLS_BELOW_HEIGHT = 270;
+const SCREEN_RATIO = 16 / 9;
+
+// Pick whichever placement leaves the 16:9 screen wider: controls on the right
+// (wide windows) or below (narrow / tall windows).
+const useControlsPlacement = (): "side" | "below" => {
+  const compute = () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const sideWidth = Math.min(Math.max(w - CONTROLS_SIDE_WIDTH, 0), h * SCREEN_RATIO);
+    const belowWidth = Math.min(w, Math.max(h - CONTROLS_BELOW_HEIGHT, 0) * SCREEN_RATIO);
+    return sideWidth > belowWidth ? "side" : "below";
+  };
+  const [placement, setPlacement] = useState<"side" | "below">(compute);
+  useEffect(() => {
+    const onResize = () => setPlacement(compute());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return placement;
+};
+
 const IndexContent = () => {
+  const placement = useControlsPlacement();
+  const controlsOnSide = placement === "side";
+
   const { apps, appMenuOpen, navigateLeft, navigateRight, toggleApp, dialLeft, dialRight, dialUp, dialDown, dialRotate, dialCenter } = useInfotainment();
 
   useEffect(() => {
@@ -164,9 +191,14 @@ const IndexContent = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background relative items-center">
+    <div
+      className={`flex h-screen w-screen overflow-hidden bg-background relative items-center ${
+        controlsOnSide ? "flex-row" : "flex-col"
+      }`}
+    >
+
       {/* Display area (screen + taskbar) locked to 16:9 */}
-      <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden bg-[hsl(220_22%_5%)]">
+      <div className="flex-1 min-h-0 min-w-0 h-full w-full flex items-center justify-center overflow-hidden bg-[hsl(220_22%_5%)]">
         <div
           className="flex flex-col overflow-hidden bg-[hsl(220_22%_5%)] border border-border/30 rounded-sm"
           style={{ aspectRatio: "16 / 9", height: "100%", maxWidth: "100%", maxHeight: "100%" }}
@@ -208,9 +240,20 @@ const IndexContent = () => {
         </div>
       </div>
 
-      <div className="w-full flex-shrink-0">
-        <NavigationButtons />
-      </div>
+      {controlsOnSide && (
+        <div
+          className="h-full flex-shrink-0 overflow-y-auto bg-[hsl(220_22%_5%)]"
+          style={{ width: CONTROLS_SIDE_WIDTH }}
+        >
+          <NavigationButtons vertical />
+        </div>
+      )}
+
+      {!controlsOnSide && (
+        <div className="w-full flex-shrink-0">
+          <NavigationButtons />
+        </div>
+      )}
     </div>
   );
 

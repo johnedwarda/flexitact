@@ -1,8 +1,37 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  CloudFog,
+  Thermometer,
+  LayoutGrid,
+  Mic,
+  MicOff,
+  PanelLeft,
+  PanelRight,
+  Phone,
+  Play,
+  Radio,
+  SkipBack,
+  SkipForward,
+  SteeringWheel,
+  VolumeX,
+  type IconType,
+} from "./icons";
 import { useInfotainment, TASKBAR_ITEMS } from "./InfotainmentContext";
 import { onHardwareInput } from "./hardwareInputEvents";
 
-const NavigationButtons = () => {
+type DialIcon = IconType;
+type DialHint = { icon: DialIcon; name: string };
+
+const NavigationButtons = ({ vertical = false }: { vertical?: boolean }) => {
   const {
     highlightedIndex,
     controlClusterDisabled,
@@ -25,6 +54,12 @@ const NavigationButtons = () => {
 
   const currentItem = TASKBAR_ITEMS[highlightedIndex];
 
+  // Drag-to-rotate: each 15 degrees of travel around the dial centre is one detent step.
+  const dialDrag = useRef<{ cx: number; cy: number; last: number; acc: number } | null>(null);
+  const [dialDragging, setDialDragging] = useState(false);
+  const pointerAngle = (e: React.PointerEvent, cx: number, cy: number) =>
+    (Math.atan2(e.clientY - cy, e.clientX - cx) * 180) / Math.PI;
+
   const handleJoystick = (dir: string) => {
     if (dir === "left") navigateLeft();
     if (dir === "right") navigateRight();
@@ -41,6 +76,40 @@ const NavigationButtons = () => {
   const handleRotate = (dir: "cw" | "ccw") => {
     setDialRotation((r) => r + (dir === "cw" ? 15 : -15));
     dialRotate(dir);
+  };
+
+  const onDialPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (controlClusterDisabled) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dialDrag.current = { cx, cy, last: pointerAngle(e, cx, cy), acc: 0 };
+    setDialDragging(true);
+  };
+
+  const onDialPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dialDrag.current;
+    if (!d) return;
+    const a = pointerAngle(e, d.cx, d.cy);
+    let delta = a - d.last;
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+    d.last = a;
+    d.acc += delta;
+    while (d.acc >= 15) {
+      handleRotate("cw");
+      d.acc -= 15;
+    }
+    while (d.acc <= -15) {
+      handleRotate("ccw");
+      d.acc += 15;
+    }
+  };
+
+  const endDialDrag = () => {
+    dialDrag.current = null;
+    setDialDragging(false);
   };
 
   // Keyboard input mirrors the touch visuals: flash the pressed button and
@@ -95,23 +164,65 @@ const NavigationButtons = () => {
 
 
   const joystickDirs = [
-    { key: "left", label: "◀", style: "left-0 top-1/2 -translate-y-1/2" },
-    { key: "right", label: "▶", style: "right-0 top-1/2 -translate-y-1/2" },
+    { key: "left", label: "◀" },
+    { key: "right", label: "▶" },
   ];
 
-  // Contextual hints for the control dial
-  const getDialHints = () => {
+  // Contextual icons for the control dial
+  const getDialHints = (): {
+    left: DialHint;
+    right: DialHint;
+    up: DialHint;
+    down: DialHint;
+    center: DialHint;
+    dial: string;
+  } => {
     switch (currentItem.id) {
       case "media":
-        return { label: "Media Control", left: "⏮ Prev", right: "Next ⏭", up: "Source", down: "Mute", dial: "Volume", center: "⏯" };
+        return {
+          left: { icon: SkipBack, name: "Previous" },
+          right: { icon: SkipForward, name: "Next" },
+          up: { icon: Radio, name: "Source" },
+          down: { icon: VolumeX, name: "Mute" },
+          center: { icon: Play, name: "Play / pause" },
+          dial: "Volume",
+        };
       case "climate":
-        return { label: "Climate Control", left: "Zone L", right: "Zone R", up: "Steering", down: "Defog", dial: "Temp", center: "Zones" };
+        return {
+          left: { icon: PanelLeft, name: "Zone left" },
+          right: { icon: PanelRight, name: "Zone right" },
+          up: { icon: SteeringWheel, name: "Steering heat" },
+          down: { icon: CloudFog, name: "Defog" },
+          center: { icon: Thermometer, name: "Zones" },
+          dial: "Temp",
+        };
       case "phone":
-        return { label: "Phone Control", left: "Prev", right: "Next", up: "Unmute", down: "Mute", dial: "Volume", center: "Call" };
+        return {
+          left: { icon: ChevronLeft, name: "Previous" },
+          right: { icon: ChevronRight, name: "Next" },
+          up: { icon: Mic, name: "Unmute" },
+          down: { icon: MicOff, name: "Mute" },
+          center: { icon: Phone, name: "Call" },
+          dial: "Volume",
+        };
       case "menu":
-        return { label: "App Menu", left: "← Prev", right: "Next →", up: "↑ Row", down: "↓ Row", dial: "Browse", center: "Open" };
+        return {
+          left: { icon: ChevronLeft, name: "Previous" },
+          right: { icon: ChevronRight, name: "Next" },
+          up: { icon: ChevronUp, name: "Row up" },
+          down: { icon: ChevronDown, name: "Row down" },
+          center: { icon: LayoutGrid, name: "Open" },
+          dial: "Browse",
+        };
       default:
-        return { label: "Control Cluster", left: "←", right: "→", up: "↑", down: "↓", dial: "Scroll", center: "OK" };
+        return {
+          left: { icon: ArrowLeft, name: "Left" },
+          right: { icon: ArrowRight, name: "Right" },
+          up: { icon: ArrowUp, name: "Up" },
+          down: { icon: ArrowDown, name: "Down" },
+          center: { icon: Check, name: "OK" },
+          dial: "Scroll",
+        };
     }
   };
 
@@ -139,7 +250,22 @@ const NavigationButtons = () => {
   );
 
   return (
-    <div className="flex items-center justify-center gap-12 px-8 py-6 bg-[hsl(220_22%_5%)]">
+    <div
+      className={`flex flex-col items-center bg-[hsl(220_22%_5%)] ${
+        vertical ? "min-h-full justify-center gap-6 px-4 py-6" : "gap-4 px-8 pb-6 pt-4"
+      }`}
+    >
+      {/* Title */}
+      <div className="flex flex-col items-center gap-0.5">
+        <h1 className="text-lg font-semibold tracking-[0.3em] text-foreground/90">FlexiTact</h1>
+        <span className="font-mono text-[8px] uppercase tracking-widest text-muted-foreground/70">
+          Finnish national patent pending
+        </span>
+      </div>
+
+      <div
+        className={`flex items-center justify-center ${vertical ? "flex-col gap-6" : "gap-12"}`}
+      >
       {/* Navigation Cluster shortcuts */}
       <ShortcutList
         items={[
@@ -152,37 +278,55 @@ const NavigationButtons = () => {
       {/* Navigation Cluster - 4-way Joystick */}
       <div className="flex flex-col items-center gap-2">
 
-        <div className="relative w-20 h-20 rounded-2xl bg-[hsl(var(--surface-elevated))] border border-border/50 shadow-lg">
-          {/* Outer ring removed */}
+        {/* Hardware-style rocker/puck: recessed well with a domed knob */}
+        <div className="relative h-[82px] w-[82px] rounded-full">
+          {/* Recessed well */}
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "radial-gradient(circle at 50% 30%, hsl(220 16% 10%), hsl(220 24% 3.5%))",
+              boxShadow: "inset 0 4px 9px rgba(0,0,0,0.9), inset 0 -1px 2px rgba(255,255,255,0.05), 0 1px 0 rgba(255,255,255,0.08)",
+            }}
+          />
 
+          {/* Left / right rocker zones with engraved chevrons */}
+          {joystickDirs.map(({ key, label }) => {
+            const active = activeJoystick === key;
+            return (
+              <button
+                key={key}
+                aria-label={key === "left" ? "Move left" : "Move right"}
+                className={`absolute top-1/2 flex h-12 w-6 -translate-y-1/2 items-center justify-center rounded-full text-[11px] transition-colors duration-100 ${
+                  key === "left" ? "left-[2px]" : "right-[2px]"
+                } ${active ? "text-primary" : "text-muted-foreground/60 hover:text-foreground"}`}
+                style={active ? { textShadow: "0 0 8px hsl(var(--primary) / 0.9)" } : { textShadow: "0 -1px 0 rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08)" }}
+                onPointerDown={() => {
+                  setActiveJoystick(key);
+                  handleJoystick(key);
+                }}
+                onPointerUp={() => setActiveJoystick(null)}
+                onPointerLeave={() => setActiveJoystick(null)}
+              >
+                {label}
+              </button>
+            );
+          })}
 
-          {/* Direction buttons */}
-          {joystickDirs.map(({ key, label, style }) => (
-            <button
-              key={key}
-              className={`absolute ${style} w-5 h-5 flex items-center justify-center rounded-md text-[8px] transition-all duration-100 ${
-                activeJoystick === key
-                  ? "bg-primary/30 text-primary scale-110"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-              }`}
-              onPointerDown={() => {
-                setActiveJoystick(key);
-                handleJoystick(key);
-              }}
-              onPointerUp={() => setActiveJoystick(null)}
-              onPointerLeave={() => setActiveJoystick(null)}
-            >
-              {label}
-            </button>
-          ))}
-
-          {/* Center button - toggle app */}
+          {/* Domed knob: tilts toward the pressed side, depresses on centre press */}
           <button
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full border border-border/50 transition-all duration-100 flex items-center justify-center ${
-              activeJoystick === "center"
-                ? "bg-primary/30 shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
-                : "bg-[hsl(var(--surface-glass))] hover:bg-secondary"
-            }`}
+            aria-label="Open or close"
+            className="absolute left-1/2 top-1/2 h-[44px] w-[44px] rounded-full transition-all duration-100"
+            style={{
+              transform: `translate(-50%, -50%) translateX(${
+                activeJoystick === "left" ? -3 : activeJoystick === "right" ? 3 : 0
+              }px) scale(${activeJoystick === "center" ? 0.94 : 1})`,
+              background:
+                "radial-gradient(circle at 34% 26%, hsl(220 10% 38%), hsl(220 13% 20%) 48%, hsl(220 20% 9%) 100%)",
+              boxShadow:
+                activeJoystick === "center"
+                  ? "0 1px 2px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.18), inset 0 -3px 6px rgba(0,0,0,0.6), 0 0 14px hsl(var(--primary) / 0.45)"
+                  : "0 5px 9px rgba(0,0,0,0.75), 0 1px 2px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.28), inset 0 -4px 6px rgba(0,0,0,0.55)",
+            }}
             onPointerDown={() => {
               setActiveJoystick("center");
               handleJoystick("center");
@@ -190,12 +334,18 @@ const NavigationButtons = () => {
             onPointerUp={() => setActiveJoystick(null)}
             onPointerLeave={() => setActiveJoystick(null)}
           >
-            <span className="text-[6px] font-mono text-muted-foreground">B</span>
+            {/* Concave finger dimple */}
+            <span
+              className="absolute inset-[9px] flex items-center justify-center rounded-full"
+              style={{
+                background: "radial-gradient(circle at 60% 70%, hsl(220 14% 22%), hsl(220 18% 12%))",
+                boxShadow: "inset 0 2px 4px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.1)",
+              }}
+            >
+              <span className="font-mono text-[7px] text-muted-foreground/70">B</span>
+            </span>
           </button>
         </div>
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-          Navigation Cluster
-        </span>
         {/* Show highlighted item name */}
         <span className="text-[10px] font-mono text-primary">
           {currentItem.label}
@@ -206,53 +356,76 @@ const NavigationButtons = () => {
       <div className="flex flex-col items-center gap-2">
 
         <div className="relative w-32 h-32">
-          {/* Outer rotating ring */}
+          {/* Outer ring: knurled metal grip that turns with the dial */}
           <div
-            className={`absolute inset-0 rounded-full border-[3px] border-border/50 bg-[hsl(var(--surface-glass))] shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_0_20px_rgba(0,0,0,0.3)] transition-transform duration-150 ${
-              controlClusterDisabled ? "opacity-30" : ""
+            className={`absolute inset-0 touch-none select-none rounded-full transition-transform duration-150 ${
+              controlClusterDisabled ? "opacity-30" : dialDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
-            style={{ transform: `rotate(${dialRotation}deg)` }}
+            role="slider"
+            aria-label="Rotate dial (drag around the ring)"
+            aria-valuenow={((dialRotation % 360) + 360) % 360}
+            aria-valuemin={0}
+            aria-valuemax={359}
+            onPointerDown={onDialPointerDown}
+            onPointerMove={onDialPointerMove}
+            onPointerUp={endDialDrag}
+            onPointerCancel={endDialDrag}
+            style={{
+              transform: `rotate(${dialRotation}deg)`,
+              background:
+                "repeating-conic-gradient(from 0deg, rgba(255,255,255,0.06) 0deg 1.5deg, rgba(0,0,0,0.25) 1.5deg 3deg), hsl(220 10% 17%)",
+              boxShadow:
+                "0 9px 18px rgba(0,0,0,0.65), 0 2px 4px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.85)",
+            }}
           >
-            {/* Dial notch indicators */}
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-              <div
-                key={deg}
-                className="absolute w-1 h-2 bg-muted-foreground/40 rounded-full top-1 left-1/2 -translate-x-1/2 origin-[50%_calc(64px-4px)]"
-                style={{ transform: `rotate(${deg}deg)` }}
-              />
-            ))}
-            {/* Primary notch */}
-            <div className="absolute w-1.5 h-3 bg-primary rounded-full top-1 left-1/2 -translate-x-1/2" />
+            {/* Index marker */}
+            <div
+              className="absolute left-1/2 top-[3px] h-3 w-1.5 -translate-x-1/2 rounded-full bg-primary"
+              style={{ boxShadow: "0 0 6px hsl(var(--primary) / 0.8)" }}
+            />
           </div>
-
-          {/* Rotate buttons */}
-          <button
-            className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-16 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors rounded-l-lg hover:bg-secondary/30"
-            onClick={() => handleRotate("ccw")}
-            aria-label="Rotate counter-clockwise"
-          >
-            <span className="text-xs">↺</span>
-          </button>
-          <button
-            className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-16 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors rounded-r-lg hover:bg-secondary/30"
-            onClick={() => handleRotate("cw")}
-            aria-label="Rotate clockwise"
-          >
-            <span className="text-xs">↻</span>
-          </button>
+          {/* Static light: bevel highlight on the ring edge (does not rotate) */}
+          <div
+            className="pointer-events-none absolute inset-0 rounded-full"
+            style={{
+              background:
+                "conic-gradient(from 200deg, rgba(255,255,255,0.18), rgba(255,255,255,0) 25%, rgba(0,0,0,0.25) 55%, rgba(255,255,255,0) 75%, rgba(255,255,255,0.18))",
+              WebkitMask: "radial-gradient(circle, transparent 62%, #000 63%)",
+              mask: "radial-gradient(circle, transparent 62%, #000 63%)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -2px 3px rgba(0,0,0,0.5)",
+            }}
+          />
 
           {/* Inner display + joystick area */}
-          <div className="absolute inset-5 rounded-full bg-[hsl(var(--surface-elevated))] border border-border/30 shadow-[inset_0_1px_4px_rgba(0,0,0,0.3)]">
-            {/* 4-way direction buttons with hint labels */}
-            {[
-              { key: "up", style: "top-0 left-1/2 -translate-x-1/2", hint: hints.up },
-              { key: "down", style: "bottom-0 left-1/2 -translate-x-1/2", hint: hints.down },
-              { key: "left", style: "left-0 top-1/2 -translate-y-1/2", hint: hints.left },
-              { key: "right", style: "right-0 top-1/2 -translate-y-1/2", hint: hints.right },
-            ].map(({ key, style, hint }) => (
+          <div
+            className="absolute inset-[18px] rounded-full"
+            style={{
+              background: "radial-gradient(circle at 50% 28%, hsl(220 16% 12%), hsl(220 24% 4%))",
+              boxShadow:
+                "inset 0 5px 10px rgba(0,0,0,0.9), inset 0 -1px 2px rgba(255,255,255,0.06), 0 1px 0 rgba(255,255,255,0.12)",
+            }}
+          >
+            {/* Disabled: label sits inside the well; ring and well stay visible */}
+            {controlClusterDisabled && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-mono text-[9px] font-semibold tracking-widest text-muted-foreground">
+                  DISABLED
+                </span>
+              </div>
+            )}
+
+            {/* 4-way direction buttons with hint icons */}
+            {!controlClusterDisabled && [
+              { key: "up", style: "top-1 left-1/2 -translate-x-1/2", hint: hints.up },
+              { key: "down", style: "bottom-1 left-1/2 -translate-x-1/2", hint: hints.down },
+              { key: "left", style: "left-1 top-1/2 -translate-y-1/2", hint: hints.left },
+              { key: "right", style: "right-1 top-1/2 -translate-y-1/2", hint: hints.right },
+            ].map(({ key, style, hint: { icon: Icon, name } }) => (
               <button
                 key={key}
-                className={`absolute ${style} px-1 h-6 flex items-center justify-center rounded text-[7px] font-mono transition-all duration-100 leading-none whitespace-nowrap ${
+                aria-label={name}
+                title={name}
+                className={`absolute ${style} flex h-7 w-7 items-center justify-center rounded transition-all duration-100 ${
                   activeDialDir === key
                     ? "text-primary scale-110"
                     : "text-muted-foreground/70 hover:text-foreground"
@@ -264,17 +437,21 @@ const NavigationButtons = () => {
                 onPointerUp={() => setActiveDialDir(null)}
                 onPointerLeave={() => setActiveDialDir(null)}
               >
-                {hint}
+                <Icon className="h-3.5 w-3.5" />
               </button>
             ))}
 
-            {/* Center press with label */}
+            {/* Center press: flat button with label */}
+            {!controlClusterDisabled && (
             <button
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-border/40 transition-all duration-100 flex flex-col items-center justify-center ${
-                activeDialDir === "center"
-                  ? "bg-primary/30 shadow-[0_0_10px_hsl(var(--primary)/0.3)]"
-                  : "bg-[hsl(var(--surface-glass))] hover:bg-secondary"
-              }`}
+              aria-label={hints.center.name}
+              title={hints.center.name}
+              className="absolute left-1/2 top-1/2 flex h-9 w-9 flex-col items-center justify-center rounded-full border transition-colors duration-100"
+              style={{
+                transform: "translate(-50%, -50%)",
+                background: activeDialDir === "center" ? "hsl(var(--primary) / 0.25)" : "hsl(220 16% 14%)",
+                borderColor: activeDialDir === "center" ? "hsl(var(--primary) / 0.6)" : "hsl(220 12% 22%)",
+              }}
               onPointerDown={() => {
                 setActiveDialDir("center");
                 dialCenter();
@@ -282,22 +459,11 @@ const NavigationButtons = () => {
               onPointerUp={() => setActiveDialDir(null)}
               onPointerLeave={() => setActiveDialDir(null)}
             >
-              <span className="text-[6px] font-mono text-muted-foreground leading-none">{hints.center}</span>
+              <hints.center.icon className="h-4 w-4 text-muted-foreground" />
             </button>
+            )}
           </div>
-
-          {/* Disabled overlay */}
-          {controlClusterDisabled && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-[hsl(var(--surface-elevated))]/60 backdrop-blur-sm">
-              <span className="text-[10px] font-mono font-semibold tracking-widest text-muted-foreground">
-                DISABLED
-              </span>
-            </div>
-          )}
         </div>
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-          {controlClusterDisabled ? "Disabled" : hints.label}
-        </span>
         <span className="text-[9px] font-mono text-muted-foreground/70">⟳ {controlClusterDisabled ? "—" : hints.dial}</span>
       </div>
 
@@ -310,6 +476,7 @@ const NavigationButtons = () => {
           ["Enter", "Press"],
         ]}
       />
+      </div>
     </div>
 
   );
