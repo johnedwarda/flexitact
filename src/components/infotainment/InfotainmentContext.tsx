@@ -25,15 +25,15 @@ interface AppInstance {
   state: AppState;
 }
 
-export type ClimateZone = "driver" | "passenger" | "rearL" | "rearC" | "rearR";
+export type ClimateZone = "driver" | "passenger" | "rearL" | "rearR";
 
-interface ClimateState {
+export interface ClimateState {
   temp: number; // driver temp (also single-zone temp)
   passengerTemp: number;
   rearTemp: number;
   seatHeat: number; // legacy alias for driver heat (kept for widget compat)
   frontSeatHeat: { driver: number; passenger: number };
-  rearSeatHeat: [number, number, number];
+  rearSeatHeat: [number, number]; // [left, right]
   steeringHeat: boolean;
   defogger: boolean;
   rearDefogger: boolean;
@@ -48,7 +48,22 @@ interface ClimateState {
   activeZone: ClimateZone;
 }
 
-const ZONE_ORDER: ClimateZone[] = ["driver", "passenger", "rearL", "rearC", "rearR"];
+export const ZONE_ORDER: ClimateZone[] = ["driver", "passenger"];
+
+/**
+ * Change one zone's target temperature by `delta` degrees.
+ * Single-zone mode keeps every zone equal; with rear sync on, the rear follows the driver;
+ * adjusting a rear zone directly turns rear sync off.
+ */
+export const adjustZoneTemp = (c: ClimateState, delta: number, zone: ClimateZone = c.activeZone): ClimateState => {
+  const clamp = (v: number) => Math.max(16, Math.min(30, v));
+  const current = zone === "passenger" ? c.passengerTemp : zone === "driver" ? c.temp : c.rearTemp;
+  const t = clamp(current + delta);
+  if (c.zones === "single") return { ...c, temp: t, passengerTemp: t, rearTemp: t, activeZone: zone };
+  if (zone === "driver") return { ...c, temp: t, rearTemp: c.rearSync ? t : c.rearTemp, activeZone: zone };
+  if (zone === "passenger") return { ...c, passengerTemp: t, activeZone: zone };
+  return { ...c, rearTemp: t, rearSync: false, activeZone: zone };
+};
 
 interface MediaState {
   playing: boolean;
@@ -148,7 +163,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
     rearTemp: 21,
     seatHeat: 1,
     frontSeatHeat: { driver: 1, passenger: 0 },
-    rearSeatHeat: [0, 0, 0],
+    rearSeatHeat: [0, 0],
     steeringHeat: false,
     defogger: false,
     rearDefogger: false,
@@ -496,6 +511,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         ...m,
         trackIndex: (m.trackIndex - 1 + TRACKS.length) % TRACKS.length,
       }));
+    } else if (currentId === "climate") {
+      setClimate((c) => ({
+        ...c,
+        activeZone: ZONE_ORDER[(ZONE_ORDER.indexOf(c.activeZone) - 1 + ZONE_ORDER.length) % ZONE_ORDER.length],
+      }));
     }
   }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
 
@@ -508,6 +528,11 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
       setMedia((m) => ({
         ...m,
         trackIndex: (m.trackIndex + 1) % TRACKS.length,
+      }));
+    } else if (currentId === "climate") {
+      setClimate((c) => ({
+        ...c,
+        activeZone: ZONE_ORDER[(ZONE_ORDER.indexOf(c.activeZone) + 1) % ZONE_ORDER.length],
       }));
     }
   }, [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage]);
@@ -559,10 +584,7 @@ export const InfotainmentProvider = ({ children }: { children: ReactNode }) => {
         }));
       } else if (currentId === "climate") {
         const delta = dir === "cw" ? 1 : -1;
-        setClimate((c) => {
-          const t = Math.max(16, Math.min(30, c.temp + delta));
-          return { ...c, temp: t, passengerTemp: t, rearTemp: t };
-        });
+        setClimate((c) => adjustZoneTemp(c, delta));
       }
     },
     [currentId, controlClusterDisabled, phonePopupOpen, highlightedIndex, recordDialUsage, activeCallIndex]
